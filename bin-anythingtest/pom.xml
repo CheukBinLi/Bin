@@ -8,9 +8,9 @@
     <version>0.1</version>
   </parent>
   <groupId>com.cheuks</groupId>
-  <artifactId>bin-anthingtest</artifactId>
+  <artifactId>bin-anythingtest</artifactId>
   <version>1.0</version>
-  <name>bin-anthingtest</name>
+  <name>bin-anythingtest</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -18,6 +18,6 @@
 	</dependencies>
 	<modules>
 		<module>bin-net</module>
-    <module>bin-anthingtest</module>
-  </modules>
+		<module>bin-anythingtest</module>
+	</modules>
 </project>
