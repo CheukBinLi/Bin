@@ -35,11 +35,15 @@ public class Server_v1 {
 				it.remove();
 				if (key.isValid()) {
 					if (key.isAcceptable()) {
-						
+						client = ((ServerSocketChannel) key.channel()).accept();
+						client.configureBlocking(false);
+						client.finishConnect();
+						client.register(key.selector(), SelectionKey.OP_WRITE);
 					} else if (key.isReadable()) {
-						
+						client = (SocketChannel) key.channel();
+						//						client.read(null);
 					} else if (key.isWritable()) {
-						
+
 					}
 				}
 			}
