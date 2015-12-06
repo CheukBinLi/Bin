@@ -35,8 +35,11 @@ public class Server_v1 {
 				it.remove();
 				if (key.isValid()) {
 					if (key.isAcceptable()) {
+						
 					} else if (key.isReadable()) {
+						
 					} else if (key.isWritable()) {
+						
 					}
 				}
 			}
