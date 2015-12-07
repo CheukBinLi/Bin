@@ -6,9 +6,10 @@
 		<artifactId>Bin</artifactId>
 		<version>0.1</version>
 	</parent>
-	<artifactId>bin-anythingtest</artifactId>
+	<groupId>com.cheuks</groupId>
+	<artifactId>bin-bean</artifactId>
 	<version>2.0</version>
-	<name>bin-anythingtest</name>
+	<name>bin-bean</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,9 +28,9 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.cheuks</groupId>
-			<artifactId>bin-bean</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.20.0-GA</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
