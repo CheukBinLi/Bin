@@ -26,7 +26,8 @@ import java.nio.channels.ScatteringByteChannel;
  */
 public class ByteBufferUtil {
 
-	private static final int LENGTH_WAY = 16;
+	private static int LENGTH_WAY = 16;
+	private static String formatChar = "%0" + LENGTH_WAY + "d";
 
 	private static final byte[] get(ScatteringByteChannel scatteringByteChannel, int size) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(size);
@@ -88,7 +89,6 @@ public class ByteBufferUtil {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(size + LENGTH_WAY);
 		byte[] buff = new byte[512];
 		int len = -1;
-		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, size).getBytes());
 		while ((len = in.read(buff)) > 0) {
 			byteBuffer.put(buff, 0, len);
@@ -109,7 +109,6 @@ public class ByteBufferUtil {
 	public byte[] getBytes(String str) throws IOException {
 		byte[] bytes = str.getBytes();
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
-		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
 		//		System.out.println("byte[] getBytes(String str)" + new String(byteBuffer.array()));
 		byteBuffer.flip();
@@ -118,7 +117,6 @@ public class ByteBufferUtil {
 
 	public byte[] getBytes(byte[] bytes) throws IOException {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
-		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
 		// System.out.println("byte[] getBytes(byte[] bytes)" + new String(byteBuffer.array()));
 		byteBuffer.flip();
