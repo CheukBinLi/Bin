@@ -9,14 +9,14 @@ import java.nio.channels.ScatteringByteChannel;
 /***
  * *
  * 
- * Copyright 2015    ZHOU.BING.LI Individual All
- *  
+ * Copyright 2015 ZHOU.BING.LI Individual All
+ * 
  * ALL RIGHT RESERVED
- *  
+ * 
  * CREATE ON 2015年12月7日下午5:02:52
- *  
+ * 
  * EMAIL:20796698@QQ.COM
- *  
+ * 
  * GITHUB:https://github.com/fdisk123
  * 
  * @author CHEUK.BIN.LI
@@ -29,16 +29,25 @@ public class ByteBufferUtil {
 	private static int LENGTH_WAY = 16;
 	private static String formatChar = "%0" + LENGTH_WAY + "d";
 
+	/***
+	 * 设置长度
+	 * 
+	 * @param size
+	 */
+	public static void setLENGTH_WAY(int size) {
+		LENGTH_WAY = size;
+		formatChar = "%0" + size + "d";
+	}
+
 	private static final byte[] get(ScatteringByteChannel scatteringByteChannel, int size) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		scatteringByteChannel.read(buffer);
 		buffer.flip();
-		// System.out.println(new String(buffer.array()));
 		return buffer.array();
 	}
 
 	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) {
-		ByteBuffer buffer = ByteBuffer.allocate(1024);
+		ByteBuffer buffer = ByteBuffer.allocate(512);
 		ByteArrayOutputStream out = null;
 		try {
 			// scatteringByteChannel.read(buffer, 0, LENGTH_WAY);
