@@ -2,7 +2,7 @@ package com.cheuks.bin.bean.classprocessing.handler;
 
 /***
  * 
- * Copyright 2015 ZHOU.BING.LI Individual All
+ * Copyright 2015 CHEUK.BIN.LI Individual All
  * 
  * ALL RIGHT RESERVED
  * 
@@ -12,7 +12,7 @@ package com.cheuks.bin.bean.classprocessing.handler;
  * 
  * GITHUB:https://github.com/fdisk123
  * 
- * @author ZHUO.BIN.LI
+ * @author CHEUK.BIN.LI
  * 
  * @see 构造加载、注入/初始信息
  *

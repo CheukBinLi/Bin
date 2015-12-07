@@ -13,7 +13,7 @@ import javassist.NotFoundException;
 
 /***
  * 
- * Copyright 2015    ZHOU.BING.LI Individual All
+ * Copyright 2015    CHEUK.BIN.LI Individual All
  *  
  * ALL RIGHT RESERVED
  *  
@@ -23,7 +23,7 @@ import javassist.NotFoundException;
  *  
  * GITHUB:https://github.com/fdisk123
  * 
- * @author ZHUO.BIN.LI
+ * @author CHEUK.BIN.LI
  * 
  * @see 类属性
  *

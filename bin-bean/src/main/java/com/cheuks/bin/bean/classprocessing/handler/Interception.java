@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 /***
  * 
- * Copyright 2015    ZHOU.BING.LI Individual All
+ * Copyright 2015    CHEUK.BIN.LI Individual All
  *  
  * ALL RIGHT RESERVED
  *  
@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  *  
  * GITHUB:https://github.com/fdisk123
  * 
- * @author ZHUO.BIN.LI
+ * @author CHEUK.BIN.LI
  * 
  * @see 拦截器接口
  *

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /***
  * 
- * Copyright 2015    ZHOU.BING.LI Individual All
+ * Copyright 2015    CHEUK.BIN.LI Individual All
  *  
  * ALL RIGHT RESERVED
  *  
@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
  *  
  * GITHUB:https://github.com/fdisk123
  * 
- * @author ZHUO.BIN.LI
+ * @author CHEUK.BIN.LI
  * 
  * @see 方法拦截
  *
