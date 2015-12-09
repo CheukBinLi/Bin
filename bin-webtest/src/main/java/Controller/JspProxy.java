@@ -52,6 +52,9 @@ public class JspProxy {
 		//		String[] values = contentType.get(0).split(";");
 		//		values = values[1].split("=");
 		//		System.err.println(values[1]);
+		
+		//meta
+		
 		String encode = "UTF-8";
 		Matcher matcher;
 		if (null != contentType && contentType.size() > 0) {
