@@ -4,11 +4,12 @@
 <body>
 	<h2>网页代理</h2>
 	<form action="proxy.do" method="post">
-		<input type="text" placeholder="www.baidu.com" name="url">
-		 <input type="button" value="浏览" onclick="xxx();">
+		<input type="text" placeholder="www.baidu.com" name="url"> <input
+			type="button" value="浏览" onclick="xxx();">
 	</form>
 </body>
 </html>
+<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
 <script>
 	function xxx() {
 		var form = document.getElementsByTagName("form")[0];

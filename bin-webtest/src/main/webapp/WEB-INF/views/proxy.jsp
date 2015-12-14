@@ -2,31 +2,22 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page isELIgnored="false"%>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-${data.toString()}
-</html>
+${data}
+<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
 <script>
-	//alert("${url}");
-	//var body = document.getElementsByTagName("body");
-	//var x = '<div style="position: relative; z-index: 10010; height: 200px; display: block;">内容:</div><div>';
-	//body.insertAdjacentHTML('beforebegin', x);
-	//alert(123);
-	var as = document.getElementsByTagName("a");
-	alert(as.length);
-	alert(as[0].getAttribute('href'));
-	as[0].setAttribute('href', '123');
-	alert(as[0].getAttribute('href'));
-	for (var a = 0; a < as.length; a++) {
-		//if(as[a].getAttribute('href').indexOf("http://")>0) 
-		as[a].setAttribute('href','http://localhost:8080/bin-webtest/proxy.do?url='+as[a].getAttribute('href'));
-		//else
-		//	as[a].setAttribute('href','http://localhost:8080/bin-webtest/proxy.do?url=http://${url}'+as[a].getAttribute('href'));
+	var src = $("a");
+	for (var a = 0; a < src.length; a++) {
+		var x = $(src[a]);
+		var h = x.attr("href") + "";
+		var aSrc = x.attr("href");
+		if (h.indexOf("http") >= 0)
+			x.attr("href", 'http://192.168.168.219:8080/bin-webtest/proxy.do?url=' + aSrc);
+		//alert(x.attr("href"));
+		//alert(aSrc);
+		//break;
+		else {
+			x.attr("href", 'http://192.168.168.219:8080/bin-webtest/proxy.do?url=http://${url}/' +aSrc);
+		}
 
-		//console.log("xxxxxxxxxxxx:"+as[a].getAttribute('href'));
 	}
-	//alert(as.length);
 </script>
