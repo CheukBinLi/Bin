@@ -3,7 +3,6 @@ package com.cheuks.bin.bean.application;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Map;
 
 import com.cheuks.bin.bean.classprocessing.AbstractClassProcessingFactory;
 import com.cheuks.bin.bean.classprocessing.CreateClassFactory;
@@ -16,7 +15,6 @@ import com.cheuks.bin.bean.xml.XmlHandler;
 
 import javassist.ClassClassPath;
 import javassist.ClassPool;
-import javassist.CtClass;
 
 public class DefaultApplicationContext extends BeanFactory implements ApplicationContext {
 
@@ -98,7 +96,7 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 		//		new BeanFactory().oo();
 		//bean
 		//intercept
-		Map<String, CtClass> beans;
+		//		Map<String, CtClass> beans;
 		AbstractClassProcessingFactory<CreateClassInfo> xmlX = new DefaultClassProcessingXmlFactory();
 		AbstractClassProcessingFactory<CreateClassInfo> scanToPack = new DefaultClassProcessingFactory();
 		//xml

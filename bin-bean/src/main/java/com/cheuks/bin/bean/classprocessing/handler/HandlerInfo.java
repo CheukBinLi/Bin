@@ -64,6 +64,7 @@ public class HandlerInfo {
 		this.imports = imports;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T getAdditional() {
 		return (T) additional;
 	}
@@ -72,6 +73,7 @@ public class HandlerInfo {
 		this.additional = additional;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T getNewClazz() {
 		return (T) newClazz;
 	}

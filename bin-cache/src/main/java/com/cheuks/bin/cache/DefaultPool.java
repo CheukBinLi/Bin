@@ -3,6 +3,7 @@ package com.cheuks.bin.cache;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings({ "unused", "unchecked" })
 public class DefaultPool implements Pool<Object> {
 
 	public static final String NORNAL_BEAN = "NORNAL_BEAN";
