@@ -11,7 +11,8 @@ public class Client_v1 {
 	public static void main(String[] args) throws IOException {
 
 		Socket s = new Socket();
-		s.connect(new InetSocketAddress("127.0.0.1", 10086));
+		// s.connect(new InetSocketAddress("127.0.0.1", 10086));
+		s.connect(new InetSocketAddress("127.0.0.1", 10088));
 
 		OutputStream out = s.getOutputStream();
 		out.write(ByteBufferUtil.getBuffer("客户端：1-你好吗".getBytes()).array());
