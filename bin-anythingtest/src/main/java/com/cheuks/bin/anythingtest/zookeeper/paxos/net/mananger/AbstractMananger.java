@@ -5,11 +5,11 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
 
 public class AbstractMananger extends Thread {
 
@@ -31,7 +31,7 @@ public class AbstractMananger extends Thread {
 				HeartBeat.put(((SocketChannel) o).getRemoteAddress().toString(), key);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.getDefault().error(this.getClass(), e);
 		}
 	}
 }

@@ -84,7 +84,7 @@ public class ByteBufferUtil {
 		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
 		byteBuffer.flip();
-		//		System.err.println(new String(byteBuffer.array()));
+		System.err.println(new String(byteBuffer.array()));
 		return byteBuffer;
 	}
 
@@ -93,7 +93,8 @@ public class ByteBufferUtil {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
 		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		//		System.out.println("byte[] getBytes(String str)" + new String(byteBuffer.array()));
+		// System.out.println("byte[] getBytes(String str)" + new
+		// String(byteBuffer.array()));
 		byteBuffer.flip();
 		return byteBuffer.array();
 	}
@@ -102,7 +103,8 @@ public class ByteBufferUtil {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
 		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		// System.out.println("byte[] getBytes(byte[] bytes)" + new String(byteBuffer.array()));
+		// System.out.println("byte[] getBytes(byte[] bytes)" + new
+		// String(byteBuffer.array()));
 		byteBuffer.flip();
 		return byteBuffer.array();
 	}

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
 
 public class ReleaseMananger extends AbstractMananger implements Runnable {
 
@@ -26,7 +27,7 @@ public class ReleaseMananger extends AbstractMananger implements Runnable {
 		SelectionKey key;
 		ConnectionMsg msg;
 		long now;
-		System.err.println("连接器启动");
+		// System.err.println("连接器启动");
 		while (!Thread.interrupted()) {
 			now = System.currentTimeMillis();
 			it = HeartBeat.entrySet().iterator();
@@ -41,7 +42,7 @@ public class ReleaseMananger extends AbstractMananger implements Runnable {
 								key.cancel();
 								key.channel().close();
 							} catch (IOException e) {
-								e.printStackTrace();
+								Logger.getDefault().error(this.getClass(), e);
 							} finally {
 								HeartBeat.remove(en.getKey());
 							}
@@ -53,7 +54,7 @@ public class ReleaseMananger extends AbstractMananger implements Runnable {
 			try {
 				Thread.sleep((long) (interval * 0.3));
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Logger.getDefault().error(this.getClass(), e);
 				break;
 			}
 		}
