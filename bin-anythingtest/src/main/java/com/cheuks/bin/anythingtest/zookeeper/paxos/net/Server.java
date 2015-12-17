@@ -13,8 +13,6 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.cheuks.bin.anythingtest.nio.ByteBufferUtil;
 
@@ -57,24 +55,18 @@ public class Server extends Thread {
 	}
 
 	private void select() throws Exception {
-		selector.select();
+		selector.select(10);
 		Iterator<SelectionKey> it = selector.selectedKeys().iterator();
 		while (it.hasNext()) {
 			selectionKey = it.next();
 			it.remove();
 			if (!selectionKey.isValid())
 				continue;
-			// if (!connectionQueue.contains(selectionKey) &&
-			// selectionKey.isAcceptable()) {
-			// connectionQueue.add(selectionKey);
-			// executorService.execute(new Accept(selectionKey));
-			// } else if (!RWQueue.contains(selectionKey)) {
-			// RWQueue.add(selectionKey);
-			// executorService.execute(new ReadWrite(selectionKey));
-			// }
-			selectionKey.cancel();
-			selector.selectNow();
-			executorService.execute(new Accept(selector, selectionKey));
+			if (null == selectionKey.attachment())
+				selectionKey.attach(new ConnectionMsg(selectionKey));
+			if (((ConnectionMsg) selectionKey.attachment()).isSelectable(true)) {
+				executorService.execute(new Accept(selectionKey));
+			}
 
 		}
 	}
@@ -102,39 +94,38 @@ public class Server extends Thread {
 
 	static class Accept implements Runnable {
 
-		private final SelectionKey key;
+		private SelectionKey key;
 		private SocketChannel client;
-		private Selector selector;
+		private ConnectionMsg msg;
 
-		public Accept(Selector selector, SelectionKey key) {
+		public Accept(SelectionKey key) {
 			super();
-			this.selector = selector;
 			this.key = key;
+			msg = (ConnectionMsg) key.attachment();
 		}
 
 		public void run() {
 			try {
 				// System.err.println(key);
-				// if (key.isAcceptable()) {
-				System.err.println("连接");
-				client = ((ServerSocketChannel) key.channel()).accept();
-				System.err.println("连接");
-				client.configureBlocking(false);
-				System.err.println("连接");
-				client.finishConnect();
-				System.err.println("连接");
-				client.register(selector, SelectionKey.OP_READ);
-				System.err.println("连接111");
-				key.selector().wakeup();
-				System.err.println("连接111");
-				// }
-				if (key.isReadable()) {
+				if (key.isAcceptable()) {
+					System.err.println("连接1");
+					client = ((ServerSocketChannel) key.channel()).accept();
+					System.err.println("连接2");
+					client.configureBlocking(false);
+					System.err.println("连接3");
+					client.finishConnect();
+					System.err.println("连接4");
+					key = client.register(key.selector(), SelectionKey.OP_WRITE, msg.enableSelectable());
+					System.err.println("连接5");
+				}
+				else if (key.isReadable()) {
 					client = (SocketChannel) key.channel();
 					ByteArrayOutputStream out = ByteBufferUtil.getByte(client);
 					System.err.println(new String(out.toByteArray()));
 					client.register(key.selector(), SelectionKey.OP_WRITE);
 					System.err.println("写");
-				} else if (key.isWritable()) {
+				}
+				else if (key.isWritable()) {
 					client = (SocketChannel) key.channel();
 					client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
 					key.cancel();
@@ -169,7 +160,8 @@ public class Server extends Thread {
 					System.err.println(new String(out.toByteArray()));
 					client.register(selector, SelectionKey.OP_WRITE);
 					System.err.println("写");
-				} else if (key.isWritable()) {
+				}
+				else if (key.isWritable()) {
 					client = (SocketChannel) key.channel();
 					client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
 					key.cancel();
