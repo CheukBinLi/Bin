@@ -3,10 +3,12 @@ package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
-import java.util.Map.Entry;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Release;
 
 public class ReleaseMananger extends AbstractMananger implements Runnable {
 
@@ -19,37 +21,33 @@ public class ReleaseMananger extends AbstractMananger implements Runnable {
 		this.interval = interval;
 	}
 
-	private long interval = 60000;
+	private long interval = 2000;
 
 	public void run() {
-		Iterator<Entry<String, SelectionKey>> it;
-		Entry<String, SelectionKey> en;
+		Iterator<Release> it;
+		Release release;
 		SelectionKey key;
 		ConnectionMsg msg;
 		long now;
 		// System.err.println("连接器启动");
 		while (!Thread.interrupted()) {
+			it = HeartBeat.iterator();
 			now = System.currentTimeMillis();
-			it = HeartBeat.entrySet().iterator();
 			while (it.hasNext()) {
-				if (lock.tryLock()) {
+				release = it.next();
+				key = release.getKey();
+				msg = release.getMsg();
+				System.err.print(release.getName());
+				if (msg.isSelectable() && msg.isConnectionTimeOut(now, this.interval))
 					try {
-						en = it.next();
-						key = en.getValue();
-						msg = (ConnectionMsg) key.attachment();
-						if (msg.isSelectable() && msg.isConnectionTimeOut(now, interval))
-							try {
-								key.cancel();
-								key.channel().close();
-							} catch (IOException e) {
-								Logger.getDefault().error(this.getClass(), e);
-							} finally {
-								HeartBeat.remove(en.getKey());
-							}
+						key.cancel();
+						key.channel().close();
+					} catch (IOException e) {
+						Logger.getDefault().info(this.getClass(), e);
 					} finally {
-						lock.unlock();
+						HeartBeat.remove(release);
+						Logger.getDefault().info(getClass(), "结束" + release.getName());
 					}
-				}
 			}
 			try {
 				Thread.sleep((long) (interval * 0.3));

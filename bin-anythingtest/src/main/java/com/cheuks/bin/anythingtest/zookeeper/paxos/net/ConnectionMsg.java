@@ -1,10 +1,18 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net;
 
 import java.nio.channels.SelectionKey;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ConnectionMsg {
+
+	public ConnectionMsg() {
+		super();
+	}
+
+	final static SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 
 	protected Long getDateTime() {
 		return System.currentTimeMillis();
@@ -20,6 +28,7 @@ public class ConnectionMsg {
 	private AtomicLong connectionTime = new AtomicLong(this.getDateTime());
 
 	private SelectionKey key;
+	private String name;
 
 	public boolean isSelectable() {
 		return selectable.get() && key.isValid();
@@ -38,8 +47,8 @@ public class ConnectionMsg {
 		return connectionTime.get();
 	}
 
-	public ConnectionMsg updateConnectionTime() {
-		connectionTime.set(this.getDateTime());
+	public synchronized ConnectionMsg updateConnectionTime() {
+		this.connectionTime.set(getDateTime());
 		return this;
 	}
 
@@ -49,7 +58,8 @@ public class ConnectionMsg {
 	 * @param timeOutInterval 超时间隔
 	 * @return
 	 */
-	public boolean isConnectionTimeOut(final long now, final long timeOutInterval) {
+	public synchronized boolean isConnectionTimeOut(long now, long timeOutInterval) {
+		System.out.println("-------" + format.format(new Date(now)) + "---------" + format.format(new Date(this.connectionTime.get())) + "      result:" + (now - this.connectionTime.get() - timeOutInterval));
 		return now - this.connectionTime.get() > timeOutInterval;
 	}
 
@@ -73,4 +83,12 @@ public class ConnectionMsg {
 		this.key = key;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public ConnectionMsg setName(String name) {
+		this.name = name;
+		return this;
+	}
 }

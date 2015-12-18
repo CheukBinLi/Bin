@@ -14,7 +14,7 @@ import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.WritererMananger
 public class Server_v1_2 extends AbstractMananger {
 
 	public static void main(String[] args) {
-		Logger.getDefault().setErrorWrite(false);
+		Logger.getDefault().setErrorWrite(false).setInfoWrite(true);
 		ExecutorService mananger = Executors.newFixedThreadPool(10);
 		mananger.execute(new SelectorMananger(10086, 10087, 10088, 10089));
 		mananger.execute(new ReleaseMananger(20000));

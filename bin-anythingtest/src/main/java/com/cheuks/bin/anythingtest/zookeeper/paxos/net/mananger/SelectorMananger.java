@@ -7,7 +7,6 @@ import java.nio.channels.ServerSocketChannel;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
@@ -16,7 +15,6 @@ public class SelectorMananger extends AbstractMananger {
 	protected Selector selector;
 	protected ServerSocketChannel serverSocketChannel;
 	protected Set<ServerSocketChannel> serverSocketChannels = new HashSet<ServerSocketChannel>();
-	private ReentrantLock lock = new ReentrantLock();
 
 	public SelectorMananger(int... port) {
 		super();
@@ -60,7 +58,7 @@ public class SelectorMananger extends AbstractMananger {
 			if (((ConnectionMsg) key.attachment()).isSelectable(true)) {
 				ScorterQueue.offer(key);
 			}
-			Thread.sleep(sleep);
+			Thread.sleep(pollWait);
 		}
 	}
 }

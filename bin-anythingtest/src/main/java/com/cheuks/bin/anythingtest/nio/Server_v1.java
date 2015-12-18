@@ -47,7 +47,7 @@ public class Server_v1 implements Runnable {
 						else if (key.isReadable()) {
 							client = (SocketChannel) key.channel();
 							ByteArrayOutputStream out = ByteBufferUtil.getByte(client);
-							System.err.println(new String(out.toByteArray()));
+							//							System.err.println(new String(out.toByteArray()));
 							client.register(key.selector(), SelectionKey.OP_WRITE);
 						}
 						else if (key.isWritable()) {

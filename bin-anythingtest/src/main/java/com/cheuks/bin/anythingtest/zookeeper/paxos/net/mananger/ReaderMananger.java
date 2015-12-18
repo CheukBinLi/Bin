@@ -1,8 +1,11 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.TimeUnit;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
@@ -14,28 +17,30 @@ public class ReaderMananger extends AbstractMananger {
 	public void run() {
 		// System.err.println("接收器启动");
 		while (!Thread.interrupted()) {
-//			try {
-//				Thread.sleep(sleep);
-//			} catch (InterruptedException e1) {
-//				e1.printStackTrace();
-//			}
-			if (null != (key = ReaderQueue.poll()) && key.isValid()) {
-				msg = (ConnectionMsg) key.attachment();
-				try {
-					channel = (SocketChannel) key.channel();
-					if (!channel.isConnected()) {
-						key.cancel();
-						continue;
+			//			try {
+			//				Thread.sleep(sleep);
+			//			} catch (InterruptedException e1) {
+			//				e1.printStackTrace();
+			//			}
+			try {
+				if (null != (key = ReaderQueue.poll(pollWait, TimeUnit.MICROSECONDS)) && key.isValid()) {
+					msg = (ConnectionMsg) key.attachment();
+					try {
+						channel = (SocketChannel) key.channel();
+						if (!channel.isConnected()) {
+							key.cancel();
+							continue;
+						}
+						ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
+						//						System.err.println(new String(out.toByteArray()));
+						key = channel.register(key.selector(), SelectionKey.OP_WRITE, msg.updateConnectionTime().enableSelectable());
+						// key.
+					} finally {
 					}
-					ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
-					System.err.println(new String(out.toByteArray()));
-					key = channel.register(key.selector(), SelectionKey.OP_WRITE, msg);
-					// key.
-				} catch (Exception e) {
-					Logger.getDefault().error(this.getClass(), e);
-				} finally {
-					msg.updateConnectionTime().enableSelectable();
 				}
+			} catch (Exception e) {
+				key.cancel();
+				Logger.getDefault().info(getClass(), e);
 			}
 		}
 	}

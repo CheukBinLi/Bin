@@ -1,5 +1,7 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
+import java.util.concurrent.TimeUnit;
+
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
 
 /***
@@ -27,24 +29,28 @@ public class ScorterMananger extends AbstractMananger {
 		// System.err.println("分拣器启动");
 		while (!Thread.interrupted()) {
 			try {
-				Thread.sleep(sleep);
-			} catch (InterruptedException e1) {
-				Logger.getDefault().error(this.getClass(), e1);
-			}
-			if (null != (key = ScorterQueue.poll())) {
-				if (key.isValid()) {
-					if (key.isAcceptable()) {
-						AcceptQueue.offer(key);
-					} else if (key.isReadable()) {
-						ReaderQueue.offer(key);
-						addHeartBeat(key);
-					} else if (key.isWritable()) {
-						WriterQueue.offer(key);
-						addHeartBeat(key);
+				if (null != (key = ScorterQueue.poll(pollWait, TimeUnit.MICROSECONDS))) {
+					if (key.isValid()) {
+						if (key.isAcceptable()) {
+							AcceptQueue.offer(key);
+						}
+						else if (key.isReadable() || key.isWritable()) {
+							if (key.isReadable()) {
+								ReaderQueue.offer(key);
+								addHeartBeat(key);
+							}
+							else if (key.isWritable()) {
+								WriterQueue.offer(key);
+								addHeartBeat(key);
+							}
+						}
 					}
-				} else {
-					key.cancel();
+					else {
+						key.cancel();
+					}
 				}
+			} catch (InterruptedException e) {
+				Logger.getDefault().error(this.getClass(), e);
 			}
 		}
 	}
