@@ -18,6 +18,15 @@ public abstract class AbstractControlThread extends Thread {
 	protected final static BlockingDeque<Attachment> ATTACHMENT_LIST = new LinkedBlockingDeque<Attachment>();
 	protected final static Object SyncAttachmentThread = new Object();
 
+	protected final static void clearAll() {
+		ACCEPT_QUEUE.clear();
+		READER_QUEUE.clear();
+		WRITER_QUEUE.clear();
+		RELEASE_Queue.clear();
+		RELEASE_LIST.clear();
+		RELEASE_LIST.clear();
+	}
+
 	protected static final int ACCEPT = 1, READER = 2, WRITER = 4, RELEASE = 8;
 
 	protected SelectionKey key;

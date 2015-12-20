@@ -36,6 +36,7 @@ public class SelectorThread extends AbstractControlThread {
 
 	void init() {
 		try {
+			clearAll();
 			selector = Selector.open();
 			for (int i = 0; i < port.length; i++) {
 				SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
@@ -52,7 +53,6 @@ public class SelectorThread extends AbstractControlThread {
 	@Override
 	public void run() {
 		init();
-		System.err.println("侦听");
 		while (!Thread.interrupted())
 			try {
 				select(this.interval);
