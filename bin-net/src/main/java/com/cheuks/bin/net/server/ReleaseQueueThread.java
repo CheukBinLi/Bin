@@ -30,8 +30,7 @@ public class ReleaseQueueThread extends AbstractControlThread {
 				attachment = release.getAttachment();
 
 				if (!attachment.isLock() && attachment.isConnectionTimeOut(now, this.timeOut)) {
-					if (releaseConnection(key, release))
-						continue;
+					releaseConnection(key, release);
 				}
 			}
 			try {
