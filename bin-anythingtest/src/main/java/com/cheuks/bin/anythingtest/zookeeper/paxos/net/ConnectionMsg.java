@@ -1,18 +1,17 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net;
 
+import java.io.IOException;
 import java.nio.channels.SelectionKey;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+import java.nio.channels.SocketChannel;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ConnectionMsg {
 
-	public ConnectionMsg() {
-		super();
-	}
-
-	final static SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+	// final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd
+	// HH:mm:ss");
 
 	protected Long getDateTime() {
 		return System.currentTimeMillis();
@@ -21,20 +20,24 @@ public class ConnectionMsg {
 	/**
 	 * 是否锁定
 	 */
-	private AtomicBoolean selectable = new AtomicBoolean(true);
+	private final AtomicBoolean selectable = new AtomicBoolean(true);
 	/***
 	 * 心跳时间
 	 */
-	private AtomicLong connectionTime = new AtomicLong(this.getDateTime());
+	private final AtomicLong connectionTime = new AtomicLong(this.getDateTime());
+
+	private final AtomicInteger action = new AtomicInteger(0);
 
 	private SelectionKey key;
+	private String id;
 	private String name;
+	private Integer no;
 
 	public boolean isSelectable() {
 		return selectable.get() && key.isValid();
 	}
 
-	public boolean isSelectable(boolean disable) {
+	public synchronized boolean isSelectable(final boolean disable) {
 		try {
 			return selectable.get() && key.isValid();
 		} finally {
@@ -47,48 +50,89 @@ public class ConnectionMsg {
 		return connectionTime.get();
 	}
 
-	public synchronized ConnectionMsg updateConnectionTime() {
+	public ConnectionMsg updateConnectionTime() {
 		this.connectionTime.set(getDateTime());
 		return this;
 	}
 
 	/***
 	 * 
-	 * @param now 当前时间
-	 * @param timeOutInterval 超时间隔
+	 * @param now
+	 *            当前时间
+	 * @param timeOutInterval
+	 *            超时间隔
 	 * @return
 	 */
-	public synchronized boolean isConnectionTimeOut(long now, long timeOutInterval) {
-		System.out.println("-------" + format.format(new Date(now)) + "---------" + format.format(new Date(this.connectionTime.get())) + "      result:" + (now - this.connectionTime.get() - timeOutInterval));
-		return now - this.connectionTime.get() > timeOutInterval;
+	public synchronized boolean isConnectionTimeOut(final long now, final long timeOutInterval) {
+		return now - this.getConnectionTime() > timeOutInterval;
 	}
 
-	public ConnectionMsg setSelectable(AtomicBoolean selectable) {
-		this.selectable = selectable;
-		return this;
-	}
-
-	public ConnectionMsg disableSelectable() {
+	public synchronized ConnectionMsg disableSelectable() {
 		this.selectable.set(false);
 		return this;
 	}
 
-	public ConnectionMsg enableSelectable() {
+	public synchronized ConnectionMsg enableSelectable() {
 		this.selectable.set(true);
 		return this;
 	}
 
 	public ConnectionMsg(SelectionKey key) {
 		super();
+		// System.err.println("流言");
 		this.key = key;
+		if (key.channel() instanceof SocketChannel)
+			try {
+				this.name = ((SocketChannel) key.channel()).getRemoteAddress().toString();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public synchronized ConnectionMsg generateId() {
+		this.id = UUID.randomUUID().toString();
+		return this;
+	}
+
 	public ConnectionMsg setName(String name) {
 		this.name = name;
 		return this;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public int getAction() {
+		return action.get();
+	}
+
+	public boolean getAndSetAction(final int currentAction, final int nextAction) {
+		synchronized (this.action) {
+			if (currentAction == this.action.get()) {
+				this.action.set(nextAction);
+				return true;
+			}
+			return false;
+		}
+	}
+
+	public ConnectionMsg setAction(int action) {
+		this.action.set(action);
+		return this;
+	}
+
+	public Integer getNo() {
+		return no;
+	}
+
+	public ConnectionMsg setNo(Integer no) {
+		this.no = no;
+		return this;
+	}
+
 }

@@ -3,8 +3,6 @@ package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeUnit;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
@@ -19,9 +17,17 @@ public class ReleaseMananger extends AbstractMananger implements Runnable {
 	public ReleaseMananger(long interval) {
 		super();
 		this.interval = interval;
+		this.longInterval = this.interval * 10;
+	}
+
+	public ReleaseMananger(long interval, long longInterval) {
+		super();
+		this.interval = interval;
+		this.longInterval = longInterval;
 	}
 
 	private long interval = 2000;
+	private long longInterval = interval * 10;
 
 	public void run() {
 		Iterator<Release> it;
@@ -33,21 +39,23 @@ public class ReleaseMananger extends AbstractMananger implements Runnable {
 		while (!Thread.interrupted()) {
 			it = HeartBeat.iterator();
 			now = System.currentTimeMillis();
+			// System.out.println(HeartBeat.size());
 			while (it.hasNext()) {
 				release = it.next();
 				key = release.getKey();
 				msg = release.getMsg();
-				System.err.print(release.getName());
-				if (msg.isSelectable() && msg.isConnectionTimeOut(now, this.interval))
-					try {
-						key.cancel();
-						key.channel().close();
-					} catch (IOException e) {
-						Logger.getDefault().info(this.getClass(), e);
-					} finally {
-						HeartBeat.remove(release);
-						Logger.getDefault().info(getClass(), "结束" + release.getName());
-					}
+
+				// System.out.print(release.getName() + " " + msg.isSelectable()
+				// + " ");
+
+				if (msg.isSelectable() && msg.isConnectionTimeOut(now, this.interval)) {
+					if (releaseConnection(key, release))
+						continue;
+				} else if (msg.isConnectionTimeOut(now, this.longInterval)) {
+					if (releaseConnection(key, release))
+						continue;
+				}
+				// System.out.println(msg.isSelectable());
 			}
 			try {
 				Thread.sleep((long) (interval * 0.3));
@@ -56,6 +64,24 @@ public class ReleaseMananger extends AbstractMananger implements Runnable {
 				break;
 			}
 		}
+	}
+
+	private boolean releaseConnection(SelectionKey key, Release release) {
+		try {
+			if (null != key) {
+				key.cancel();
+				key.channel().close();
+			}
+			return true;
+		} catch (IOException e) {
+			Logger.getDefault().info(this.getClass(), e);
+		} finally {
+			HeartBeat.remove(release);
+			msg = getConnectionMsg(key);
+			// Logger.getDefault().info(getClass(), msg.getId() + "结束" +
+			// release.getName());
+		}
+		return false;
 	}
 
 }

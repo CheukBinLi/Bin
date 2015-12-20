@@ -7,6 +7,9 @@ import java.nio.channels.ServerSocketChannel;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.zookeeper.server.FinalRequestProcessor;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
@@ -22,6 +25,7 @@ public class SelectorMananger extends AbstractMananger {
 			selector = Selector.open();
 			for (int i = 0; i < port.length; i++) {
 				serverSocketChannels.add(serverSocketChannel = ServerSocketChannel.open());
+				serverSocketChannel.socket().setReuseAddress(true);
 				serverSocketChannel.bind(new InetSocketAddress(port[i]));
 				serverSocketChannel.configureBlocking(false);
 				serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -33,32 +37,44 @@ public class SelectorMananger extends AbstractMananger {
 
 	@Override
 	public void run() {
-		// System.err.println("筛选器启动");
+		System.err.println("筛选器启动");
 		while (!Thread.interrupted())
 			try {
 				select();
+				// Thread.sleep(10);
 			} catch (Exception e) {
 				Logger.getDefault().error(this.getClass(), e);
 			}
 	}
 
+	private AtomicInteger x = new AtomicInteger(0);
+
 	private void select() throws Exception {
-		selector.select(5);
-		Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+		selector.select(20);
+		Set<SelectionKey> keys = selector.selectedKeys();
+		Iterator<SelectionKey> it = keys.iterator();
 		while (it.hasNext()) {
 			key = it.next();
 			it.remove();
 			if (!key.isValid())
 				continue;
-			if (null == key.attachment()) {
-				key.attach(new ConnectionMsg(key).disableSelectable());
-				AcceptQueue.offer(key);
+			else if (key.isAcceptable()) {
+				msg = new ConnectionMsg(key).setAction(1).setNo(x.addAndGet(1)).generateId();
+				channel = ((ServerSocketChannel) key.channel()).accept();
+				channel.configureBlocking(false);
+				channel.finishConnect();
+				key = channel.register(key.selector(), SelectionKey.OP_READ, msg);
+				addHeartBeat(key, msg);
+				// System.err.println(x.addAndGet(1));
+				continue;
+			} else if (((ConnectionMsg) key.attachment()).isSelectable(true)) {
+				if (key.isReadable() && getAndSetAction(key, 1, 2)) {
+					doTry(ReadDo, ReaderQueue, key);
+				} else if (key.isWritable() && getAndSetAction(key, 2, 1)) {
+					doTry(WriteDo, WriterQueue, key);
+				}
 				continue;
 			}
-			if (((ConnectionMsg) key.attachment()).isSelectable(true)) {
-				ScorterQueue.offer(key);
-			}
-			Thread.sleep(pollWait);
 		}
 	}
 }

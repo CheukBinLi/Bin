@@ -3,7 +3,6 @@ package com.cheuks.bin.anythingtest.nio;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -11,6 +10,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executors;
+
+import com.cheuks.bin.net.util.ByteBufferUtil;
 
 public class Server_v1 implements Runnable {
 
@@ -43,14 +44,13 @@ public class Server_v1 implements Runnable {
 							client.configureBlocking(false);
 							client.finishConnect();
 							client.register(key.selector(), SelectionKey.OP_READ);
-						}
-						else if (key.isReadable()) {
+						} else if (key.isReadable()) {
 							client = (SocketChannel) key.channel();
 							ByteArrayOutputStream out = ByteBufferUtil.getByte(client);
-							//							System.err.println(new String(out.toByteArray()));
+							// System.err.println(new
+							// String(out.toByteArray()));
 							client.register(key.selector(), SelectionKey.OP_WRITE);
-						}
-						else if (key.isWritable()) {
+						} else if (key.isWritable()) {
 							client = (SocketChannel) key.channel();
 							client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
 							key.cancel();

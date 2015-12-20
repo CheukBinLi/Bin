@@ -21,11 +21,14 @@ public class AcceptMananger extends AbstractMananger {
 					msg = (ConnectionMsg) key.attachment();
 					try {
 						channel = ((ServerSocketChannel) key.channel()).accept();
+						if (null == channel)
+							continue;
 						channel.configureBlocking(false);
 						channel.finishConnect();
-						key = channel.register(key.selector(), SelectionKey.OP_READ, msg.enableSelectable());
+						key = channel.register(key.selector(), SelectionKey.OP_READ, msg.generateId().updateConnectionTime().enableSelectable());
 						// key.
 					} finally {
+						// addHeartBeat(key, msg.enableSelectable());
 					}
 				}
 			} catch (Exception e) {

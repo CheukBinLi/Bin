@@ -1,5 +1,8 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
+import java.nio.channels.SelectionKey;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
@@ -30,22 +33,25 @@ public class ScorterMananger extends AbstractMananger {
 		while (!Thread.interrupted()) {
 			try {
 				if (null != (key = ScorterQueue.poll(pollWait, TimeUnit.MICROSECONDS))) {
-					if (key.isValid()) {
-						if (key.isAcceptable()) {
-							AcceptQueue.offer(key);
+					if (key.isValid() && null != key.channel()) {
+						/*
+						 * if (key.isAcceptable()) { AcceptQueue.offer(key); }
+						 * else
+						 */if (key.isReadable()) {
+							doTry(ReadDo, ReaderQueue, key);
+						} else if (key.isWritable()) {
+							doTry(WriteDo, WriterQueue, key);
 						}
-						else if (key.isReadable() || key.isWritable()) {
-							if (key.isReadable()) {
-								ReaderQueue.offer(key);
-								addHeartBeat(key);
-							}
-							else if (key.isWritable()) {
-								WriterQueue.offer(key);
-								addHeartBeat(key);
-							}
-						}
-					}
-					else {
+						// else if (key.isConnectable()) {}
+						// try {
+						// System.err.println("分拣：" + new
+						// Release(key).getMsg().getId() + (key.isWritable() ?
+						// ":写" : key.isReadable() ? "读" : "x") + " " +
+						// key.interestOps());
+						// } catch (IOException e) {
+						// e.printStackTrace();
+						// }
+					} else {
 						key.cancel();
 					}
 				}
