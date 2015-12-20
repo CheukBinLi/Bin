@@ -39,14 +39,14 @@ public class ByteBufferUtil {
 		formatChar = "%0" + size + "d";
 	}
 
-	private static final byte[] get(ScatteringByteChannel scatteringByteChannel, int size) throws IOException {
+	private static final byte[] get(ScatteringByteChannel scatteringByteChannel, int size) throws IOException, NumberFormatException {
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		scatteringByteChannel.read(buffer);
 		buffer.flip();
 		return buffer.array();
 	}
 
-	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) throws IOException {
+	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) throws IOException, NumberFormatException {
 		ByteBuffer buffer = ByteBuffer.allocate(512);
 		ByteArrayOutputStream out = null;
 		// scatteringByteChannel.read(buffer, 0, LENGTH_WAY);
@@ -68,7 +68,7 @@ public class ByteBufferUtil {
 		return out;
 	}
 
-	public static final ByteArrayOutputStream getByte(InputStream inputStream) throws IOException {
+	public static final ByteArrayOutputStream getByte(InputStream inputStream) throws IOException, NumberFormatException {
 		byte[] buffer = new byte[512];
 		byte[] lenByte = new byte[LENGTH_WAY];
 		inputStream.read(lenByte);
@@ -88,7 +88,7 @@ public class ByteBufferUtil {
 		return out;
 	}
 
-	public static final ByteBuffer getBuffer(InputStream in, int size) throws IOException {
+	public static final ByteBuffer getBuffer(InputStream in, int size) throws IOException, NumberFormatException {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(size + LENGTH_WAY);
 		byte[] buff = new byte[512];
 		int len = -1;
@@ -100,12 +100,12 @@ public class ByteBufferUtil {
 		return byteBuffer;
 	}
 
-	public static final ByteBuffer getBuffer(byte[] bytes) throws IOException {
+	public static final ByteBuffer getBuffer(byte[] bytes) throws IOException, NumberFormatException {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
 		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
 		byteBuffer.flip();
-		//		System.err.println(new String(byteBuffer.array()));
+		// System.err.println(new String(byteBuffer.array()));
 		return byteBuffer;
 	}
 
@@ -113,15 +113,17 @@ public class ByteBufferUtil {
 		byte[] bytes = str.getBytes();
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		//		System.out.println("byte[] getBytes(String str)" + new String(byteBuffer.array()));
+		// System.out.println("byte[] getBytes(String str)" + new
+		// String(byteBuffer.array()));
 		byteBuffer.flip();
 		return byteBuffer.array();
 	}
 
-	public byte[] getBytes(byte[] bytes) throws IOException {
+	public byte[] getBytes(byte[] bytes) throws IOException, NumberFormatException {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		// System.out.println("byte[] getBytes(byte[] bytes)" + new String(byteBuffer.array()));
+		// System.out.println("byte[] getBytes(byte[] bytes)" + new
+		// String(byteBuffer.array()));
 		byteBuffer.flip();
 		return byteBuffer.array();
 	}
