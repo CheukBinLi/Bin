@@ -1,4 +1,4 @@
-package com.cheuks.bin.net.server;
+package com.cheuks.bin.net.server.niothread;
 
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
@@ -34,10 +34,12 @@ public abstract class AbstractControlThread extends Thread {
 	protected Attachment attachment;
 
 	public final Attachment getAddition(final SelectionKey key) {
-		Attachment attachment = null;
-		if (null != key.attachment())
-			attachment = (Attachment) key.attachment();
-		return attachment;
+		synchronized (key) {
+			Attachment attachment = null;
+			if (null != key.attachment())
+				attachment = (Attachment) key.attachment();
+			return attachment;
+		}
 	}
 
 	public Attachment createAttachment() {

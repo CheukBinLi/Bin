@@ -1,8 +1,10 @@
-package com.cheuks.bin.net.server;
+package com.cheuks.bin.net.server.niothread;
 
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -75,15 +77,15 @@ public class Attachment {
 
 	public Attachment lockAndSetActionType(int nextAction) {
 		synchronized (lock) {
-			lock.set(true);
-			actionType.set(nextAction);
+			lock();
+			setActionType(nextAction);
 			return this;
 		}
 	}
 
 	public Attachment updateHeartBeatAndSetActionType(int nextAction) {
 		synchronized (actionType) {
-			actionType.set(nextAction);
+			setActionType(nextAction);
 			updateHeartBeat();
 			return this;
 		}
@@ -91,7 +93,7 @@ public class Attachment {
 
 	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops) throws ClosedChannelException {
 		synchronized (lock) {
-			lock.set(false);
+			unLock();
 			updateHeartBeat();
 			return channel.register(key.selector(), ops, this);
 		}
@@ -99,11 +101,13 @@ public class Attachment {
 
 	public Attachment unLockAndUpdateHeartBeat() {
 		synchronized (lock) {
-			lock.set(false);
+			unLock();
 			updateHeartBeat();
 			return this;
 		}
 	}
+
+	private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	/***
 	 * 
@@ -114,6 +118,7 @@ public class Attachment {
 	 * @return
 	 */
 	public synchronized boolean isConnectionTimeOut(final long now, final long timeOutInterval) {
+		//		System.out.println(String.format("now:%s- this.getConnectionTime():%s > timeOutInterval", sdf.format(new Date(now)), sdf.format(new Date(this.getConnectionTime()))));
 		return now - this.getConnectionTime() > timeOutInterval;
 	}
 

@@ -4,12 +4,14 @@ import com.cheuks.bin.net.server.handler.ServiceHandler;
 
 public interface Server {
 
-	void start();
+	Server start() throws Throwable;
 
-	void stop();
+	Server stop() throws Throwable;
 
-	void addService(int... port);
+	Server setTimeOut(long timeOut) throws Throwable;
 
-	void addHandler(ServiceHandler... handler);
+	Server addService(Integer... port) throws Throwable;
+
+	Server addHandler(ServiceHandler... handler) throws Throwable;
 
 }

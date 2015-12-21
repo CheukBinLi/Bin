@@ -117,13 +117,15 @@ public class Server extends Thread {
 					System.err.println("连接4");
 					key = client.register(key.selector(), SelectionKey.OP_READ, msg.enableSelectable());
 					System.err.println("连接5");
-				} else if (key.isReadable()) {
+				}
+				else if (key.isReadable()) {
 					client = (SocketChannel) key.channel();
 					ByteArrayOutputStream out = ByteBufferUtil.getByte(client);
 					System.err.println(new String(out.toByteArray()));
 					client.register(key.selector(), SelectionKey.OP_WRITE);
 					System.err.println("写");
-				} else if (key.isWritable()) {
+				}
+				else if (key.isWritable()) {
 					client = (SocketChannel) key.channel();
 					client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
 					// key.cancel();
@@ -158,7 +160,8 @@ public class Server extends Thread {
 					System.err.println(new String(out.toByteArray()));
 					client.register(selector, SelectionKey.OP_WRITE);
 					System.err.println("写");
-				} else if (key.isWritable()) {
+				}
+				else if (key.isWritable()) {
 					client = (SocketChannel) key.channel();
 					client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
 					key.cancel();

@@ -1,4 +1,4 @@
-package com.cheuks.bin.net.server;
+package com.cheuks.bin.net.server.niothread;
 
 import com.cheuks.bin.util.Logger;
 

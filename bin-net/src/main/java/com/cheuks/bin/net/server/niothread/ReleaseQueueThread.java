@@ -1,7 +1,9 @@
-package com.cheuks.bin.net.server;
+package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import com.cheuks.bin.util.Logger;
@@ -15,6 +17,10 @@ public class ReleaseQueueThread extends AbstractControlThread {
 		this.timeOut = timeOut;
 	}
 
+	public void setTimeOut(long timeOut) {
+		this.timeOut = timeOut;
+	}
+
 	@Override
 	public void run() {
 		Iterator<Release> it;
@@ -24,11 +30,15 @@ public class ReleaseQueueThread extends AbstractControlThread {
 		while (!Thread.interrupted()) {
 			it = RELEASE_Queue.iterator();
 			now = System.currentTimeMillis();
+			System.err.println(new SimpleDateFormat("HH:mm:ss").format(new Date(now)));
+			System.err.println(RELEASE_Queue.size());
 			while (it.hasNext()) {
 				release = it.next();
 				key = release.getKey();
 				attachment = release.getAttachment();
-
+				//				System.out.println("a:" + attachment.isLock());
+				//				System.out.println("b :" + attachment.isConnectionTimeOut(now, this.timeOut));
+				//				if ((!attachment.isLock() && attachment.isConnectionTimeOut(now, this.timeOut)) || attachment.isConnectionTimeOut(now, this.longTimeOut)) {
 				if (!attachment.isLock() && attachment.isConnectionTimeOut(now, this.timeOut)) {
 					releaseConnection(key, release);
 				}
@@ -39,6 +49,7 @@ public class ReleaseQueueThread extends AbstractControlThread {
 				Logger.getDefault().error(this.getClass(), e);
 				// break;
 			}
+			it = null;
 		}
 	}
 

@@ -1,7 +1,8 @@
-package com.cheuks.bin.net.server;
+package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -15,8 +16,8 @@ public class SelectorThread extends AbstractControlThread {
 	// Map<Integer, Boolean> portInfo;
 	ServerSocketChannel serverSocketChannel;
 	Selector selector;
-	int[] port;
-	final long interval;
+	Integer[] port;
+	final Long interval;
 
 	@Override
 	public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
@@ -28,26 +29,32 @@ public class SelectorThread extends AbstractControlThread {
 		super.setUncaughtExceptionHandler(eh);
 	}
 
-	public SelectorThread(long selectInterval, int... port) {
+	public SelectorThread(Long selectInterval, Integer... port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
 	}
 
 	void init() {
+		clearAll();
 		try {
-			clearAll();
-			selector = Selector.open();
-			for (int i = 0; i < port.length; i++) {
-				SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
-				serverSocketChannel.socket().setReuseAddress(true);
-				serverSocketChannel.bind(new InetSocketAddress(port[i]));
-				serverSocketChannel.configureBlocking(false);
-				serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-			}
-		} catch (Exception e) {
+			addListener(this.port);
+		} catch (IOException e) {
 			Logger.getDefault().error(this.getClass(), e);
 		}
+	}
+
+	public synchronized void addListener(Integer... port) throws IOException {
+		if (null == selector)
+			selector = Selector.open();
+		for (int i = 0; i < port.length; i++) {
+			SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
+			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+			serverSocketChannel.bind(new InetSocketAddress(port[i]));
+			serverSocketChannel.configureBlocking(false);
+			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+		}
+		//		System.out.println(serverSocketChannel.supportedOptions());
 	}
 
 	@Override
@@ -78,10 +85,12 @@ public class SelectorThread extends AbstractControlThread {
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);
 				tryDo(RELEASE, key);
 				continue;
-			} else if (!getAddition(key).isLock()) {
+			}
+			else if (!getAddition(key).isLock()) {
 				if (key.isReadable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_READING, Attachment.AT_WRITING)) {
 					tryDo(READER, key);
-				} else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
+				}
+				else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
 					tryDo(WRITER, key);
 				}
 				continue;

@@ -1,4 +1,4 @@
-package com.cheuks.bin.net.server;
+package com.cheuks.bin.net.server.niothread;
 
 import java.util.UUID;
 
