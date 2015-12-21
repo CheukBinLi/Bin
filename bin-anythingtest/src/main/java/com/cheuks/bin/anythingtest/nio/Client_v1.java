@@ -42,144 +42,86 @@ public class Client_v1 {
 		ExecutorService r1 = Executors.newCachedThreadPool();
 		ExecutorService r2 = Executors.newCachedThreadPool();
 		ExecutorService r3 = Executors.newCachedThreadPool();
-		int i = 5;
-		String ip = "127.0.0.1";//192.168.168.219
+		ExecutorService r4 = Executors.newCachedThreadPool();
+		ExecutorService r5 = Executors.newCachedThreadPool();
+		ExecutorService r6 = Executors.newCachedThreadPool();
+		ExecutorService r7 = Executors.newCachedThreadPool();
+		ExecutorService r8 = Executors.newCachedThreadPool();
+		ExecutorService r9 = Executors.newCachedThreadPool();
+		int i = 500;
+		final StringBuffer ip = new StringBuffer("127.0.0.1");// 192.168.168.219
 		if (args.length == 2) {
-			ip = args[0];
+			ip.setLength(0);
+			ip.append(args[0]);
 			i = Integer.valueOf(args[1]);
 		}
 		final int[] port = { 10088, 10087, 10089, 10086 };
 		final Random r = new Random();
-		while ((i -= 4) > 0)
-			r0.submit(new Runnable() {
-				public void run() {
-					try {
-						final CountDownLatch countDownLatch = new CountDownLatch(1);
-						int obj = port[r.nextInt(2) + 1];
-						Socket s = new Socket();
-						s.connect(new InetSocketAddress("192.168.168.219", obj));
+		int x;
+		while (i-- > 0)
+			try {
+				x = r.nextInt(2) + 1;
+				// x = 0;
+				r0.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r1.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r2.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r3.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r4.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r5.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r6.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r7.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r8.submit(new connectionTest(port[x], ip.toString(), ax.get()));
+				r9.submit(new connectionTest(port[x], ip.toString(), ax.get()));
 
-						// System.err.println("port:" + s.getLocalPort());
-
-						OutputStream out = s.getOutputStream();
-						InputStream in = s.getInputStream();
-						ax.addAndGet(1);
-						for (int i = 0; i < 4; i++) {
-							out.write(ByteBufferUtil.getBuffer((ax.get() + ":客户端：" + i + "-你好吗:").getBytes()).array());
-							out.flush();
-							System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()) + ":" + s.getLocalPort());
-						}
-						//						countDownLatch.await();
-						Thread.sleep(2000);
-						out.close();
-						in.close();
-					} catch (NumberFormatException e) {
-						Logger.getDefault().error(this.getClass(), e);
-					} catch (IOException e) {
-						Logger.getDefault().error(this.getClass(), e);
-					} catch (InterruptedException e) {
-						Logger.getDefault().error(this.getClass(), e);
-					}
-				}
-			});
-		r1.submit(new Runnable() {
-			public void run() {
-				try {
-					final CountDownLatch countDownLatch = new CountDownLatch(1);
-					int obj = port[r.nextInt(2) + 1];
-					Socket s = new Socket();
-					s.connect(new InetSocketAddress("192.168.168.219", obj));
-
-					// System.err.println("port:" + s.getLocalPort());
-
-					OutputStream out = s.getOutputStream();
-					InputStream in = s.getInputStream();
-					ax.addAndGet(1);
-					for (int i = 0; i < 4; i++) {
-						out.write(ByteBufferUtil.getBuffer((ax.get() + ":客户端：" + i + "-你好吗:").getBytes()).array());
-						out.flush();
-						System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()) + ":" + s.getLocalPort());
-					}
-					//						countDownLatch.await();
-					Thread.sleep(2000);
-					out.close();
-					in.close();
-				} catch (NumberFormatException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				} catch (IOException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				} catch (InterruptedException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				}
+				// Thread.sleep(r.nextInt(50) + 10);
+				Thread.sleep(50);
+				// break;
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		});
-		r2.submit(new Runnable() {
-			public void run() {
-				try {
-					final CountDownLatch countDownLatch = new CountDownLatch(1);
-					int obj = port[r.nextInt(2) + 1];
-					Socket s = new Socket();
-					s.connect(new InetSocketAddress("192.168.168.219", obj));
+	}
 
-					// System.err.println("port:" + s.getLocalPort());
+	static class connectionTest implements Runnable {
 
-					OutputStream out = s.getOutputStream();
-					InputStream in = s.getInputStream();
-					ax.addAndGet(1);
-					for (int i = 0; i < 4; i++) {
-						out.write(ByteBufferUtil.getBuffer((ax.get() + ":客户端：" + i + "-你好吗:").getBytes()).array());
-						out.flush();
-						System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()) + ":" + s.getLocalPort());
-					}
-					//						countDownLatch.await();
-					Thread.sleep(2000);
-					out.close();
-					in.close();
-				} catch (NumberFormatException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				} catch (IOException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				} catch (InterruptedException e) {
-					Logger.getDefault().error(this.getClass(), e);
+		private int port;
+		private String ip;
+		private final int ax;
+
+		public connectionTest(int port, String ip, int ax) {
+			super();
+			this.port = port;
+			this.ip = ip;
+			this.ax = ax;
+		}
+
+		public void run() {
+			try {
+				final CountDownLatch countDownLatch = new CountDownLatch(1);
+				Socket s = new Socket();
+				s.connect(new InetSocketAddress(ip, port));
+
+				// System.err.println("port:" + s.getLocalPort());
+
+				OutputStream out = s.getOutputStream();
+				InputStream in = s.getInputStream();
+				for (int i = 0; i < 4; i++) {
+					out.write(ByteBufferUtil.getBuffer((ax + ":客户端：" + i + "-你好吗:").getBytes()).array());
+					out.flush();
+					System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()) + ":" + s.getLocalPort());
 				}
+				// countDownLatch.await();
+				Thread.sleep(2000);
+				out.close();
+				in.close();
+			} catch (NumberFormatException e) {
+				Logger.getDefault().error(this.getClass(), e);
+			} catch (IOException e) {
+				// Logger.getDefault().error(this.getClass(), e);
+				System.err.println("  " + port + " : " + ax);
+			} catch (InterruptedException e) {
+				Logger.getDefault().error(this.getClass(), e);
 			}
-		});
-		r3.submit(new Runnable() {
-			public void run() {
-				try {
-					final CountDownLatch countDownLatch = new CountDownLatch(1);
-					int obj = port[r.nextInt(2) + 1];
-					Socket s = new Socket();
-					s.connect(new InetSocketAddress("192.168.168.219", obj));
-
-					// System.err.println("port:" + s.getLocalPort());
-
-					OutputStream out = s.getOutputStream();
-					InputStream in = s.getInputStream();
-					ax.addAndGet(1);
-					for (int i = 0; i < 4; i++) {
-						out.write(ByteBufferUtil.getBuffer((ax.get() + ":客户端：" + i + "-你好吗:").getBytes()).array());
-						out.flush();
-						System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()) + ":" + s.getLocalPort());
-					}
-					//						countDownLatch.await();
-					Thread.sleep(2000);
-					out.close();
-					in.close();
-				} catch (NumberFormatException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				} catch (IOException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				} catch (InterruptedException e) {
-					Logger.getDefault().error(this.getClass(), e);
-				}
-			}
-		});
-		try {
-			Thread.sleep(r.nextInt(10) + 5);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
 	}
 }

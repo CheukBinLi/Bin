@@ -4,10 +4,11 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+
+import com.cheuks.bin.net.server.handler.ReceiveInfo;
 
 public class Attachment {
 
@@ -22,6 +23,7 @@ public class Attachment {
 	private final AtomicBoolean lock = new AtomicBoolean(false);
 	private final AtomicLong connectionTime = new AtomicLong();
 	private final AtomicInteger actionType = new AtomicInteger();
+	private ReceiveInfo ReceiveInfo;
 
 	public Attachment updateHeartBeat() {
 		this.connectionTime.set(getCurrentTime());
@@ -53,6 +55,15 @@ public class Attachment {
 
 	public String getId() {
 		return id;
+	}
+
+	public ReceiveInfo getReceiveInfo() {
+		return ReceiveInfo;
+	}
+
+	public Attachment setReceiveInfo(ReceiveInfo receiveInfo) {
+		ReceiveInfo = receiveInfo;
+		return this;
 	}
 
 	public boolean isCurrentActionType(int action) {
@@ -91,10 +102,11 @@ public class Attachment {
 		}
 	}
 
-	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops) throws ClosedChannelException {
+	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops, final ReceiveInfo receiveInfo) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
 			updateHeartBeat();
+			this.ReceiveInfo = receiveInfo;
 			return channel.register(key.selector(), ops, this);
 		}
 	}
@@ -118,7 +130,9 @@ public class Attachment {
 	 * @return
 	 */
 	public synchronized boolean isConnectionTimeOut(final long now, final long timeOutInterval) {
-		//		System.out.println(String.format("now:%s- this.getConnectionTime():%s > timeOutInterval", sdf.format(new Date(now)), sdf.format(new Date(this.getConnectionTime()))));
+		// System.out.println(String.format("now:%s- this.getConnectionTime():%s
+		// > timeOutInterval", sdf.format(new Date(now)), sdf.format(new
+		// Date(this.getConnectionTime()))));
 		return now - this.getConnectionTime() > timeOutInterval;
 	}
 

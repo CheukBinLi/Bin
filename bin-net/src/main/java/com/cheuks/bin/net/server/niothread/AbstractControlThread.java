@@ -4,14 +4,19 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.LinkedBlockingDeque;
+
+import com.cheuks.bin.net.server.handler.ServiceHandler;
 
 public abstract class AbstractControlThread extends Thread {
 
 	protected final static BlockingDeque<SelectionKey> ACCEPT_QUEUE = new LinkedBlockingDeque<SelectionKey>();
 	protected final static BlockingDeque<SelectionKey> READER_QUEUE = new LinkedBlockingDeque<SelectionKey>();
 	protected final static BlockingDeque<SelectionKey> WRITER_QUEUE = new LinkedBlockingDeque<SelectionKey>();
+	protected final static BlockingDeque<SelectionKey> HANDLER_QUEUE = new LinkedBlockingDeque<SelectionKey>();
+	protected final static ConcurrentHashMap<String, ServiceHandler> SERVICE_HANDLER_MAP = new ConcurrentHashMap<String, ServiceHandler>();
 	protected final static CopyOnWriteArraySet<Release> RELEASE_Queue = new CopyOnWriteArraySet<Release>();
 	protected final static BlockingDeque<SelectionKey> RELEASE_LIST = new LinkedBlockingDeque<SelectionKey>();
 	protected final static BlockingDeque<ServerSocketChannel> SERVER_LIST = new LinkedBlockingDeque<ServerSocketChannel>();

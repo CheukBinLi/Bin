@@ -49,7 +49,7 @@ public class SelectorThread extends AbstractControlThread {
 			selector = Selector.open();
 		for (int i = 0; i < port.length; i++) {
 			SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
-			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+//			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 			serverSocketChannel.bind(new InetSocketAddress(port[i]));
 			serverSocketChannel.configureBlocking(false);
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);

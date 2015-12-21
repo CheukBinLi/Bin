@@ -59,8 +59,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -76,6 +75,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 		public void run() {
 			boolean flags = false;
 			while (!Thread.interrupted()) {
+				flags = false;
 				try {
 					if (null != (key = READER_QUEUE.poll(5, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
@@ -83,21 +83,22 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							channel = (SocketChannel) key.channel();
 							channel.configureBlocking(false);
 							ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
-							//							System.out.println(new String(out.toByteArray()));
-							attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_WRITE).selector().wakeup();
+							// System.out.println(new
+							// String(out.toByteArray()));
+							attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_WRITE, null);
 							flags = true;
 						} catch (NumberFormatException e) {
-							//							e.printStackTrace();
+							// e.printStackTrace();
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
 							e.printStackTrace();
 						} finally {
+							if (null == key)
+								continue;
 							if (!flags)
-								if (null != key)
-									key.attach(getAddition(key).unLock());
+								key.attach(getAddition(key).unLock());
 							tryDo(RELEASE, key);
-							flags = false;
 						}
 					}
 				} catch (InterruptedException e) {
