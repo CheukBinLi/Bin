@@ -58,7 +58,8 @@ public class WriterThreadMananger extends AbstractControlThread {
 						if (WRITER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -72,9 +73,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 	static class Dispatcher extends AbstractControlThread {
 		@Override
 		public void run() {
-			boolean flags = false;
 			while (!Thread.interrupted()) {
-				flags = false;
 				try {
 					if (null != (key = WRITER_QUEUE.poll(5, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
@@ -83,7 +82,6 @@ public class WriterThreadMananger extends AbstractControlThread {
 							channel.configureBlocking(false);
 							channel.write(ByteBufferUtil.getBuffer(("服务回复：" + a.addAndGet(1)).getBytes()));
 							key = attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_READ, null);
-							flags = true;
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (ClosedChannelException e) {
@@ -91,10 +89,6 @@ public class WriterThreadMananger extends AbstractControlThread {
 						} catch (IOException e) {
 							e.printStackTrace();
 						} finally {
-							if (null == key)
-								continue;
-							if (!flags)
-								key.attach(getAddition(key).unLock());
 							tryDo(RELEASE, key);
 						}
 					}

@@ -21,7 +21,6 @@ public abstract class AbstractControlThread extends Thread {
 	protected final static BlockingDeque<SelectionKey> RELEASE_LIST = new LinkedBlockingDeque<SelectionKey>();
 	protected final static BlockingDeque<ServerSocketChannel> SERVER_LIST = new LinkedBlockingDeque<ServerSocketChannel>();
 	protected final static BlockingDeque<Attachment> ATTACHMENT_LIST = new LinkedBlockingDeque<Attachment>();
-	protected final static Object SyncAttachmentThread = new Object();
 
 	protected final static void clearAll() {
 		ACCEPT_QUEUE.clear();

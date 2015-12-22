@@ -7,7 +7,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,7 +58,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -73,9 +73,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	static class Dispatcher extends AbstractControlThread {
 		@Override
 		public void run() {
-			boolean flags = false;
 			while (!Thread.interrupted()) {
-				flags = false;
 				try {
 					if (null != (key = READER_QUEUE.poll(5, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
@@ -83,10 +81,11 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							channel = (SocketChannel) key.channel();
 							channel.configureBlocking(false);
 							ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
+							if (null == out)
+								continue;
 							// System.out.println(new
 							// String(out.toByteArray()));
 							attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_WRITE, null);
-							flags = true;
 						} catch (NumberFormatException e) {
 							// e.printStackTrace();
 						} catch (ClosedChannelException e) {
@@ -94,10 +93,6 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						} catch (IOException e) {
 							e.printStackTrace();
 						} finally {
-							if (null == key)
-								continue;
-							if (!flags)
-								key.attach(getAddition(key).unLock());
 							tryDo(RELEASE, key);
 						}
 					}

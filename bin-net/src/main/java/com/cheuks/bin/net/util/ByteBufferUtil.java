@@ -42,20 +42,34 @@ public class ByteBufferUtil {
 		formatChar = "%0" + size + "d";
 	}
 
-	private static final byte[] get(ScatteringByteChannel scatteringByteChannel, int size) throws IOException, NumberFormatException {
+	private static final byte[] get(ScatteringByteChannel scatteringByteChannel, int size) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		scatteringByteChannel.read(buffer);
 		buffer.flip();
 		return buffer.array();
 	}
 
-	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) throws IOException, NumberFormatException {
+	private static final Integer getIntegerLen(ScatteringByteChannel scatteringByteChannel, int size) {
+		try {
+			ByteBuffer buffer = ByteBuffer.allocate(size);
+			scatteringByteChannel.read(buffer);
+			buffer.flip();
+			return Integer.valueOf(new String(buffer.array()));
+		} catch (Exception e) {
+			return -1;
+		}
+	}
+
+	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(512);
 		ByteArrayOutputStream out = null;
 		// scatteringByteChannel.read(buffer, 0, LENGTH_WAY);
 		// byte[] lenByte = new byte[LENGTH_WAY];
-		byte[] lenByte = get(scatteringByteChannel, LENGTH_WAY);
-		int length = Integer.valueOf(new String(lenByte));
+		//		byte[] lenByte = get(scatteringByteChannel, LENGTH_WAY);
+		//		int length = Integer.valueOf(new String(lenByte));
+		int length = getIntegerLen(scatteringByteChannel, LENGTH_WAY);
+		if (length < 0)
+			return out;
 		out = new ByteArrayOutputStream(length);
 		int count = length / buffer.capacity();
 		int x = length % buffer.capacity();

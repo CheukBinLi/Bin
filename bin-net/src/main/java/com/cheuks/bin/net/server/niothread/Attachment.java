@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.cheuks.bin.net.server.handler.ReceiveInfo;
+import com.cheuks.bin.net.server.handler.MessageInfo;
 
 public class Attachment {
 
@@ -23,7 +23,7 @@ public class Attachment {
 	private final AtomicBoolean lock = new AtomicBoolean(false);
 	private final AtomicLong connectionTime = new AtomicLong();
 	private final AtomicInteger actionType = new AtomicInteger();
-	private ReceiveInfo ReceiveInfo;
+	private MessageInfo ReceiveInfo;
 
 	public Attachment updateHeartBeat() {
 		this.connectionTime.set(getCurrentTime());
@@ -57,11 +57,11 @@ public class Attachment {
 		return id;
 	}
 
-	public ReceiveInfo getReceiveInfo() {
+	public MessageInfo getReceiveInfo() {
 		return ReceiveInfo;
 	}
 
-	public Attachment setReceiveInfo(ReceiveInfo receiveInfo) {
+	public Attachment setReceiveInfo(MessageInfo receiveInfo) {
 		ReceiveInfo = receiveInfo;
 		return this;
 	}
@@ -102,7 +102,7 @@ public class Attachment {
 		}
 	}
 
-	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops, final ReceiveInfo receiveInfo) throws ClosedChannelException {
+	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops, final MessageInfo receiveInfo) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
 			updateHeartBeat();

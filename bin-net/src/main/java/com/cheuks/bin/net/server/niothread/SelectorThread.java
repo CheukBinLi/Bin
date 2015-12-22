@@ -17,22 +17,31 @@ public class SelectorThread extends AbstractControlThread {
 	ServerSocketChannel serverSocketChannel;
 	Selector selector;
 	Integer[] port;
+	final Integer maxConnection;
 	final Long interval;
 
-	@Override
-	public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
-		try {
-			Selector.open().close();
-		} catch (IOException e) {
-			Logger.getDefault().error(this.getClass(), e);
-		}
-		super.setUncaughtExceptionHandler(eh);
-	}
+	//	@Override
+	//	public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
+	//		try {
+	//			Selector.open().close();
+	//		} catch (IOException e) {
+	//			Logger.getDefault().error(this.getClass(), e);
+	//		}
+	//		super.setUncaughtExceptionHandler(eh);
+	//	}
 
 	public SelectorThread(Long selectInterval, Integer... port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
+		this.maxConnection = 2000;
+	}
+
+	public SelectorThread(Integer maxConnection, Long selectInterval, Integer... port) {
+		super();
+		this.port = port;
+		this.interval = selectInterval;
+		this.maxConnection = maxConnection;
 	}
 
 	void init() {
@@ -49,7 +58,8 @@ public class SelectorThread extends AbstractControlThread {
 			selector = Selector.open();
 		for (int i = 0; i < port.length; i++) {
 			SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
-//			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+			serverSocketChannel.socket().setSoTimeout(60000);
 			serverSocketChannel.bind(new InetSocketAddress(port[i]));
 			serverSocketChannel.configureBlocking(false);
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -63,8 +73,11 @@ public class SelectorThread extends AbstractControlThread {
 		while (!Thread.interrupted())
 			try {
 				select(this.interval);
+				Thread.sleep(10);
 			} catch (IOException e) {
 				Logger.getDefault().error(this.getClass(), e);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 	}
 
@@ -78,6 +91,10 @@ public class SelectorThread extends AbstractControlThread {
 			if (!key.isValid())
 				continue;
 			else if (key.isAcceptable()) {
+				if (this.maxConnection <= RELEASE_Queue.size()) {
+					key.interestOps(SelectionKey.OP_ACCEPT);
+					continue;
+				}
 				attachment = createAttachment().updateHeartBeatAndSetActionType(Attachment.AT_READING);
 				channel = ((ServerSocketChannel) key.channel()).accept();
 				channel.configureBlocking(false);
@@ -95,6 +112,16 @@ public class SelectorThread extends AbstractControlThread {
 				}
 				continue;
 			}
+			//			else if (key.isConnectable()) {
+			//				if (this.maxConnection <= RELEASE_Queue.size()) {
+			//					//					key.channel().configureBlocking(false);
+			//					key.channel().register(selector, SelectionKey.OP_CONNECT);
+			//					continue;
+			//				}
+			//				else {
+			//					key.channel().register(selector, SelectionKey.OP_ACCEPT);
+			//				}
+			//			}
 		}
 	}
 

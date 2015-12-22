@@ -21,8 +21,9 @@ public class NioServer implements Server {
 	SelectorThread selectorThread;
 
 	long timeOut = 60000;
-	Long refreshInterval = 50L;
+	Long refreshInterval = 5L;
 	int attachmentQueue = 5;
+	int maxConnection = 2000;
 
 	private static final Server newInstance = new NioServer();
 
@@ -33,10 +34,10 @@ public class NioServer implements Server {
 	private NioServer() {
 	}
 
-	public Server start() {
+	public Server start(Integer maxConnection) {
 		if (null == executorService || executorService.isShutdown()) {
 			executorService = Executors.newFixedThreadPool(10);
-			executorService.submit(selectorThread = new SelectorThread(this.refreshInterval, this.ports.toArray(new Integer[0])));
+			executorService.submit(selectorThread = new SelectorThread(maxConnection, this.refreshInterval, this.ports.toArray(new Integer[0])));
 			executorService.submit(new ReleaseQueueThread(this.timeOut));
 			executorService.submit(new AttachmentListThread(5));
 			executorService.submit(new ReleaseListThread());
@@ -68,6 +69,10 @@ public class NioServer implements Server {
 	public Server setTimeOut(long timeOut) throws Throwable {
 		this.timeOut = timeOut;
 		return this;
+	}
+
+	public Server start() throws Throwable {
+		return this.start(this.maxConnection);
 	}
 
 }

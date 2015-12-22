@@ -11,10 +11,10 @@ public class ServerX {
 		//		mananger.execute(new ReleaseQueueThread(5000));
 		//		mananger.execute(new AttachmentListThread(5));
 		//		mananger.execute(new ReaderThreadMananger());
-		//		mananger.execute(new WriterThreadMananger());
+		//		mananger.execute(new WriterThreadManange());
 		//		st.addListener(10086, 10087, 10088, 10089);
 
 		Server server = NioServer.newInstance();
-		server.addService(10088, 10087, 10089, 10086).setTimeOut(60000).start();
+		server.addService(10088, 10087, 10089, 10086).setTimeOut(10000).start(20);
 	}
 }

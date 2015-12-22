@@ -16,25 +16,6 @@ import com.cheuks.bin.net.util.ByteBufferUtil;
 
 public class Client_v1 {
 
-	public static void maina(String[] args) throws IOException, InterruptedException {
-		final CountDownLatch countDownLatch = new CountDownLatch(1);
-		Socket s = new Socket();
-		s.connect(new InetSocketAddress("127.0.0.1", 10088));
-		// s.connect(new InetSocketAddress("127.0.0.1", 10087));
-		// s.connect(new InetSocketAddress("127.0.0.1", 10089));
-
-		OutputStream out = s.getOutputStream();
-		out.write(ByteBufferUtil.getBuffer("客户端：1-你好吗".getBytes()).array());
-		out.flush();
-		InputStream in = s.getInputStream();
-		System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()));
-		out.write(ByteBufferUtil.getBuffer("客户端：2-你好吗".getBytes()).array());
-		out.flush();
-		// countDownLatch.await();
-		in.close();
-
-	}
-
 	public static void main(String[] args) {
 
 		final AtomicInteger ax = new AtomicInteger();
@@ -49,6 +30,7 @@ public class Client_v1 {
 		ExecutorService r8 = Executors.newCachedThreadPool();
 		ExecutorService r9 = Executors.newCachedThreadPool();
 		int i = 500;
+		//				final StringBuffer ip = new StringBuffer("192.168.168.150");// 192.168.168.219
 		final StringBuffer ip = new StringBuffer("127.0.0.1");// 192.168.168.219
 		if (args.length == 2) {
 			ip.setLength(0);
@@ -87,6 +69,7 @@ public class Client_v1 {
 		private int port;
 		private String ip;
 		private final int ax;
+		private int timeOut = 6000;
 
 		public connectionTest(int port, String ip, int ax) {
 			super();
@@ -99,12 +82,10 @@ public class Client_v1 {
 			try {
 				final CountDownLatch countDownLatch = new CountDownLatch(1);
 				Socket s = new Socket();
+				s.setSoTimeout(60000);
 				s.connect(new InetSocketAddress(ip, port));
-
-				// System.err.println("port:" + s.getLocalPort());
-
-				OutputStream out = s.getOutputStream();
 				InputStream in = s.getInputStream();
+				OutputStream out = s.getOutputStream();
 				for (int i = 0; i < 4; i++) {
 					out.write(ByteBufferUtil.getBuffer((ax + ":客户端：" + i + "-你好吗:").getBytes()).array());
 					out.flush();
@@ -117,8 +98,9 @@ public class Client_v1 {
 			} catch (NumberFormatException e) {
 				Logger.getDefault().error(this.getClass(), e);
 			} catch (IOException e) {
-				// Logger.getDefault().error(this.getClass(), e);
-				System.err.println("  " + port + " : " + ax);
+				//				Logger.getDefault().error(this.getClass(), e);
+				//				System.err.println("  " + port + " : " + ax);
+				e.printStackTrace();
 			} catch (InterruptedException e) {
 				Logger.getDefault().error(this.getClass(), e);
 			}

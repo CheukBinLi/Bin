@@ -6,6 +6,8 @@ public interface Server {
 
 	Server start() throws Throwable;
 
+	Server start(Integer maxConnection) throws Throwable;
+
 	Server stop() throws Throwable;
 
 	Server setTimeOut(long timeOut) throws Throwable;
