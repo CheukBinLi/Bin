@@ -5,10 +5,10 @@ import java.io.Serializable;
 
 public interface Serializ {
 
-	<T> T toObject(Byte[] b);
+	<T> T toObject(byte[] b) throws Throwable;
 
-	byte[] serializ(Serializable obj);
+	byte[] serializ(Serializable obj) throws Throwable;
 
-	byte[] serializ(InputStream in);
+	byte[] serializ(InputStream in) throws Throwable;
 
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.util.Logger;
 
 public class ReaderThreadMananger extends AbstractControlThread {
@@ -21,11 +22,17 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	private AtomicInteger currentCount = new AtomicInteger();
 	private Object syncObj = new Object();
 	private ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentCount);
+	private Serializ serializ;
 
 	public ReaderThreadMananger() {
 		super();
 	}
 
+	public ReaderThreadMananger(boolean autoControl, int defaultConcurrentCount) {
+		super();
+		this.autoControl = autoControl;
+		this.defaultConcurrentCount = defaultConcurrentCount;
+	}
 	public ReaderThreadMananger(boolean autoControl, int defaultConcurrentCount) {
 		super();
 		this.autoControl = autoControl;
