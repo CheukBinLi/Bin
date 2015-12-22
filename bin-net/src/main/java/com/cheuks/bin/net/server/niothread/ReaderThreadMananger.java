@@ -58,8 +58,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);

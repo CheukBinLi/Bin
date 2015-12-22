@@ -23,7 +23,7 @@ public class Attachment {
 	private final AtomicBoolean lock = new AtomicBoolean(false);
 	private final AtomicLong connectionTime = new AtomicLong();
 	private final AtomicInteger actionType = new AtomicInteger();
-	private MessageInfo ReceiveInfo;
+	private MessageInfo messageInfo;
 
 	public Attachment updateHeartBeat() {
 		this.connectionTime.set(getCurrentTime());
@@ -57,12 +57,12 @@ public class Attachment {
 		return id;
 	}
 
-	public MessageInfo getReceiveInfo() {
-		return ReceiveInfo;
+	public MessageInfo getMessageInfo() {
+		return messageInfo;
 	}
 
-	public Attachment setReceiveInfo(MessageInfo receiveInfo) {
-		ReceiveInfo = receiveInfo;
+	public Attachment setMessageInfo(MessageInfo messageInfo) {
+		this.messageInfo = messageInfo;
 		return this;
 	}
 
@@ -102,11 +102,11 @@ public class Attachment {
 		}
 	}
 
-	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops, final MessageInfo receiveInfo) throws ClosedChannelException {
+	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops, final MessageInfo messageInfo) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
 			updateHeartBeat();
-			this.ReceiveInfo = receiveInfo;
+			this.messageInfo = messageInfo;
 			return channel.register(key.selector(), ops, this);
 		}
 	}
