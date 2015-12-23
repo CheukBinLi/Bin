@@ -12,7 +12,7 @@ public class HandlerListThread extends AbstractControlThread {
 		ServiceHandler serviceHandler;
 		while (!Thread.interrupted()) {
 			try {
-				//搜索
+				// 搜索
 				serviceHandler = HANDLER_LIST.takeFirst();
 				if (null == serviceHandler)
 					continue;
@@ -21,7 +21,7 @@ public class HandlerListThread extends AbstractControlThread {
 					continue;
 				Method[] methods = c.getDeclaredMethods();
 				for (Method m : methods)
-					cache.addNFloop4Map(true, m, cacheTag, c.getSimpleName(), ReflectionUtil.newInstance().getMethodName(m));
+					cache.addNFloop4Map(true, m, cacheTag, serviceHandler.path(), ReflectionUtil.newInstance().getMethodName(m));
 				SERVICE_HANDLER_MAP.put(serviceHandler.path(), serviceHandler);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

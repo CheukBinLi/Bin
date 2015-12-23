@@ -7,7 +7,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.cheuks.bin.net.server.handler.ServiceHandler;
+import com.cheuks.bin.net.server.handler.test.ServiceHandlerTest;
 import com.cheuks.bin.net.server.niothread.AttachmentListThread;
+import com.cheuks.bin.net.server.niothread.HandlerListThread;
+import com.cheuks.bin.net.server.niothread.HandlerQueueThread;
 import com.cheuks.bin.net.server.niothread.ReaderThreadMananger;
 import com.cheuks.bin.net.server.niothread.ReleaseListThread;
 import com.cheuks.bin.net.server.niothread.ReleaseQueueThread;
@@ -43,6 +46,14 @@ public class NioServer implements Server {
 			executorService.submit(new ReleaseListThread());
 			executorService.submit(new ReaderThreadMananger());
 			executorService.submit(new WriterThreadMananger());
+			executorService.submit(new HandlerListThread());
+			executorService.submit(new HandlerQueueThread());
+			// 处理测试
+			try {
+				selectorThread.addServiceHandler(new ServiceHandlerTest());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return this;
 	}

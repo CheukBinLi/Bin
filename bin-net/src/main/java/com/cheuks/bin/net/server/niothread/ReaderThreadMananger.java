@@ -71,8 +71,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -86,6 +85,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	class Dispatcher extends AbstractControlThread {
 		private boolean flags;
 		private SelectionKey key;
+		private Attachment attachment;
 
 		public void run() {
 			while (!Thread.interrupted()) {
@@ -98,10 +98,14 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
 							if (flags = (null == out))
 								continue;
-							// System.out.println(new String(out.toByteArray()));
+							// System.out.println(new
+							// String(out.toByteArray()));
 							attachment.setMessageInfo((MessageInfo) serializ.toObject(out));
+							// System.out.println(attachment.getMessageInfo().getPath());
 							tryDo(HANDLER, key);
-							//attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_WRITE, null);
+							// attachment.unLockAndUpdateHeartBeat(channel, key,
+							// SelectionKey.OP_WRITE, null);
+//							attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_WRITE, null);
 
 						} catch (NumberFormatException e) {
 							// e.printStackTrace();

@@ -70,8 +70,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 						if (WRITER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -91,12 +90,14 @@ public class WriterThreadMananger extends AbstractControlThread {
 				try {
 					if (null != (key = WRITER_QUEUE.poll(5, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
+						System.err.println(111111);
 						try {
 							channel = (SocketChannel) key.channel();
 							channel.configureBlocking(false);
-							//							channel.write(ByteBufferUtil.getBuffer(("服务回复：" + a.addAndGet(1)).getBytes()));
+							// channel.write(ByteBufferUtil.getBuffer(("服务回复：" +
+							// a.addAndGet(1)).getBytes()));
 							channel.write(ByteBufferUtil.getBuffer(serializ.serializ(attachment.getMessageInfo())));
-							key = attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_READ, null);
+							key = attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_READ, null);
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (ClosedChannelException e) {

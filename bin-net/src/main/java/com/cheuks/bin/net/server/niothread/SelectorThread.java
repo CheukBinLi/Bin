@@ -20,15 +20,15 @@ public class SelectorThread extends AbstractControlThread {
 	final Integer maxConnection;
 	final Long interval;
 
-	//	@Override
-	//	public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
-	//		try {
-	//			Selector.open().close();
-	//		} catch (IOException e) {
-	//			Logger.getDefault().error(this.getClass(), e);
-	//		}
-	//		super.setUncaughtExceptionHandler(eh);
-	//	}
+	// @Override
+	// public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
+	// try {
+	// Selector.open().close();
+	// } catch (IOException e) {
+	// Logger.getDefault().error(this.getClass(), e);
+	// }
+	// super.setUncaughtExceptionHandler(eh);
+	// }
 
 	public SelectorThread(Long selectInterval, Integer... port) {
 		super();
@@ -64,7 +64,7 @@ public class SelectorThread extends AbstractControlThread {
 			serverSocketChannel.configureBlocking(false);
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		}
-		//		System.out.println(serverSocketChannel.supportedOptions());
+		// System.out.println(serverSocketChannel.supportedOptions());
 	}
 
 	@Override
@@ -102,26 +102,24 @@ public class SelectorThread extends AbstractControlThread {
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);
 				tryDo(RELEASE, key);
 				continue;
-			}
-			else if (!getAddition(key).isLock()) {
+			} else if (!getAddition(key).isLock()) {
 				if (key.isReadable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_READING, Attachment.AT_WRITING)) {
 					tryDo(READER, key);
-				}
-				else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
+				} else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
 					tryDo(WRITER, key);
 				}
 				continue;
 			}
-			//			else if (key.isConnectable()) {
-			//				if (this.maxConnection <= RELEASE_Queue.size()) {
-			//					//					key.channel().configureBlocking(false);
-			//					key.channel().register(selector, SelectionKey.OP_CONNECT);
-			//					continue;
-			//				}
-			//				else {
-			//					key.channel().register(selector, SelectionKey.OP_ACCEPT);
-			//				}
-			//			}
+			// else if (key.isConnectable()) {
+			// if (this.maxConnection <= RELEASE_Queue.size()) {
+			// // key.channel().configureBlocking(false);
+			// key.channel().register(selector, SelectionKey.OP_CONNECT);
+			// continue;
+			// }
+			// else {
+			// key.channel().register(selector, SelectionKey.OP_ACCEPT);
+			// }
+			// }
 		}
 	}
 

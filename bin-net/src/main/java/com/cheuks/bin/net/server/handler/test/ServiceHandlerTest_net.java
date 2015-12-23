@@ -8,8 +8,8 @@ public class ServiceHandlerTest_net extends CallMethod implements ServiceHandler
 		return "x/1.0";
 	}
 
-	public String a() {
-		return (String) call(path(), "java.lang.String:a", null);
+	public String a() throws Throwable {
+		return (String) call("", "", "");
 	}
 
 }

@@ -2,7 +2,6 @@ package com.cheuks.bin.net.server.niothread;
 
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,7 +12,8 @@ import com.cheuks.bin.net.server.handler.MessageInfo;
 public class Attachment {
 
 	public final static int AT_READING = 1;
-	public final static int AT_WRITING = 2;
+	public final static int AT_HANDLING = 2;
+	public final static int AT_WRITING = 3;
 
 	final long getCurrentTime() {
 		return System.currentTimeMillis();
@@ -102,12 +102,12 @@ public class Attachment {
 		}
 	}
 
-	public SelectionKey unLockAndUpdateHeartBeat(final SocketChannel channel, final SelectionKey key, int ops, final MessageInfo messageInfo) throws ClosedChannelException {
+	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final MessageInfo messageInfo) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
 			updateHeartBeat();
 			this.messageInfo = messageInfo;
-			return channel.register(key.selector(), ops, this);
+			return key.channel().register(key.selector(), ops, this);
 		}
 	}
 

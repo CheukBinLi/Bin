@@ -3,6 +3,7 @@ package com.cheuks.bin.net.server.niothread;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.security.Provider.Service;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -60,6 +61,14 @@ public abstract class AbstractControlThread extends Thread {
 				ATTACHMENT_LIST.notify();
 			}
 		}
+	}
+
+	public void addServiceHandler(ServiceHandler handler) throws Exception {
+		// if (null != (handler = SERVICE_HANDLER_MAP.put(handler.path(),
+		// handler))) {
+		// throw new Exception("重复的PATH:" + handler.path());
+		// }
+		HANDLER_LIST.offerLast(handler);
 	}
 
 	public void tryDo(int queue, final SelectionKey key) {

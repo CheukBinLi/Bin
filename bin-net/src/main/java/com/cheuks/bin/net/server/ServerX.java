@@ -15,6 +15,6 @@ public class ServerX {
 		//		st.addListener(10086, 10087, 10088, 10089);
 
 		Server server = NioServer.newInstance();
-		server.addService(10088, 10087, 10089, 10086).setTimeOut(10000).start(20);
+		server.addService(10088, 10087, 10089, 10086).setTimeOut(60000).start(20);
 	}
 }

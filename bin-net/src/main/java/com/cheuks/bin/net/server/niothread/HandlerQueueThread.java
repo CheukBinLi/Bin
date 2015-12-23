@@ -33,8 +33,11 @@ public class HandlerQueueThread extends AbstractControlThread {
 						} catch (InvocationTargetException e) {
 							e.printStackTrace();
 						}
-
-					attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_WRITE, messageInfo.setResult(result));
+					System.err.println(1);
+					key.channel().register(key.selector(), SelectionKey.OP_WRITE, attachment.unLock());
+					System.err.println(2);
+					// attachment.unLockAndUpdateHeartBeat(key,
+					// SelectionKey.OP_WRITE, messageInfo.setResult(result));
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
