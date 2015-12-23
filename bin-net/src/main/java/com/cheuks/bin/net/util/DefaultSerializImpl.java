@@ -3,17 +3,11 @@ package com.cheuks.bin.net.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class DefaultSerializ implements Serializ {
-
-	protected DefaultSerializ() throws IOException, SecurityException {
-		super();
-	}
+public class DefaultSerializImpl implements Serializ {
 
 	@SuppressWarnings("unchecked")
 	public <T> T toObject(byte[] b) throws IOException, ClassNotFoundException {
@@ -40,8 +34,8 @@ public class DefaultSerializ implements Serializ {
 		return b;
 	}
 
-	public byte[] serializ(InputStream in) {
-		return;
+	public <T> T toObject(ByteArrayOutputStream out) throws Throwable {
+		return toObject(out.toByteArray());
 	}
 
 }

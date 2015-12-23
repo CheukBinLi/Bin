@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.DefaultSerializImpl;
+import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.util.Logger;
 
 public class WriterThreadMananger extends AbstractControlThread {
@@ -21,15 +23,25 @@ public class WriterThreadMananger extends AbstractControlThread {
 	private AtomicInteger currentCount = new AtomicInteger();
 	private Object syncObj = new Object();
 	private ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentCount);
+	private final Serializ serializ;
 
 	public WriterThreadMananger() {
 		super();
+		this.serializ = new DefaultSerializImpl();
 	}
 
 	public WriterThreadMananger(boolean autoControl, int defaultConcurrentCount) {
 		super();
 		this.autoControl = autoControl;
 		this.defaultConcurrentCount = defaultConcurrentCount;
+		this.serializ = new DefaultSerializImpl();
+	}
+
+	public WriterThreadMananger(boolean autoControl, int defaultConcurrentCount, final Serializ serializ) {
+		super();
+		this.autoControl = autoControl;
+		this.defaultConcurrentCount = defaultConcurrentCount;
+		this.serializ = serializ;
 	}
 
 	public WriterThreadMananger setAutoControl(boolean autoControl) {
@@ -70,7 +82,9 @@ public class WriterThreadMananger extends AbstractControlThread {
 		}
 	}
 
-	static class Dispatcher extends AbstractControlThread {
+	class Dispatcher extends AbstractControlThread {
+		private SelectionKey key;
+
 		@Override
 		public void run() {
 			while (!Thread.interrupted()) {
@@ -80,13 +94,16 @@ public class WriterThreadMananger extends AbstractControlThread {
 						try {
 							channel = (SocketChannel) key.channel();
 							channel.configureBlocking(false);
-							channel.write(ByteBufferUtil.getBuffer(("服务回复：" + a.addAndGet(1)).getBytes()));
+							//							channel.write(ByteBufferUtil.getBuffer(("服务回复：" + a.addAndGet(1)).getBytes()));
+							channel.write(ByteBufferUtil.getBuffer(serializ.serializ(attachment.getMessageInfo())));
 							key = attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_READ, null);
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {
 							tryDo(RELEASE, key);

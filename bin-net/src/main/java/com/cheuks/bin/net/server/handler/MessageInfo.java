@@ -9,6 +9,7 @@ public class MessageInfo implements Serializable {
 	private String method;
 	private Object[] params;
 	private Object result;
+	private Throwable throwable;
 
 	public String getPath() {
 		return path;
@@ -46,4 +47,12 @@ public class MessageInfo implements Serializable {
 		return this;
 	}
 
+	public Throwable getThrowable() {
+		return throwable;
+	}
+
+	public MessageInfo setThrowable(Throwable throwable) {
+		this.throwable = throwable;
+		return this;
+	}
 }

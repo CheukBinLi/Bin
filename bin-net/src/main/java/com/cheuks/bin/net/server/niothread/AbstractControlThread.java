@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import com.cheuks.bin.cache.CachePoolFactory;
+import com.cheuks.bin.cache.DefaultCachePoolFactory;
 import com.cheuks.bin.net.server.handler.ServiceHandler;
 
 public abstract class AbstractControlThread extends Thread {
@@ -16,11 +18,15 @@ public abstract class AbstractControlThread extends Thread {
 	protected final static BlockingDeque<SelectionKey> READER_QUEUE = new LinkedBlockingDeque<SelectionKey>();
 	protected final static BlockingDeque<SelectionKey> WRITER_QUEUE = new LinkedBlockingDeque<SelectionKey>();
 	protected final static BlockingDeque<SelectionKey> HANDLER_QUEUE = new LinkedBlockingDeque<SelectionKey>();
+	protected final static BlockingDeque<ServiceHandler> HANDLER_LIST = new LinkedBlockingDeque<ServiceHandler>();
 	protected final static ConcurrentHashMap<String, ServiceHandler> SERVICE_HANDLER_MAP = new ConcurrentHashMap<String, ServiceHandler>();
 	protected final static CopyOnWriteArraySet<Release> RELEASE_Queue = new CopyOnWriteArraySet<Release>();
 	protected final static BlockingDeque<SelectionKey> RELEASE_LIST = new LinkedBlockingDeque<SelectionKey>();
 	protected final static BlockingDeque<ServerSocketChannel> SERVER_LIST = new LinkedBlockingDeque<ServerSocketChannel>();
 	protected final static BlockingDeque<Attachment> ATTACHMENT_LIST = new LinkedBlockingDeque<Attachment>();
+
+	protected final static CachePoolFactory cache = DefaultCachePoolFactory.newInstance();
+	protected static final String cacheTag = "ServiceHandler";
 
 	protected final static void clearAll() {
 		ACCEPT_QUEUE.clear();
@@ -31,7 +37,7 @@ public abstract class AbstractControlThread extends Thread {
 		RELEASE_LIST.clear();
 	}
 
-	protected static final int ACCEPT = 1, READER = 2, WRITER = 4, RELEASE = 8;
+	protected static final int ACCEPT = 1, READER = 2, WRITER = 4, RELEASE = 8, HANDLER = 16;
 
 	protected SelectionKey key;
 	protected SocketChannel channel;
@@ -72,6 +78,10 @@ public abstract class AbstractControlThread extends Thread {
 			break;
 		case RELEASE:
 			RELEASE_LIST.offerLast(key);
+			break;
+
+		case HANDLER:
+			HANDLER_QUEUE.offerLast(key);
 			break;
 		}
 	}

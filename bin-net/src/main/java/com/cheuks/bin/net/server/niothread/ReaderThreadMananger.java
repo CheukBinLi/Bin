@@ -10,7 +10,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.cheuks.bin.net.server.handler.MessageInfo;
 import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.util.Logger;
 
@@ -22,21 +24,25 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	private AtomicInteger currentCount = new AtomicInteger();
 	private Object syncObj = new Object();
 	private ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentCount);
-	private Serializ serializ;
+	private final Serializ serializ;
 
 	public ReaderThreadMananger() {
 		super();
+		this.serializ = new DefaultSerializImpl();
 	}
 
 	public ReaderThreadMananger(boolean autoControl, int defaultConcurrentCount) {
 		super();
 		this.autoControl = autoControl;
 		this.defaultConcurrentCount = defaultConcurrentCount;
+		this.serializ = new DefaultSerializImpl();
 	}
-	public ReaderThreadMananger(boolean autoControl, int defaultConcurrentCount) {
+
+	public ReaderThreadMananger(boolean autoControl, int defaultConcurrentCount, final Serializ serializ) {
 		super();
 		this.autoControl = autoControl;
 		this.defaultConcurrentCount = defaultConcurrentCount;
+		this.serializ = serializ;
 	}
 
 	public ReaderThreadMananger setAutoControl(boolean autoControl) {
@@ -65,7 +71,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -76,8 +83,10 @@ public class ReaderThreadMananger extends AbstractControlThread {
 		}
 	}
 
-	static class Dispatcher extends AbstractControlThread {
-		@Override
+	class Dispatcher extends AbstractControlThread {
+		private boolean flags;
+		private SelectionKey key;
+
 		public void run() {
 			while (!Thread.interrupted()) {
 				try {
@@ -87,19 +96,24 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							channel = (SocketChannel) key.channel();
 							channel.configureBlocking(false);
 							ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
-							if (null == out)
+							if (flags = (null == out))
 								continue;
-							// System.out.println(new
-							// String(out.toByteArray()));
-							attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_WRITE, null);
+							// System.out.println(new String(out.toByteArray()));
+							attachment.setMessageInfo((MessageInfo) serializ.toObject(out));
+							tryDo(HANDLER, key);
+							//attachment.unLockAndUpdateHeartBeat(channel, key, SelectionKey.OP_WRITE, null);
+
 						} catch (NumberFormatException e) {
 							// e.printStackTrace();
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
 							e.printStackTrace();
+						} catch (Throwable e) {
+							e.printStackTrace();
 						} finally {
-							tryDo(RELEASE, key);
+							if (flags)
+								tryDo(RELEASE, key);
 						}
 					}
 				} catch (InterruptedException e) {
