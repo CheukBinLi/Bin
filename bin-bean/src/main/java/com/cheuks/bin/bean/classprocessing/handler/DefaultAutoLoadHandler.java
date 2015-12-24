@@ -43,7 +43,7 @@ public class DefaultAutoLoadHandler extends AbstractClassProcessingHandler<CtCla
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public HandlerInfo doProcessing(final Map<String, Map> cache, CtClass newClass, CtMember additional, Object config) throws Throwable {
-		if (!(additional instanceof CtField))
+		if (newClass.getSuperclass().getName().equals("java.lang.Object") || !(additional instanceof CtField))
 			return null;
 		CtField o = (CtField) additional;
 		Iterator<Entry<String, CtClass>> autoIt = cache.get(ClassProcessingFactory.REGISTER_CACHE).entrySet().iterator();

@@ -44,7 +44,8 @@ public class CreateClassFactory {
 				CtConstructor[] ctConstructors = tempClass.getSuperClazz().getDeclaredConstructors();
 				CtConstructor defauleConstructor = CtNewConstructor.defaultConstructor(newClazz);
 				//				System.err.println(tempClass.getConstructor());
-				defauleConstructor.setBody(tempClass.getConstructor());
+				if (null != tempClass)
+					defauleConstructor.setBody(tempClass.getConstructor());
 
 				//				defauleConstructor.addCatch("", newClazz.getClassPool().get("java.lang.Exception"));
 
@@ -58,11 +59,11 @@ public class CreateClassFactory {
 						newClazz.addConstructor(tempC);
 					}
 				} catch (DuplicateMemberException e) {
-					//				e.printStackTrace();
+					//					e.printStackTrace();
 				}
 				AbstractClassProcessingFactory.anthingToClass(newClazz, tempClass.getSuperClazz().getName(), isInitSystemClassLoader());
 			} catch (Exception e) {
-				//				e.printStackTrace();
+				e.printStackTrace();
 				errorQueue.put(tempClass);
 			}
 		}

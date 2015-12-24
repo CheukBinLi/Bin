@@ -116,10 +116,10 @@ public class ByteBufferUtil {
 
 	public static final ByteBuffer getBuffer(byte[] bytes) throws IOException, NumberFormatException {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
-		String formatChar = "%0" + LENGTH_WAY + "d";
+		//		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
 		byteBuffer.flip();
-		// System.err.println(new String(byteBuffer.array()));
+		//		 System.err.println(new String(byteBuffer.array()));
 		return byteBuffer;
 	}
 

@@ -11,30 +11,47 @@ import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
 
-public abstract class CallMethod {
+public class CallMethod {
 
 	protected SocketChannel channel;
-	protected static final Serializ defaultSerializ = new DefaultSerializImpl();
+	protected static Serializ defaultSerializ = new DefaultSerializImpl();
+	protected Socket s;
+	private String ip;
+	private int port;
 
-	public Socket getConnection(String path) throws IOException {
-		// channel = SocketChannel.open();
-		// channel.configureBlocking(false);
-		// channel.connect(new InetSocketAddress("127.0.0.1", 10088));
+	public CallMethod(String ip, int port) {
+		super();
+		this.ip = ip;
+		this.port = port;
+	}
+
+	public Socket getConnection() throws IOException {
 		Socket socket = new Socket();
-		socket.connect(new InetSocketAddress("127.0.0.1", 10088), 60000);
+		socket.connect(new InetSocketAddress(this.ip, this.port));
 		return socket;
 	}
 
 	public Object call(String path, String methodName, Object... params) throws NumberFormatException, Throwable {
 		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setPath("x/1.0").setMethod("java.lang.String:a");
-		Socket s = getConnection(null);
+		messageInfo.setPath(path).setMethod(methodName);
+		messageInfo.setParams(params);
+		s = getConnection();
 		OutputStream out = s.getOutputStream();
-		InputStream in = s.getInputStream();
 		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
-		out.flush();
+		InputStream in = s.getInputStream();
 		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(in));
+		out.close();
+		in.close();
 		return messageInfo.getResult();
+		//		MessageInfo messageInfo = new MessageInfo();
+		//		messageInfo.setPath("x/1.0").setMethod("java.lang.String:a");
+		//		s = getConnection(null);
+		//		OutputStream out = s.getOutputStream();
+		//		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
+		//		InputStream in = s.getInputStream();
+		//		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(in));
+		//		out.close();
+		//		in.close();
+		//		return messageInfo.getResult();
 	}
-
 }

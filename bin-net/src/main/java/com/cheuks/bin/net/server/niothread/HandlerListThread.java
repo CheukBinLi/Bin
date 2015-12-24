@@ -21,8 +21,8 @@ public class HandlerListThread extends AbstractControlThread {
 					continue;
 				Method[] methods = c.getDeclaredMethods();
 				for (Method m : methods)
-					cache.addNFloop4Map(true, m, cacheTag, serviceHandler.path(), ReflectionUtil.newInstance().getMethodName(m));
-				SERVICE_HANDLER_MAP.put(serviceHandler.path(), serviceHandler);
+					cache.addNFloop4Map(true, m, cacheTag, serviceHandler.classID(), ReflectionUtil.newInstance().getMethodName(m));
+				SERVICE_HANDLER_MAP.put(serviceHandler.classID(), serviceHandler);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

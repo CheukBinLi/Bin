@@ -97,7 +97,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 							// channel.write(ByteBufferUtil.getBuffer(("服务回复：" +
 							// a.addAndGet(1)).getBytes()));
 							channel.write(ByteBufferUtil.getBuffer(serializ.serializ(attachment.getMessageInfo())));
-							key = attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_READ, null);
+//							key = attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_READ, null);
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (ClosedChannelException e) {

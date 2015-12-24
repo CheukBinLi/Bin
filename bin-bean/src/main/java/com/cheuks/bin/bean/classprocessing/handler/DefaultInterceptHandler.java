@@ -45,7 +45,7 @@ public class DefaultInterceptHandler extends AbstractClassProcessingHandler<CtCl
 	}
 
 	public HandlerInfo doProcessing(Map<String, Map> cache, CtClass newClazz, CtMember additional, Object config) throws Throwable {
-		if (!(additional instanceof CtMethod))
+		if (newClazz.getSuperclass().getName().equals("java.lang.Object") || !(additional instanceof CtMethod))
 			return null;
 		CtMethod ctMethod = CtNewMethod.copy((CtMethod) additional, newClazz, null);
 		boolean isReturn = !ctMethod.getReturnType().getName().equals("void");

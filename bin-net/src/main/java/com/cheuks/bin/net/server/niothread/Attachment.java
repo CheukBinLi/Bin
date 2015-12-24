@@ -107,6 +107,7 @@ public class Attachment {
 			unLock();
 			updateHeartBeat();
 			this.messageInfo = messageInfo;
+			key.selector().wakeup();
 			return key.channel().register(key.selector(), ops, this);
 		}
 	}

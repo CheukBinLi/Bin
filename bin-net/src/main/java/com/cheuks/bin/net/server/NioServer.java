@@ -24,7 +24,7 @@ public class NioServer implements Server {
 	SelectorThread selectorThread;
 
 	long timeOut = 60000;
-	Long refreshInterval = 5L;
+	Long refreshInterval = 20L;
 	int attachmentQueue = 5;
 	int maxConnection = 2000;
 

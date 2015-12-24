@@ -32,7 +32,14 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 	}
 
 	public static void anthingToClass(final CtClass newClazz, final String superClazzName, boolean initSystemClassLoader) throws CannotCompileException {
+		System.err.println(newClazz.getName());
 		final Class c = newClazz.toClass();
+		try {
+			newClazz.writeFile("C:/Users/Ben/Desktop");
+		} catch (Exception e) {
+			//					errorQueue.add(en);
+			e.printStackTrace();
+		}
 		BeanFactory.addBean(c, FULL_NAME_BEAN, superClazzName);
 		BeanFactory.addBean(c, NICK_NAME_BEAN, ShortNameUtil.makeLowerHumpNameShortName(superClazzName));
 		BeanFactory.addBean(c, SHORT_NAME_BEAN, ShortNameUtil.makeShortName(superClazzName));
@@ -79,6 +86,7 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 				//				BeanFactory.addClassInfo(scanClass(c, false ));
 				//				//反编查看
 				//				try {
+				//					System.out.println("1111111111");
 				//					en.getValue().writeFile("C:/Users/Ben/Desktop");
 				//				} catch (Exception e) {
 				//					//					errorQueue.add(en);

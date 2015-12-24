@@ -16,6 +16,7 @@ import com.cheuks.bin.bean.application.BeanFactory;
 import com.cheuks.bin.bean.classprocessing.handler.ClassProcessingHandler;
 import com.cheuks.bin.bean.classprocessing.handler.DefaultAutoLoadHandler;
 import com.cheuks.bin.bean.classprocessing.handler.DefaultInterceptHandler;
+import com.cheuks.bin.bean.classprocessing.handler.DefaultRmiClientHandler;
 import com.cheuks.bin.bean.classprocessing.handler.HandlerInfo;
 import com.cheuks.bin.bean.util.ExecutorServiceFatory;
 import com.cheuks.bin.bean.util.ShortNameUtil;
@@ -48,6 +49,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 		List<ClassProcessingHandler> list = new ArrayList<ClassProcessingHandler>();
 		list.add(new DefaultAutoLoadHandler());
 		list.add(new DefaultInterceptHandler());
+		list.add(new DefaultRmiClientHandler());
 		return doHandler(list, cache);
 
 	}
@@ -106,7 +108,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 				}
 				return;
 			} catch (NotFoundException e) {
-				e.printStackTrace();
+				//				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (InstantiationException e1) {
@@ -143,6 +145,8 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 		Entry<String, CtClass> en;
 		int level = 0;
 		List<HandlerInfo> handlerInfos = null;
+		boolean appendTry;
+		boolean isInterface;
 		while (it.hasNext()) {
 			level = 0;
 			handlerInfos = new ArrayList<HandlerInfo>();
@@ -150,15 +154,19 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 			CtClass tempClazz = en.getValue();
 			CtClass newClazz = tempClazz.getClassPool().makeClass(tempClazz.getName() + Impl);
 			newClazz.getClassPool().importPackage(en.getKey());
-			newClazz.setSuperclass(tempClazz);
-
 			//搜索Feld
 			CtField[] ctFields = tempClazz.getDeclaredFields();
 			//搜索Method
 			//********************
 			CtMethod[] ctMethods = tempClazz.getDeclaredMethods();
+
+			if (isInterface = tempClazz.isInterface())
+				newClazz.addInterface(tempClazz);
+			else
+				newClazz.setSuperclass(tempClazz);
+
 			HandlerInfo handlerInfo;
-			for (ClassProcessingHandler<CtClass, AutoLoad, CtMember, CtClass, HandlerInfo> cph : handler) {
+			for (ClassProcessingHandler<CtClass, Object, CtMember, CtClass, HandlerInfo> cph : handler) {
 				for (CtField f : ctFields) {//Field
 					if (null != cph.getCheck(f, ClassProcessingHandler.Field) || null != cph.getCheckII(tempClazz, ClassProcessingHandler.Type)) {
 						handlerInfo = cph.doProcessing(classCache, newClazz, f, null);
@@ -193,11 +201,14 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 			//			CtConstructor defauleConstructor = CtNewConstructor.defaultConstructor(newClazz);
 			StringBuffer sb = new StringBuffer("{");
 			sb.append("super($$);");
+			appendTry = false;
 			if (handlerInfos.size() > 0) {
 				sb.append("try {");
 				for (HandlerInfo h : handlerInfos) {
-					if (null != h.getX())
+					if (null != h.getX() && h.getX().length() > 0) {
 						sb.append(h.getX());
+						appendTry = true;
+					}
 				}
 				sb.append("}catch(java.lang.Exception e){e.printStackTrace();}");
 			}
@@ -225,12 +236,12 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 						newClazz.getClassPool().importPackage(s);
 					}
 			}
-
+			System.out.println(level + ":" + newClazz.getName());
 			if (level == 0)
 				//				A1.put(en.getKey(), newClazz);
 				result.addFirstQueue(new DefaultTempClass(tempClazz, newClazz));
 			else
-				result.addSecondQueue(new DefaultTempClass(tempClazz, newClazz, sb.toString(), null));
+				result.addSecondQueue(new DefaultTempClass(tempClazz, newClazz, appendTry ? sb.toString() : null, null));
 			//				A2.put(en.getKey(), newClazz);
 
 			//反编查看

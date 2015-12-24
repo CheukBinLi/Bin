@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cheuks.bin.net.server.handler.MessageInfo;
+import com.cheuks.bin.net.server.handler.ServiceHandler;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
@@ -71,7 +72,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -86,6 +88,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 		private boolean flags;
 		private SelectionKey key;
 		private Attachment attachment;
+		private ServiceHandler serviceHandler = null;
+		private Object result = null;
 
 		public void run() {
 			while (!Thread.interrupted()) {
@@ -102,10 +106,27 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							// String(out.toByteArray()));
 							attachment.setMessageInfo((MessageInfo) serializ.toObject(out));
 							// System.out.println(attachment.getMessageInfo().getPath());
+							///
 							tryDo(HANDLER, key);
-							// attachment.unLockAndUpdateHeartBeat(channel, key,
-							// SelectionKey.OP_WRITE, null);
-//							attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_WRITE, null);
+							//handler
+
+							//							Method m = cache.get4Map(cacheTag, attachment.getMessageInfo().getPath(), attachment.getMessageInfo().getMethod());
+							//							serviceHandler = SERVICE_HANDLER_MAP.get(attachment.getMessageInfo().getPath());
+							//							if (null != m && null != serviceHandler)
+							//								try {
+							//									result = m.invoke(serviceHandler, attachment.getMessageInfo().getParams());
+							//									attachment.getMessageInfo().setResult(result);
+							//								} catch (IllegalAccessException e) {
+							//									e.printStackTrace();
+							//								} catch (IllegalArgumentException e) {
+							//									e.printStackTrace();
+							//								} catch (InvocationTargetException e) {
+							//									e.printStackTrace();
+							//								}
+							//							System.err.println(1);
+							//							//							key.channel().register(key.selector(), SelectionKey.OP_WRITE, attachment.unLock());
+							//							attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_WRITE, attachment.getMessageInfo());
+							//							System.err.println(2);
 
 						} catch (NumberFormatException e) {
 							// e.printStackTrace();
@@ -116,8 +137,9 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {
-							if (flags)
-								tryDo(RELEASE, key);
+							//							if (flags)
+							//								tryDo(RELEASE, key);
+							//							flags = true;
 						}
 					}
 				} catch (InterruptedException e) {

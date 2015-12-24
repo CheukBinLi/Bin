@@ -50,6 +50,9 @@ public class Scan {
 			result.addAll(classMatchFilter(fullPaths[i], scanResult));
 		}
 		try {
+			//			Iterator<String>a=result.iterator();
+			//			while(a.hasNext())
+			//				System.out.println(a.next());
 			return result;
 		} finally {
 			executorService.shutdown();
