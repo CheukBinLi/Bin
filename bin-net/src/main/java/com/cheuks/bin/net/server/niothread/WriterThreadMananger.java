@@ -8,8 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.net.util.DefaultSerializImpl;
-import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.util.Logger;
 
 public class WriterThreadMananger extends AbstractControlThread {
@@ -57,8 +55,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 						if (WRITER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -79,7 +76,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 					if (null != (key = WRITER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
 						try {
-							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getWriteEvent().process(key);
+							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getWriteEvent().process(key, serializ);
 							if (!key.isValid())
 								continue;
 							attachment = getAddition(key);

@@ -19,26 +19,15 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	private AtomicInteger currentCount = new AtomicInteger();
 	private Object syncObj = new Object();
 	private ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentCount);
-	@SuppressWarnings("unused")
-	private final Serializ serializ;
 
 	public ReaderThreadMananger() {
 		super();
-		this.serializ = new DefaultSerializImpl();
 	}
 
 	public ReaderThreadMananger(boolean autoControl, int defaultConcurrentCount) {
 		super();
 		this.autoControl = autoControl;
 		this.defaultConcurrentCount = defaultConcurrentCount;
-		this.serializ = new DefaultSerializImpl();
-	}
-
-	public ReaderThreadMananger(boolean autoControl, int defaultConcurrentCount, final Serializ serializ) {
-		super();
-		this.autoControl = autoControl;
-		this.defaultConcurrentCount = defaultConcurrentCount;
-		this.serializ = serializ;
 	}
 
 	public ReaderThreadMananger setAutoControl(boolean autoControl) {
@@ -67,8 +56,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);

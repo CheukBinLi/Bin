@@ -29,24 +29,21 @@ public abstract class AbstractControlThread extends Thread {
 	protected final static BlockingDeque<Attachment> ATTACHMENT_LIST = new LinkedBlockingDeque<Attachment>();
 
 	protected final static CachePoolFactory cache = DefaultCachePoolFactory.newInstance();
-	protected static final String cacheTag = "ServiceHandler";
-	protected final static Serializ serializ;
+	protected final static String cacheTag = "ServiceHandler";
+	protected volatile static Serializ serializ = new DefaultSerializImpl();
 	protected int pollInterval = 2;
 
 	public AbstractControlThread() {
 		super();
-		this.serializ = new DefaultSerializImpl();
 	}
 
-	//新
+	// 新
 	/***
-	 * @1:channel.hashCode
-	 * @2:type
+	 * @1:channel.hashCode @2:type
 	 */
 	protected final static ConcurrentHashMap<Integer, Integer> TYPE_LIST = new ConcurrentHashMap<Integer, Integer>();
 	/***
-	 * @1:type
-	 * @2:处理接口
+	 * @1:type @2:处理接口
 	 */
 	protected final static ConcurrentHashMap<Integer, EventInfo> EVENT_LIST = new ConcurrentHashMap<Integer, EventInfo>();
 
@@ -64,6 +61,10 @@ public abstract class AbstractControlThread extends Thread {
 	protected SelectionKey key;
 	protected SocketChannel channel;
 	protected Attachment attachment;
+
+	public final void setSerializ(Serializ serializ) {
+		AbstractControlThread.serializ = serializ;
+	}
 
 	public final Attachment getAddition(final SelectionKey key) {
 		synchronized (key) {

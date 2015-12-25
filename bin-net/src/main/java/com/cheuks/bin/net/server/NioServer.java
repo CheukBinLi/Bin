@@ -15,6 +15,7 @@ import com.cheuks.bin.net.server.niothread.ReleaseListThread;
 import com.cheuks.bin.net.server.niothread.ReleaseQueueThread;
 import com.cheuks.bin.net.server.niothread.SelectorThread;
 import com.cheuks.bin.net.server.niothread.WriterThreadMananger;
+import com.cheuks.bin.net.util.Serializ;
 
 public class NioServer implements Server {
 
@@ -46,12 +47,12 @@ public class NioServer implements Server {
 			executorService.submit(new WriterThreadMananger());
 			executorService.submit(new HandlerListThread());
 			executorService.submit(new HandlerQueueThread());
-			//			// 处理测试
-			//			try {
-			//				selectorThread.addServiceHandler(new ServiceHandlerTest());
-			//			} catch (Exception e) {
-			//				e.printStackTrace();
-			//			}
+			// // 处理测试
+			// try {
+			// selectorThread.addServiceHandler(new ServiceHandlerTest());
+			// } catch (Exception e) {
+			// e.printStackTrace();
+			// }
 		}
 		return this;
 	}
@@ -80,6 +81,11 @@ public class NioServer implements Server {
 
 	public Server addEventHandle(EventInfo eventInfos, Integer serviceType) throws Throwable {
 		selectorThread.addEventHandle(eventInfos, serviceType);
+		return this;
+	}
+
+	public Server setSerializ(Serializ serializ) {
+		selectorThread.setSerializ(serializ);
 		return this;
 	}
 

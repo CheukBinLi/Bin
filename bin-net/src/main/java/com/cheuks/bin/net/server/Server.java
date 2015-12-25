@@ -2,6 +2,7 @@ package com.cheuks.bin.net.server;
 
 import com.cheuks.bin.net.server.event.EventInfo;
 import com.cheuks.bin.net.server.handler.ServiceHandler;
+import com.cheuks.bin.net.util.Serializ;
 
 public interface Server {
 
@@ -18,5 +19,7 @@ public interface Server {
 	Server addHandler(ServiceHandler... handler) throws Throwable;
 
 	Server addEventHandle(EventInfo eventInfos, Integer serviceType) throws Throwable;
+
+	Server setSerializ(Serializ serializ);
 
 }
