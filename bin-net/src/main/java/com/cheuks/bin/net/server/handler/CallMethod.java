@@ -10,6 +10,7 @@ import java.nio.channels.SocketChannel;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
+import com.cheuks.bin.util.ReflectionUtil;
 
 public class CallMethod {
 
@@ -38,7 +39,10 @@ public class CallMethod {
 		messageInfo.setParams(params);
 		sc = getConnection();
 		sc.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)));
-		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(sc));
+			messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(sc));
+		try {
+				//"callMethod.call(\"" + this.a.classID() + "\",\"" + ReflectionUtil.newInstance().getMethodName(ctMethod) + "\"," + (ctMethod.getParameterTypes().length > 0 ? "new java.lang.Object[] {$args});" : "null);"
+		} catch (java.lang.Throwable e) {e.printStackTrace();}
 		//		OutputStream out = s.getOutputStream();
 		//		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
 		//		InputStream in = s.getInputStream();

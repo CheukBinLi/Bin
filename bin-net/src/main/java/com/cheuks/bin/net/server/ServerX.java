@@ -22,8 +22,8 @@ public class ServerX {
 
 		Server server = NioServer.newInstance();
 		//		server.addService(10088, 10087, 10089, 10086).setTimeOut(60000).start(20);
-		server.start();
-		server.addService(10088, Server.SERVICE_TYPE_RMI).addService(10087, Server.SERVICE_TYPE_MESSAGE).setTimeOut(10000);
+		server.start(2000, 10000);
+		server.addService(10088, Server.SERVICE_TYPE_RMI).addService(10087, Server.SERVICE_TYPE_MESSAGE);
 		server.addHandler(new ServiceHandlerTest());
 		server.addEventHandle(new EventInfo(new RmiReadEvent(), new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);
 	}

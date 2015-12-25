@@ -43,22 +43,17 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		}
 		CtMethod ctMethod = CtNewMethod.copy((CtMethod) additional, newClazz, null);
 		boolean isReturn = !ctMethod.getReturnType().getName().equals("void");
-		String result = "callMethod.call(\"" + this.a.classID() + "\",\"" + ReflectionUtil.newInstance().getMethodName(ctMethod) + "\"," + (ctMethod.getParameterTypes().length > 0 ? "new java.lang.Object[] {$args});" : "null);");
-		//		if (isReturn) {
-		//			result.equals("$$);");
-		//		}
-		//		else
-		//			result.equals("null);");
+		String result = "callMethod.call(\"" + this.a.classID() + "\",\"" + ReflectionUtil.newInstance().getMethodName(ctMethod) + "\"," + (ctMethod.getParameterTypes().length > 0 ? "new java.lang.Object[] {$args});" : "null);} catch (java.lang.Throwable e) {e.printStackTrace();}");
 		StringBuffer sb = new StringBuffer("{");
 		if (isReturn)
-			sb.append("return (" + ctMethod.getReturnType().getName() + ")").append(result);
+			sb.append("try {return (" + ctMethod.getReturnType().getName() + ")").append(result).append("return ").append(ClassInfo.getReturn(ctMethod.getReturnType())).append(";");
 		else
 			sb.append(result);
 		sb.append("}");
+		//		System.out.println(sb.toString());
 		ctMethod.setBody(sb.toString());
 		newClazz.addMethod(ctMethod);
 		return new HandlerInfo(null, newClazz, ctMethod);
 
 	}
-
 }

@@ -12,6 +12,7 @@ public class ReleaseListThread extends AbstractControlThread {
 			try {
 				if (null != (key = RELEASE_LIST.pollFirst(5, TimeUnit.MICROSECONDS))) {
 					this.attachment = (Attachment) key.attachment();
+					attachment.unLockAndUpdateHeartBeat();
 					RELEASE_Queue.add(new Release(this.attachment.getId(), this.attachment, key));
 				}
 			} catch (InterruptedException e) {
