@@ -20,26 +20,15 @@ public class WriterThreadMananger extends AbstractControlThread {
 	private AtomicInteger currentCount = new AtomicInteger();
 	private Object syncObj = new Object();
 	private ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentCount);
-	@SuppressWarnings("unused")
-	private final Serializ serializ;
 
 	public WriterThreadMananger() {
 		super();
-		this.serializ = new DefaultSerializImpl();
 	}
 
 	public WriterThreadMananger(boolean autoControl, int defaultConcurrentCount) {
 		super();
 		this.autoControl = autoControl;
 		this.defaultConcurrentCount = defaultConcurrentCount;
-		this.serializ = new DefaultSerializImpl();
-	}
-
-	public WriterThreadMananger(boolean autoControl, int defaultConcurrentCount, final Serializ serializ) {
-		super();
-		this.autoControl = autoControl;
-		this.defaultConcurrentCount = defaultConcurrentCount;
-		this.serializ = serializ;
 	}
 
 	public WriterThreadMananger setAutoControl(boolean autoControl) {

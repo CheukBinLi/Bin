@@ -12,6 +12,8 @@ import com.cheuks.bin.cache.CachePoolFactory;
 import com.cheuks.bin.cache.DefaultCachePoolFactory;
 import com.cheuks.bin.net.server.event.EventInfo;
 import com.cheuks.bin.net.server.handler.ServiceHandler;
+import com.cheuks.bin.net.util.DefaultSerializImpl;
+import com.cheuks.bin.net.util.Serializ;
 
 public abstract class AbstractControlThread extends Thread {
 
@@ -28,7 +30,13 @@ public abstract class AbstractControlThread extends Thread {
 
 	protected final static CachePoolFactory cache = DefaultCachePoolFactory.newInstance();
 	protected static final String cacheTag = "ServiceHandler";
+	protected final static Serializ serializ;
 	protected int pollInterval = 2;
+
+	public AbstractControlThread() {
+		super();
+		this.serializ = new DefaultSerializImpl();
+	}
 
 	//新
 	/***
