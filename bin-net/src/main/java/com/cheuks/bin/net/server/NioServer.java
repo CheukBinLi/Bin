@@ -2,12 +2,11 @@ package com.cheuks.bin.net.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.cheuks.bin.net.server.event.EventInfo;
 import com.cheuks.bin.net.server.handler.ServiceHandler;
-import com.cheuks.bin.net.server.handler.test.ServiceHandlerTest;
 import com.cheuks.bin.net.server.niothread.AttachmentListThread;
 import com.cheuks.bin.net.server.niothread.HandlerListThread;
 import com.cheuks.bin.net.server.niothread.HandlerQueueThread;
@@ -20,12 +19,12 @@ import com.cheuks.bin.net.server.niothread.WriterThreadMananger;
 public class NioServer implements Server {
 
 	ExecutorService executorService;
-	ArrayList<Integer> ports = new ArrayList<Integer>();
+	ArrayList<Integer[]> ports = new ArrayList<Integer[]>();
 	SelectorThread selectorThread;
 
 	long timeOut = 60000;
-	Long refreshInterval = 20L;
-	int attachmentQueue = 5;
+	Long refreshInterval = 2L;
+	int attachmentQueue = 2;
 	int maxConnection = 2000;
 
 	private static final Server newInstance = new NioServer();
@@ -40,7 +39,7 @@ public class NioServer implements Server {
 	public Server start(Integer maxConnection) {
 		if (null == executorService || executorService.isShutdown()) {
 			executorService = Executors.newFixedThreadPool(10);
-			executorService.submit(selectorThread = new SelectorThread(maxConnection, this.refreshInterval, this.ports.toArray(new Integer[0])));
+			executorService.submit(selectorThread = new SelectorThread(maxConnection, this.refreshInterval, this.ports));
 			executorService.submit(new ReleaseQueueThread(this.timeOut));
 			executorService.submit(new AttachmentListThread(5));
 			executorService.submit(new ReleaseListThread());
@@ -48,12 +47,12 @@ public class NioServer implements Server {
 			executorService.submit(new WriterThreadMananger());
 			executorService.submit(new HandlerListThread());
 			executorService.submit(new HandlerQueueThread());
-			// 处理测试
-			try {
-				selectorThread.addServiceHandler(new ServiceHandlerTest());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			//			// 处理测试
+			//			try {
+			//				selectorThread.addServiceHandler(new ServiceHandlerTest());
+			//			} catch (Exception e) {
+			//				e.printStackTrace();
+			//			}
 		}
 		return this;
 	}
@@ -65,15 +64,14 @@ public class NioServer implements Server {
 		return this;
 	}
 
-	public Server addService(Integer... port) throws IOException {
-		ports.addAll(Arrays.asList(port));
-		if (null != executorService && !executorService.isShutdown() && null != selectorThread && !selectorThread.isInterrupted()) {
-			selectorThread.addListener(port);
-		}
+	public Server addService(Integer port, Integer serviceType) throws IOException {
+		selectorThread.addListener(port, serviceType);
 		return this;
 	}
 
-	public Server addHandler(ServiceHandler... handler) {
+	public Server addHandler(ServiceHandler... handler) throws Exception {
+		for (int i = 0, len = handler.length; i < len; i++)
+			selectorThread.addServiceHandler(handler[i]);
 		return this;
 	}
 
@@ -84,6 +82,11 @@ public class NioServer implements Server {
 
 	public Server start() throws Throwable {
 		return this.start(this.maxConnection);
+	}
+
+	public Server addEventHandle(EventInfo eventInfos, Integer serviceType) throws Throwable {
+		selectorThread.addEventHandle(eventInfos, serviceType);
+		return this;
 	}
 
 }

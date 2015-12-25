@@ -3,13 +3,11 @@ package com.cheuks.bin.net.server.niothread;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.util.Logger;
@@ -22,6 +20,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 	private AtomicInteger currentCount = new AtomicInteger();
 	private Object syncObj = new Object();
 	private ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentCount);
+	@SuppressWarnings("unused")
 	private final Serializ serializ;
 
 	public WriterThreadMananger() {
@@ -88,16 +87,14 @@ public class WriterThreadMananger extends AbstractControlThread {
 		public void run() {
 			while (!Thread.interrupted()) {
 				try {
-					if (null != (key = WRITER_QUEUE.poll(5, TimeUnit.MICROSECONDS))) {
+					if (null != (key = WRITER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
-						System.err.println("write:" + attachment.getServiceCode());
 						try {
-							channel = (SocketChannel) key.channel();
-							channel.configureBlocking(false);
-							// channel.write(ByteBufferUtil.getBuffer(("服务回复：" +
-							// a.addAndGet(1)).getBytes()));
-							channel.write(ByteBufferUtil.getBuffer(serializ.serializ(attachment.getMessageInfo())));
-							//							key = attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_READ, null);
+							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getWriteEvent().process(key);
+							if (!key.isValid())
+								continue;
+							attachment = getAddition(key);
+							attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), attachment.getAttachment());
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (ClosedChannelException e) {

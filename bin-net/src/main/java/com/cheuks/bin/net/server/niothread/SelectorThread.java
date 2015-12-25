@@ -2,11 +2,14 @@ package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.net.StandardSocketOptions;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.cheuks.bin.util.Logger;
@@ -16,61 +19,62 @@ public class SelectorThread extends AbstractControlThread {
 	// Map<Integer, Boolean> portInfo;
 	ServerSocketChannel serverSocketChannel;
 	Selector selector;
-	Integer[] port;
+	List<Integer[]> port;
 	final Integer maxConnection;
 	final Long interval;
 
-	// @Override
-	// public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
-	// try {
-	// Selector.open().close();
-	// } catch (IOException e) {
-	// Logger.getDefault().error(this.getClass(), e);
-	// }
-	// super.setUncaughtExceptionHandler(eh);
-	// }
-
-	public SelectorThread(Long selectInterval, Integer... port) {
+	public SelectorThread(Long selectInterval, List<Integer[]> port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
 		this.maxConnection = 2000;
+		init();
 	}
 
-	public SelectorThread(Integer maxConnection, Long selectInterval, Integer... port) {
+	public SelectorThread(Integer maxConnection, Long selectInterval, List<Integer[]> port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
 		this.maxConnection = maxConnection;
+		init();
 	}
 
 	void init() {
 		clearAll();
-		try {
-			addListener(this.port);
-		} catch (IOException e) {
-			Logger.getDefault().error(this.getClass(), e);
-		}
+		if (null == selector)
+			try {
+				selector = Selector.open();
+				if (!this.port.isEmpty())
+					for (int i = 0; i < port.size(); i++) {
+						addListener(port.get(i)[0], port.get(i)[1]);
+					}
+			} catch (SocketException e) {
+				e.printStackTrace();
+			} catch (ClosedChannelException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 	}
 
-	public synchronized void addListener(Integer... port) throws IOException {
-		if (null == selector)
-			selector = Selector.open();
-		for (int i = 0; i < port.length; i++) {
-			SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
-			serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
-			serverSocketChannel.socket().setSoTimeout(60000);
-			serverSocketChannel.bind(new InetSocketAddress(port[i]));
-			serverSocketChannel.configureBlocking(false);
-			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-			System.out.println(port[i] + ":" + serverSocketChannel.hashCode());
-		}
-		// System.out.println(serverSocketChannel.supportedOptions());
+	public synchronized void addListener(Integer port, Integer serviceType) throws SocketException, ClosedChannelException, IOException {
+		SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
+		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+		serverSocketChannel.socket().setSoTimeout(60000);
+		serverSocketChannel.bind(new InetSocketAddress(port));
+		serverSocketChannel.configureBlocking(false);
+		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
+		//		if (null != TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType))
+		//			throw new IOException("重复端口");
+
+		//		System.out.println(port + ":" + serverSocketChannel.hashCode());
 	}
 
 	@Override
 	public void run() {
-		init();
 		while (!Thread.interrupted())
 			try {
 				select(this.interval);

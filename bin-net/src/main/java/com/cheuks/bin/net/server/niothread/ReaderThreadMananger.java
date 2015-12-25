@@ -1,18 +1,12 @@
 package com.cheuks.bin.net.server.niothread;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.net.server.handler.MessageInfo;
-import com.cheuks.bin.net.server.handler.ServiceHandler;
-import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.util.Logger;
@@ -25,6 +19,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	private AtomicInteger currentCount = new AtomicInteger();
 	private Object syncObj = new Object();
 	private ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentCount);
+	@SuppressWarnings("unused")
 	private final Serializ serializ;
 
 	public ReaderThreadMananger() {
@@ -85,50 +80,15 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	}
 
 	class Dispatcher extends AbstractControlThread {
-		private boolean flags;
-		private SelectionKey key;
-		private Attachment attachment;
-		private ServiceHandler serviceHandler = null;
-		private Object result = null;
 
 		public void run() {
 			while (!Thread.interrupted()) {
 				try {
-					if (null != (key = READER_QUEUE.poll(5, TimeUnit.MICROSECONDS))) {
+					if (null != (key = READER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
-						System.err.println("read:" + attachment.getServiceCode());
 						try {
-							channel = (SocketChannel) key.channel();
-							channel.configureBlocking(false);
-							ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
-							if (flags = (null == out))
-								continue;
-							// System.out.println(new
-							// String(out.toByteArray()));
-							attachment.setMessageInfo((MessageInfo) serializ.toObject(out));
-							// System.out.println(attachment.getMessageInfo().getPath());
-							///
+							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getReadEvent().process(key);
 							tryDo(HANDLER, key);
-							//handler
-
-							//							Method m = cache.get4Map(cacheTag, attachment.getMessageInfo().getPath(), attachment.getMessageInfo().getMethod());
-							//							serviceHandler = SERVICE_HANDLER_MAP.get(attachment.getMessageInfo().getPath());
-							//							if (null != m && null != serviceHandler)
-							//								try {
-							//									result = m.invoke(serviceHandler, attachment.getMessageInfo().getParams());
-							//									attachment.getMessageInfo().setResult(result);
-							//								} catch (IllegalAccessException e) {
-							//									e.printStackTrace();
-							//								} catch (IllegalArgumentException e) {
-							//									e.printStackTrace();
-							//								} catch (InvocationTargetException e) {
-							//									e.printStackTrace();
-							//								}
-							//							System.err.println(1);
-							//							//							key.channel().register(key.selector(), SelectionKey.OP_WRITE, attachment.unLock());
-							//							attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_WRITE, attachment.getMessageInfo());
-							//							System.err.println(2);
-
 						} catch (NumberFormatException e) {
 							// e.printStackTrace();
 						} catch (ClosedChannelException e) {
@@ -138,9 +98,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {
-							if (flags)
-								tryDo(RELEASE, key);
-							flags = true;
+							tryDo(RELEASE, key);
 						}
 					}
 				} catch (InterruptedException e) {

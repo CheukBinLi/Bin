@@ -1,12 +1,11 @@
 package com.cheuks.bin.net.server.niothread;
 
+import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import com.cheuks.bin.net.server.handler.MessageInfo;
 
 public class Attachment {
 
@@ -20,10 +19,11 @@ public class Attachment {
 
 	private final String id;
 	private final AtomicBoolean lock = new AtomicBoolean(false);
+	private final AtomicInteger register = new AtomicInteger();
 	private final AtomicLong connectionTime = new AtomicLong();
 	private final AtomicInteger actionType = new AtomicInteger();
 	private int serviceCode;
-	private MessageInfo messageInfo;
+	private Object attachment;
 
 	public Attachment updateHeartBeat() {
 		this.connectionTime.set(getCurrentTime());
@@ -57,12 +57,27 @@ public class Attachment {
 		return id;
 	}
 
-	public MessageInfo getMessageInfo() {
-		return messageInfo;
+	public int getRegister() {
+		return register.get();
 	}
 
-	public Attachment setMessageInfo(MessageInfo messageInfo) {
-		this.messageInfo = messageInfo;
+	public Attachment setRegister(int ops) {
+		register.set(ops);
+		return this;
+	}
+
+	public Object getAttachment() {
+		return attachment;
+	}
+
+	public <T> T getAttachmentX() {
+		if (null != attachment)
+			return (T) attachment;
+		return null;
+	}
+
+	public Attachment setAttachment(Object attachment) {
+		this.attachment = attachment;
 		return this;
 	}
 
@@ -120,11 +135,11 @@ public class Attachment {
 		}
 	}
 
-	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final MessageInfo messageInfo) throws ClosedChannelException {
+	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final Object messageInfo) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
 			updateHeartBeat();
-			this.messageInfo = messageInfo;
+			this.attachment = messageInfo;
 			key.selector().wakeup();
 			return key.channel().register(key.selector(), ops, this);
 		}
@@ -138,6 +153,26 @@ public class Attachment {
 		}
 	}
 
+	public Attachment registerWrite() {
+		this.register.set(SelectionKey.OP_WRITE);
+		return this;
+	}
+
+	public Attachment registerRead() {
+		this.register.set(SelectionKey.OP_READ);
+		return this;
+	}
+
+	public Attachment registerConnect() {
+		this.register.set(SelectionKey.OP_CONNECT);
+		return this;
+	}
+
+	public void registerClose(SelectionKey key) throws IOException {
+		key.channel().close();
+		key.channel();
+	}
+
 	/***
 	 * 
 	 * @param now
@@ -149,5 +184,4 @@ public class Attachment {
 	public synchronized boolean isConnectionTimeOut(final long now, final long timeOutInterval) {
 		return now - this.getConnectionTime() > timeOutInterval;
 	}
-
 }

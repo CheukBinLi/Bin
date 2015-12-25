@@ -25,12 +25,13 @@ public class ReleaseQueueThread extends AbstractControlThread {
 			it = RELEASE_Queue.iterator();
 			now = System.currentTimeMillis();
 			//			System.err.println(new SimpleDateFormat("HH:mm:ss").format(new Date(now)));
-			//			System.err.println(RELEASE_Queue.size());
+			System.err.println(RELEASE_Queue.size());
 			while (it.hasNext()) {
 				release = it.next();
 				key = release.getKey();
 				attachment = release.getAttachment();
 				if (!attachment.isLock() && attachment.isConnectionTimeOut(now, this.timeOut)) {
+					System.err.println("---------------");
 					releaseConnection(key, release);
 				}
 			}

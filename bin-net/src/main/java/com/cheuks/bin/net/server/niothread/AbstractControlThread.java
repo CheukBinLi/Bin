@@ -3,7 +3,6 @@ package com.cheuks.bin.net.server.niothread;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.security.Provider.Service;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -11,6 +10,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import com.cheuks.bin.cache.CachePoolFactory;
 import com.cheuks.bin.cache.DefaultCachePoolFactory;
+import com.cheuks.bin.net.server.event.EventInfo;
 import com.cheuks.bin.net.server.handler.ServiceHandler;
 
 public abstract class AbstractControlThread extends Thread {
@@ -28,6 +28,19 @@ public abstract class AbstractControlThread extends Thread {
 
 	protected final static CachePoolFactory cache = DefaultCachePoolFactory.newInstance();
 	protected static final String cacheTag = "ServiceHandler";
+	protected int pollInterval = 2;
+
+	//新
+	/***
+	 * @1:channel.hashCode
+	 * @2:type
+	 */
+	protected final static ConcurrentHashMap<Integer, Integer> TYPE_LIST = new ConcurrentHashMap<Integer, Integer>();
+	/***
+	 * @1:type
+	 * @2:处理接口
+	 */
+	protected final static ConcurrentHashMap<Integer, EventInfo> EVENT_LIST = new ConcurrentHashMap<Integer, EventInfo>();
 
 	protected final static void clearAll() {
 		ACCEPT_QUEUE.clear();
@@ -69,6 +82,10 @@ public abstract class AbstractControlThread extends Thread {
 		// throw new Exception("重复的PATH:" + handler.path());
 		// }
 		HANDLER_LIST.offerLast(handler);
+	}
+
+	public synchronized void addEventHandle(EventInfo eventInfos, Integer serviceType) throws Throwable {
+		EVENT_LIST.put(serviceType, eventInfos);
 	}
 
 	public void tryDo(int queue, final SelectionKey key) {

@@ -1,5 +1,11 @@
 package com.cheuks.bin.net.server;
 
+import com.cheuks.bin.net.server.event.EventInfo;
+import com.cheuks.bin.net.server.event.RmiHandleEvent;
+import com.cheuks.bin.net.server.event.RmiReadEvent;
+import com.cheuks.bin.net.server.event.RmiWriteEvent;
+import com.cheuks.bin.net.server.handler.test.ServiceHandlerTest;
+
 public class ServerX {
 	public static void main(String[] args) throws Throwable {
 		//		Logger.getDefault().setErrorWrite(false).setInfoWrite(true);
@@ -15,6 +21,10 @@ public class ServerX {
 		//		st.addListener(10086, 10087, 10088, 10089);
 
 		Server server = NioServer.newInstance();
-		server.addService(10088, 10087, 10089, 10086).setTimeOut(60000).start(20);
+		//		server.addService(10088, 10087, 10089, 10086).setTimeOut(60000).start(20);
+		server.start();
+		server.addService(10088, Server.SERVICE_TYPE_RMI).addService(10087, Server.SERVICE_TYPE_MESSAGE).setTimeOut(10000);
+		server.addHandler(new ServiceHandlerTest());
+		server.addEventHandle(new EventInfo(new RmiReadEvent(), new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);
 	}
 }

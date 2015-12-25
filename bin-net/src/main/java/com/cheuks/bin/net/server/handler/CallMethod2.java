@@ -11,40 +11,37 @@ import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
 
-public class CallMethod {
+public class CallMethod2 {
 
 	protected SocketChannel channel;
 	protected static Serializ defaultSerializ = new DefaultSerializImpl();
 	protected Socket s;
-	SocketChannel sc;
 	private String ip;
 	private int port;
 
-	public CallMethod(String ip, int port) {
+	public CallMethod2(String ip, int port) {
 		super();
 		this.ip = ip;
 		this.port = port;
 	}
 
-	public SocketChannel getConnection() throws IOException {
-		SocketChannel sc = SocketChannel.open();
-		sc.connect(new InetSocketAddress(this.ip, this.port));
-		return sc;
+	public Socket getConnection() throws IOException {
+		Socket socket = new Socket();
+		socket.connect(new InetSocketAddress(this.ip, this.port));
+		return socket;
 	}
 
 	public Object call(String path, String methodName, Object... params) throws NumberFormatException, Throwable {
 		MessageInfo messageInfo = new MessageInfo();
 		messageInfo.setPath(path).setMethod(methodName);
 		messageInfo.setParams(params);
-		sc = getConnection();
-		sc.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)));
-		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(sc));
-		//		OutputStream out = s.getOutputStream();
-		//		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
-		//		InputStream in = s.getInputStream();
-		//		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(in));
-		//		out.close();
-		//		in.close();
+		s = getConnection();
+		OutputStream out = s.getOutputStream();
+		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
+		InputStream in = s.getInputStream();
+		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(in));
+		out.close();
+		in.close();
 		return messageInfo.getResult();
 		//		MessageInfo messageInfo = new MessageInfo();
 		//		messageInfo.setPath("x/1.0").setMethod("java.lang.String:a");
