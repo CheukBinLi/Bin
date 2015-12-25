@@ -2,7 +2,6 @@ package com.cheuks.bin.net.server.niothread;
 
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
-import java.text.SimpleDateFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,6 +22,7 @@ public class Attachment {
 	private final AtomicBoolean lock = new AtomicBoolean(false);
 	private final AtomicLong connectionTime = new AtomicLong();
 	private final AtomicInteger actionType = new AtomicInteger();
+	private int serviceCode;
 	private MessageInfo messageInfo;
 
 	public Attachment updateHeartBeat() {
@@ -75,6 +75,15 @@ public class Attachment {
 		return this;
 	}
 
+	public int getServiceCode() {
+		return serviceCode;
+	}
+
+	public Attachment setServiceCode(int serviceCode) {
+		this.serviceCode = serviceCode;
+		return this;
+	}
+
 	public boolean lockSetActionTypeAnd(int currentAction, int nextAction) {
 		synchronized (lock) {
 			if (isCurrentActionType(currentAction)) {
@@ -102,6 +111,15 @@ public class Attachment {
 		}
 	}
 
+	public Attachment updateHeartBeatAndSetActionTypeAndServiceCode(int nextAction, SelectionKey key) {
+		synchronized (actionType) {
+			this.serviceCode = key.channel().hashCode();
+			setActionType(nextAction);
+			updateHeartBeat();
+			return this;
+		}
+	}
+
 	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final MessageInfo messageInfo) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
@@ -120,8 +138,6 @@ public class Attachment {
 		}
 	}
 
-	private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 	/***
 	 * 
 	 * @param now
@@ -131,9 +147,6 @@ public class Attachment {
 	 * @return
 	 */
 	public synchronized boolean isConnectionTimeOut(final long now, final long timeOutInterval) {
-		// System.out.println(String.format("now:%s- this.getConnectionTime():%s
-		// > timeOutInterval", sdf.format(new Date(now)), sdf.format(new
-		// Date(this.getConnectionTime()))));
 		return now - this.getConnectionTime() > timeOutInterval;
 	}
 

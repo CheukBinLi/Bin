@@ -236,7 +236,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 						newClazz.getClassPool().importPackage(s);
 					}
 			}
-			System.out.println(level + ":" + newClazz.getName());
+//			System.out.println(level + ":" + newClazz.getName());
 			if (level == 0)
 				//				A1.put(en.getKey(), newClazz);
 				result.addFirstQueue(new DefaultTempClass(tempClazz, newClazz));

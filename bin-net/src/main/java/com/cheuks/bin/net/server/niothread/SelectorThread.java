@@ -63,6 +63,7 @@ public class SelectorThread extends AbstractControlThread {
 			serverSocketChannel.bind(new InetSocketAddress(port[i]));
 			serverSocketChannel.configureBlocking(false);
 			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+			System.out.println(port[i] + ":" + serverSocketChannel.hashCode());
 		}
 		// System.out.println(serverSocketChannel.supportedOptions());
 	}
@@ -95,17 +96,19 @@ public class SelectorThread extends AbstractControlThread {
 					key.interestOps(SelectionKey.OP_ACCEPT);
 					continue;
 				}
-				attachment = createAttachment().updateHeartBeatAndSetActionType(Attachment.AT_READING);
+				attachment = createAttachment().updateHeartBeatAndSetActionTypeAndServiceCode(Attachment.AT_READING, key);
 				channel = ((ServerSocketChannel) key.channel()).accept();
 				channel.configureBlocking(false);
 				channel.finishConnect();
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);
 				tryDo(RELEASE, key);
 				continue;
-			} else if (!getAddition(key).isLock()) {
+			}
+			else if (!getAddition(key).isLock()) {
 				if (key.isReadable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_READING, Attachment.AT_WRITING)) {
 					tryDo(READER, key);
-				} else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
+				}
+				else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
 					tryDo(WRITER, key);
 				}
 				continue;

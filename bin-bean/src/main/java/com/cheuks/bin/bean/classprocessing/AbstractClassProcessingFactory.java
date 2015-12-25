@@ -32,7 +32,6 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 	}
 
 	public static void anthingToClass(final CtClass newClazz, final String superClazzName, boolean initSystemClassLoader) throws CannotCompileException {
-		System.err.println(newClazz.getName());
 		final Class c = newClazz.toClass();
 		try {
 			newClazz.writeFile("C:/Users/Ben/Desktop");

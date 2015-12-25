@@ -96,6 +96,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 				try {
 					if (null != (key = READER_QUEUE.poll(5, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
+						System.err.println("read:" + attachment.getServiceCode());
 						try {
 							channel = (SocketChannel) key.channel();
 							channel.configureBlocking(false);
@@ -137,9 +138,9 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {
-							//							if (flags)
-							//								tryDo(RELEASE, key);
-							//							flags = true;
+							if (flags)
+								tryDo(RELEASE, key);
+							flags = true;
 						}
 					}
 				} catch (InterruptedException e) {
