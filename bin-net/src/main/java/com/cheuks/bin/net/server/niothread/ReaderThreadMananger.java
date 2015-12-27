@@ -1,14 +1,13 @@
 package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.channels.ClosedChannelException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.net.util.DefaultSerializImpl;
-import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.util.Logger;
 
 public class ReaderThreadMananger extends AbstractControlThread {
@@ -46,7 +45,14 @@ public class ReaderThreadMananger extends AbstractControlThread {
 	}
 
 	@Override
+	public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
+		super.setUncaughtExceptionHandler(eh);
+		executorService.shutdownNow();
+	}
+
+	@Override
 	public void run() {
+		System.out.println("ReaderThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!Thread.interrupted()) {
@@ -61,7 +67,9 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					}
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
-					Logger.getDefault().error(this.getClass(), e);
+					executorService.shutdownNow();
+					// Logger.getDefault().error(this.getClass(), e);
+					break;
 				}
 			}
 		}
@@ -90,9 +98,11 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						}
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					// e.printStackTrace();
+					break;
 				}
 			}
+			System.out.println("ReaderQueue-Dispatcher结束");
 		}
 	}
 

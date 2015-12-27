@@ -8,8 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.util.Logger;
-
 public class WriterThreadMananger extends AbstractControlThread {
 
 	private boolean autoControl = true;
@@ -40,15 +38,28 @@ public class WriterThreadMananger extends AbstractControlThread {
 
 	@Override
 	public void interrupt() {
-		executorService.shutdown();
+		executorService.shutdownNow();
 		super.interrupt();
 	}
 
 	@Override
+	public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
+		super.setUncaughtExceptionHandler(eh);
+		executorService.shutdownNow();
+	}
+
+	@Override
 	public void run() {
+		System.out.println("WriterThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
-		while (!Thread.interrupted()) {
+		// try {
+		// Thread.sleep(5000);
+		// this.interrupt();
+		// } catch (InterruptedException e1) {
+		// e1.printStackTrace();
+		// }
+		while (!this.shutdown.get()) {
 			synchronized (syncObj) {
 				try {
 					if (autoControl) {
@@ -60,7 +71,9 @@ public class WriterThreadMananger extends AbstractControlThread {
 					}
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
-					Logger.getDefault().error(this.getClass(), e);
+					executorService.shutdownNow();
+					// Logger.getDefault().error(this.getClass(), e);
+					break;
 				}
 			}
 		}
@@ -94,11 +107,12 @@ public class WriterThreadMananger extends AbstractControlThread {
 						}
 					}
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					// e.printStackTrace();
+					break;
 				}
+
 			}
+			System.out.println("WriteQueue-Dispatcher结束");
 		}
 	}
-
 }

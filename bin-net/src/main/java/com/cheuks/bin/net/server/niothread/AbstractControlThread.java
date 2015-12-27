@@ -1,5 +1,6 @@
 package com.cheuks.bin.net.server.niothread;
 
+import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -7,6 +8,7 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.cheuks.bin.cache.CachePoolFactory;
 import com.cheuks.bin.cache.DefaultCachePoolFactory;
@@ -33,8 +35,24 @@ public abstract class AbstractControlThread extends Thread {
 	protected volatile static Serializ serializ = new DefaultSerializImpl();
 	protected int pollInterval = 2;
 
+	protected AtomicBoolean shutdown = new AtomicBoolean();
+
 	public AbstractControlThread() {
 		super();
+	}
+
+	public void closeAllChannel() throws IOException {
+		ServerSocketChannel tempX;
+		while (null != (tempX = SERVER_LIST.pop())) {
+			if (tempX.isOpen())
+				tempX.close();
+			System.err.println("XXX关闭");
+		}
+	}
+
+	@Override
+	public void interrupt() {
+		this.shutdown.set(true);
 	}
 
 	// 新
@@ -54,6 +72,13 @@ public abstract class AbstractControlThread extends Thread {
 		RELEASE_Queue.clear();
 		RELEASE_LIST.clear();
 		RELEASE_LIST.clear();
+		HANDLER_QUEUE.clear();
+		HANDLER_LIST.clear();
+		SERVICE_HANDLER_MAP.clear();
+		SERVER_LIST.clear();
+		ATTACHMENT_LIST.clear();
+		EVENT_LIST.clear();
+		TYPE_LIST.clear();
 	}
 
 	protected static final int ACCEPT = 1, READER = 2, WRITER = 4, RELEASE = 8, HANDLER = 16;

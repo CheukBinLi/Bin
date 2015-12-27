@@ -1,10 +1,12 @@
 package com.cheuks.bin.net.server.niothread;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cheuks.bin.util.Logger;
@@ -39,16 +41,16 @@ public class HandlerQueueThread extends AbstractControlThread {
 
 	@Override
 	public void interrupt() {
-		executorService.shutdown();
+		executorService.shutdownNow();
 		super.interrupt();
 	}
-	
-	
+
 	@Override
 	public void run() {
+		System.out.println("HandlerQueue");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
-		while (!Thread.interrupted()) {
+		while (!this.shutdown.get()) {
 			synchronized (syncObj) {
 				try {
 					if (autoControl) {
@@ -60,10 +62,13 @@ public class HandlerQueueThread extends AbstractControlThread {
 					}
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
-					Logger.getDefault().error(this.getClass(), e);
+					executorService.shutdownNow();
+					// Logger.getDefault().error(this.getClass(), e);
+					break;
 				}
 			}
 		}
+		System.out.println("HandlerQueueThread结束");
 	}
 
 	class Dispatcher extends AbstractControlThread {
@@ -80,7 +85,8 @@ public class HandlerQueueThread extends AbstractControlThread {
 						attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), attachment.getAttachment());
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					// e.printStackTrace();
+					break;
 				} catch (ClosedChannelException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -88,9 +94,7 @@ public class HandlerQueueThread extends AbstractControlThread {
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
-
 			}
-
 		}
 	}
 

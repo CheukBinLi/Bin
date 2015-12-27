@@ -21,7 +21,8 @@ public class ReleaseQueueThread extends AbstractControlThread {
 		Release release;
 		long now;
 		// System.err.println("连接器启动");
-		while (!Thread.interrupted()) {
+		System.out.println("ReleaseQueue-Dispatcher");
+		while (!this.shutdown.get()) {
 			it = RELEASE_Queue.iterator();
 			now = System.currentTimeMillis();
 			// System.err.println(new SimpleDateFormat("HH:mm:ss").format(new
@@ -38,8 +39,8 @@ public class ReleaseQueueThread extends AbstractControlThread {
 			try {
 				Thread.sleep((long) (timeOut * 0.3));
 			} catch (InterruptedException e) {
-				Logger.getDefault().error(this.getClass(), e);
-				// break;
+				// Logger.getDefault().error(this.getClass(), e);
+				break;
 			}
 			it = null;
 		}

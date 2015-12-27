@@ -1,6 +1,7 @@
 package com.cheuks.bin.net.server;
 
 import java.io.IOException;
+import java.nio.channels.Selector;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +22,7 @@ public class NioServer implements Server {
 
 	ExecutorService executorService;
 	ArrayList<Integer[]> ports = new ArrayList<Integer[]>();
-	SelectorThread selectorThread;
+	volatile SelectorThread selectorThread;
 
 	Long refreshInterval = 2L;
 	int attachmentQueue = 2;
@@ -39,7 +40,8 @@ public class NioServer implements Server {
 	public Server start(Integer maxConnection, long timeOut) {
 		if (null == executorService || executorService.isShutdown()) {
 			executorService = Executors.newFixedThreadPool(10);
-			executorService.submit(selectorThread = new SelectorThread(maxConnection, this.refreshInterval, this.ports));
+			selectorThread = new SelectorThread(maxConnection, this.refreshInterval, this.ports);
+			executorService.submit(selectorThread);
 			executorService.submit(new ReleaseQueueThread(timeOut));
 			executorService.submit(new AttachmentListThread(5));
 			executorService.submit(new ReleaseListThread());
@@ -59,7 +61,20 @@ public class NioServer implements Server {
 
 	public Server stop() {
 		if (null != executorService && !executorService.isShutdown()) {
-			executorService.shutdown();
+			executorService.shutdownNow();
+			try {
+				selectorThread.closeAllChannel();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			ports.clear();
+			try {
+				Selector.open().wakeup();
+				Selector.open().close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return this;
 	}

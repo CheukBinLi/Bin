@@ -1,6 +1,7 @@
 package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.StandardSocketOptions;
@@ -61,29 +62,44 @@ public class SelectorThread extends AbstractControlThread {
 	public synchronized void addListener(Integer port, Integer serviceType) throws SocketException, ClosedChannelException, IOException {
 		SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
 		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+		serverSocketChannel.socket().setReuseAddress(true);
 		serverSocketChannel.socket().setSoTimeout(60000);
 		serverSocketChannel.bind(new InetSocketAddress(port));
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
 		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
-		//		if (null != TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType))
-		//			throw new IOException("重复端口");
+		System.err.println(serverSocketChannel.hashCode());
+		// if (null != TYPE_LIST.put(serverSocketChannel.hashCode(),
+		// serviceType))
+		// throw new IOException("重复端口");
 
-		//		System.out.println(port + ":" + serverSocketChannel.hashCode());
+		// System.out.println(port + ":" + serverSocketChannel.hashCode());
+	}
+
+	@Override
+	public void interrupt() {
+		// TODO Auto-generated method stub
+		super.interrupt();
 	}
 
 	@Override
 	public void run() {
-		while (!Thread.interrupted())
+		System.out.println("启动");
+		while (!this.shutdown.get()) {
 			try {
 				select(this.interval);
-				Thread.sleep(10);
-			} catch (IOException e) {
-				Logger.getDefault().error(this.getClass(), e);
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
+				break;
 			}
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				// e.printStackTrace();
+				break;
+			}
+		}
 	}
 
 	void select(long interval) throws IOException {
@@ -107,26 +123,14 @@ public class SelectorThread extends AbstractControlThread {
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);
 				tryDo(RELEASE, key);
 				continue;
-			}
-			else if (!getAddition(key).isLock()) {
+			} else if (!getAddition(key).isLock()) {
 				if (key.isReadable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_READING, Attachment.AT_WRITING)) {
 					tryDo(READER, key);
-				}
-				else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
+				} else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
 					tryDo(WRITER, key);
 				}
 				continue;
 			}
-			// else if (key.isConnectable()) {
-			// if (this.maxConnection <= RELEASE_Queue.size()) {
-			// // key.channel().configureBlocking(false);
-			// key.channel().register(selector, SelectionKey.OP_CONNECT);
-			// continue;
-			// }
-			// else {
-			// key.channel().register(selector, SelectionKey.OP_ACCEPT);
-			// }
-			// }
 		}
 	}
 

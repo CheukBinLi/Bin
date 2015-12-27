@@ -19,7 +19,8 @@ public class AttachmentListThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		while (!Thread.interrupted()) {
+		System.out.println("AttachmentListThread");
+		while (!this.shutdown.get()) {
 			synchronized (ATTACHMENT_LIST) {
 				if (ATTACHMENT_LIST.size() < this.mix)
 					ATTACHMENT_LIST.offerLast(new Attachment(getUUID()));
@@ -27,7 +28,8 @@ public class AttachmentListThread extends AbstractControlThread {
 					try {
 						ATTACHMENT_LIST.wait();
 					} catch (InterruptedException e) {
-						Logger.getDefault().error(this.getClass(), e);
+						// Logger.getDefault().error(this.getClass(), e);
+						break;
 					}
 			}
 		}

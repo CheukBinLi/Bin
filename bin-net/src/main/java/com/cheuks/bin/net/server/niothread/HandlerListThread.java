@@ -7,10 +7,12 @@ import com.cheuks.bin.util.ReflectionUtil;
 
 public class HandlerListThread extends AbstractControlThread {
 
+	ServiceHandler serviceHandler;
+
 	@Override
 	public void run() {
-		ServiceHandler serviceHandler;
-		while (!Thread.interrupted()) {
+		System.out.println("HandlerListThread");
+		while (!this.shutdown.get()) {
 			try {
 				// 搜索
 				serviceHandler = HANDLER_LIST.takeFirst();
@@ -24,11 +26,10 @@ public class HandlerListThread extends AbstractControlThread {
 					cache.addNFloop4Map(true, m, cacheTag, serviceHandler.classID(), ReflectionUtil.newInstance().getMethodName(m));
 				SERVICE_HANDLER_MAP.put(serviceHandler.classID(), serviceHandler);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				// e.printStackTrace();
+				break;
 			}
-
 		}
-
 	}
 
 }
