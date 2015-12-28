@@ -18,14 +18,9 @@ public class ReleaseQueueThread extends AbstractControlThread {
 		Iterator<Release> it;
 		Release release;
 		long now;
-		// //System.err.println("连接器启动");
-		//System.out.println("ReleaseQueue-Dispatcher");
 		while (!this.shutdown.get()) {
 			it = RELEASE_Queue.iterator();
 			now = System.currentTimeMillis();
-			// //System.err.println(new SimpleDateFormat("HH:mm:ss").format(new
-			// Date(now)));
-			// //System.err.println(RELEASE_Queue.size());
 			while (it.hasNext()) {
 				release = it.next();
 				key = release.getKey();
@@ -37,7 +32,6 @@ public class ReleaseQueueThread extends AbstractControlThread {
 			try {
 				Thread.sleep((long) (timeOut * 0.3));
 			} catch (InterruptedException e) {
-				// Logger.getDefault().error(this.getClass(), e);
 				break;
 			}
 			it = null;
@@ -52,7 +46,6 @@ public class ReleaseQueueThread extends AbstractControlThread {
 			}
 			return true;
 		} catch (IOException e) {
-			// Logger.getDefault().info(this.getClass(), e);
 		} finally {
 			RELEASE_Queue.remove(release);
 		}

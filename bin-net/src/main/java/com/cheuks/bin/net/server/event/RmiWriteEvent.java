@@ -17,9 +17,7 @@ public class RmiWriteEvent implements WriteEvent {
 	public SelectionKey process(SelectionKey key, Serializ serializ) throws Throwable {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
-		// channel.write(ByteBufferUtil.getBuffer(("服务回复：" +
 		channel.write(ByteBufferUtil.getBuffer(serializ.serializ((MessageInfo) attachment.getAttachment())));
-		// throw new Throwable("channel读取失败");
 		// 注册读
 		// attachment.registerRead();
 		attachment.registerClose(key);

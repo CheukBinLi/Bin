@@ -101,10 +101,6 @@ public abstract class AbstractControlThread extends Thread {
 	}
 
 	public void addServiceHandler(ServiceHandler handler) throws Exception {
-		// if (null != (handler = SERVICE_HANDLER_MAP.put(handler.path(),
-		// handler))) {
-		// throw new Exception("重复的PATH:" + handler.path());
-		// }
 		HANDLER_LIST.offerLast(handler);
 	}
 

@@ -19,7 +19,6 @@ public class RmiReadEvent implements ReadEvent {
 	public SelectionKey process(SelectionKey key) throws Throwable {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
-		//							channel.configureBlocking(false);
 		ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
 		if (null != out && out.size() > 0)
 			attachment.setAttachment((MessageInfo) serializ.toObject(out));

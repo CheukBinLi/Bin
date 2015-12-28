@@ -57,7 +57,6 @@ public class ByteBufferUtil {
 		}
 	}
 
-
 	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(512);
 		ByteArrayOutputStream out = null;
@@ -124,8 +123,6 @@ public class ByteBufferUtil {
 		byte[] bytes = str.getBytes();
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		// System.out.println("byte[] getBytes(String str)" + new
-		// String(byteBuffer.array()));
 		byteBuffer.flip();
 		return byteBuffer.array();
 	}
@@ -133,25 +130,8 @@ public class ByteBufferUtil {
 	public byte[] getBytes(byte[] bytes) throws IOException, NumberFormatException {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		// System.out.println("byte[] getBytes(byte[] bytes)" + new
-		// String(byteBuffer.array()));
 		byteBuffer.flip();
 		return byteBuffer.array();
-	}
-
-	public static void main(String[] args) {
-		System.out.println(113 / 6);
-		System.out.println(113 % 6);
-		System.out.println(113 % 6 == 0);
-		System.out.println(107 / 6);
-		System.out.println(10 % 3);
-		System.out.println(95 % 1024);
-		String formatChar = "%0" + LENGTH_WAY + "d";
-		String length = String.format(formatChar, 123);
-		System.err.println(length);
-		System.err.println(length.getBytes().length);
-		System.err.println(Integer.MAX_VALUE);
-		System.err.println(Long.MAX_VALUE);
 	}
 
 }

@@ -17,7 +17,6 @@ public class BeanFactory {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> T getBean(String name, boolean cloneModel) throws InstantiationException, IllegalAccessException, CloneNotSupportedException {
-		//		System.out.println(name);
 		Object A;
 		A = cachePoolFactory.get4Map(ClassProcessingFactory.FULL_NAME_BEAN, name);
 		if (null == A)

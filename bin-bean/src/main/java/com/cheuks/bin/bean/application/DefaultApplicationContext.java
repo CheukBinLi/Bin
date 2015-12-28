@@ -68,7 +68,6 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 		isRuned = true;
 		DefaultConfigInfo configInfo = null;
 		if (isXml) {
-			//分析
 			InputStream in;
 			if (null == (in = Thread.currentThread().getContextClassLoader().getResourceAsStream(config))) {
 				File file = new File(config);
@@ -84,58 +83,15 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 
 		isCloneModel.set(cloneModel);
 
-		//附加装载容器
 		if (configInfo.isInitSystemClassLoader())
 			ClassPool.getDefault().insertClassPath(new ClassClassPath(this.getClass()));
-
-		//步骤
-		//		ClassPool cp = ClassPool.getDefault();
-		//		CtClass clazz = cp.get("com.ben.mc.bean.application.BeanFactory");
-		////		clazz.freeze();
-		////		clazz.defrost();
-		////		clazz.detach();
-		//		clazz.setName(clazz.getName());
-		//		CtField field = clazz.getDeclaredField("cachePoolFactory");
-		//		clazz.removeField(field);
-		//		CtField newfield = CtField.make("private static com.ben.mc.cache.CachePoolFactory cachePoolFactory = new com.ben.mc.cache.DefaultCachePoolFactory();", clazz);
-		//		clazz.toClass();
-		//		new BeanFactory().oo();
-		//bean
-		//intercept
-		//		Map<String, CtClass> beans;
 		AbstractClassProcessingFactory<CreateClassInfo> xmlX = new DefaultClassProcessingXmlFactory();
 		AbstractClassProcessingFactory<CreateClassInfo> scanToPack = new DefaultClassProcessingFactory();
-		//xml
 		CreateClassInfo beanQueue = xmlX.getCompleteClass(null, configInfo);
-		//ScanToPack
-		//		CreateClassInfo scanToPackQueue = null;
 		if (null != configInfo.getScanToPack()) {
 			beanQueue.addAll(scanToPack.getCompleteClass(Scan.doScan(configInfo.getScanToPack()), configInfo));
 		}
-		//生成
 		CreateClassFactory.newInstance().create(beanQueue, configInfo.isInitSystemClassLoader(), cloneModel);
-		//		xmlX.anthingToClass(xmlBeanQueue, configInfo.isInitSystemClassLoader());
-		//		xmlX.anthingToClass(scanToPackQueue, configInfo.isInitSystemClassLoader());
-		//		for (int i = 0, len = xmlBeanQueue.size(); i < len; i++) {
-		//			for (Entry<String, CtClass> en : xmlBeanQueue.get(i).entrySet()) {
-		//				System.out.println(en.getValue().getName());
-		//			}
-		//		}
-		//		System.out.println("------------");
-		//		for (int i = 0, len = scanToPackQueue.size(); i < len; i++) {
-		//			for (Entry<String, CtClass> en : scanToPackQueue.get(i).entrySet()) {
-		//				System.out.println(en.getValue().getName());
-		//			}
-		//		}
-	}
-
-	public static void main(String[] args) {
-		try {
-			new DefaultApplicationContext("bean.xml");
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

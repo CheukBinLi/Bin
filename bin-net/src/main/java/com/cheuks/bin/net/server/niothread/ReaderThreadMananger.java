@@ -50,7 +50,6 @@ public class ReaderThreadMananger extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		//System.out.println("ReaderThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!Thread.interrupted()) {
@@ -67,7 +66,6 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					executorService.shutdownNow();
-					// Logger.getDefault().error(this.getClass(), e);
 					break;
 				}
 			}
@@ -102,7 +100,6 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					break;
 				}
 			}
-			//System.out.println("ReaderQueue-Dispatcher结束");
 		}
 	}
 

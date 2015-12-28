@@ -43,7 +43,6 @@ public class HandlerQueueThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		//System.out.println("HandlerQueue");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!this.shutdown.get()) {
@@ -65,7 +64,6 @@ public class HandlerQueueThread extends AbstractControlThread {
 				}
 			}
 		}
-		//System.out.println("HandlerQueueThread结束");
 	}
 
 	class Dispatcher extends AbstractControlThread {

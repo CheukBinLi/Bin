@@ -49,7 +49,8 @@ public abstract class AbstractCachePoolFactory implements CachePoolFactory {
 			else
 				temp = new ArrayList<Object>();
 			getCache().put(key, temp);
-		} else
+		}
+		else
 			temp = (List<Object>) obj;
 		obj = null;
 		int size = floor.length;
@@ -82,7 +83,8 @@ public abstract class AbstractCachePoolFactory implements CachePoolFactory {
 		if (floor[size - 1] < temp.size()) {
 			temp.set(floor[size - 1], value);
 			path.add(floor[size - 1]);
-		} else {
+		}
+		else {
 			temp.add(value);
 			path.add(temp.size() - 1);
 		}
@@ -131,36 +133,6 @@ public abstract class AbstractCachePoolFactory implements CachePoolFactory {
 			}
 			container = (Map) node;// 下一节
 		}
-		//		System.out.println("key:" + key[key.length - 1]+"   "+value);
 		return container.put(key[key.length - 1], value);
-	}
-
-	public static void main(String[] args) throws Exception {
-		ArrayList<Integer> ax = new ArrayList<Integer>();
-		ax.add(99);
-		ax.set(0, 44);
-		System.out.println(ax.get(0));
-		AbstractCachePoolFactory a = new DefaultCachePoolFactory();
-		a.putList("小明", "a", 1, 2, 3, 4, 5, 6, 7, "小B");
-		System.out.println(a.get("小明"));
-		Integer[] A1 = a.addNFloor(true, "学校分级", "野鸡小学", 1);
-		Integer[] A2 = a.addNFloor(true, "学校分级", "野鸡小学1-1班", 1, 1);
-		Integer[] A3 = a.addNFloor(true, "学校分级", "野鸡小学1-2班", 1, 1);
-		Integer[] A33 = a.addNFloor(true, "学校分级", "野鸡小学1-3班", 1, 7, 1, 1, 1);
-		Integer[] A4 = a.addNFloor(true, "学校分级", "野鸡小学2", 2);
-		System.out.println(a.getNFloor("学校分级", A1));
-		System.out.println(a.getNFloor("学校分级", A2));
-		System.out.println(a.getNFloor("学校分级", A3));
-		System.out.println(a.getNFloor("学校分级", A33));
-		System.out.println(a.getNFloor("学校分级", A4));
-		//		Object o = a.get("学校分级");
-		System.out.println(a.get("学校分级"));
-
-		///
-		a.addNFloop4Map(true, "小学鸡-1-1", "学校", "垃圾学校", "4年一班");
-		a.addNFloop4Map(true, "小学鸡-1-2", "学校", "垃圾学校", "4年二班");
-		a.addNFloop4Map(true, "小学鸡-1-3", "学校", "垃圾学校", "4年三班");
-		a.addNFloop4Map(true, "小学鸡-1-4", "学校", "垃圾学校", "4年一班");
-		System.out.println(a.get4Map("学校", "垃圾学校", "4年一班"));
 	}
 }

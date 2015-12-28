@@ -14,7 +14,6 @@ import java.util.Set;
 
 public class SelectorThread extends AbstractControlThread {
 
-	// Map<Integer, Boolean> portInfo;
 	ServerSocketChannel serverSocketChannel;
 	Selector selector;
 	List<Integer[]> port;
@@ -71,7 +70,6 @@ public class SelectorThread extends AbstractControlThread {
 
 	@Override
 	public void interrupt() {
-		// TODO Auto-generated method stub
 		super.interrupt();
 	}
 
@@ -87,7 +85,6 @@ public class SelectorThread extends AbstractControlThread {
 			try {
 				Thread.sleep(5);
 			} catch (InterruptedException e) {
-				// e.printStackTrace();
 				break;
 			}
 		}

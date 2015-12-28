@@ -183,9 +183,6 @@ public class Attachment {
 	 * @return
 	 */
 	public synchronized boolean isConnectionTimeOut(final long now, final long timeOutInterval) {
-		//		System.out.println(String.format("now:%s- this.getConnectionTime():%s> timeOutInterval", sdf.format(new Date(now)), sdf.format(new Date(this.getConnectionTime()))));
 		return now - this.getConnectionTime() > timeOutInterval;
 	}
-
-	//	private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 }

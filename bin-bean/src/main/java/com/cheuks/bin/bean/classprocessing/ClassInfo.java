@@ -163,7 +163,9 @@ public class ClassInfo {
 			return "null";
 		else if (c.getSimpleName().equals("float"))
 			return "-1F";
-		return "";
+		else if (c.getSimpleName().equals("void"))
+			return "";
+		return "null";
 	}
 
 	public static void main(String[] args) throws NotFoundException {

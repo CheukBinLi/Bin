@@ -54,15 +54,8 @@ public class WriterThreadMananger extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		//System.out.println("WriterThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
-		// try {
-		// Thread.sleep(5000);
-		// this.interrupt();
-		// } catch (InterruptedException e1) {
-		// e1.printStackTrace();
-		// }
 		while (!this.shutdown.get()) {
 			synchronized (syncObj) {
 				try {
@@ -77,7 +70,6 @@ public class WriterThreadMananger extends AbstractControlThread {
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					executorService.shutdownNow();
-					// Logger.getDefault().error(this.getClass(), e);
 					break;
 				}
 			}
@@ -117,7 +109,6 @@ public class WriterThreadMananger extends AbstractControlThread {
 						}
 					}
 				} catch (InterruptedException e) {
-					// e.printStackTrace();
 					break;
 				}
 
