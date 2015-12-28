@@ -7,7 +7,7 @@ public class ServiceHandlerTest implements ServiceHandlerTestI {
 	}
 
 	public String a() {
-		return "a";
+		return "aaaaaaaaaaaaaaaasdflkasdklfsdbfwrlkwsdfjsdklfjl";
 	}
 
 }

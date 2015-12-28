@@ -11,7 +11,7 @@ public class HandlerListThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		System.out.println("HandlerListThread");
+		//System.out.println("HandlerListThread");
 		while (!this.shutdown.get()) {
 			try {
 				// 搜索

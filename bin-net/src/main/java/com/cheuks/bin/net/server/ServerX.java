@@ -25,23 +25,7 @@ public class ServerX {
 		// server.addService(10088, 10087, 10089,
 		// 10086).setTimeOut(60000).start(20);
 		server.start(2000, 10000);
-		server.addService(10088, Server.SERVICE_TYPE_RMI)/*.addService(10087, Server.SERVICE_TYPE_MESSAGE)*/;
-		server.addHandler(new ServiceHandlerTest());
-		server.addEventHandle(new EventInfo(new RmiReadEvent(), new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);
-		Thread.sleep(10000);
-		try {
-			server.stop();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Thread.sleep(10000);
-		server.start();
-		try {
-			server.addService(10088, Server.SERVICE_TYPE_RMI)/*.addService(10087, Server.SERVICE_TYPE_MESSAGE)*/;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		server.addService(10088, Server.SERVICE_TYPE_RMI).addService(10087, Server.SERVICE_TYPE_MESSAGE);
 		server.addHandler(new ServiceHandlerTest());
 		server.addEventHandle(new EventInfo(new RmiReadEvent(), new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);
 	}

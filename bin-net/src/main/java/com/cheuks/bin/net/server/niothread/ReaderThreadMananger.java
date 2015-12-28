@@ -1,14 +1,12 @@
 package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.channels.ClosedChannelException;
+import java.nio.channels.SelectionKey;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.cheuks.bin.util.Logger;
 
 public class ReaderThreadMananger extends AbstractControlThread {
 
@@ -52,7 +50,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		System.out.println("ReaderThread");
+		//System.out.println("ReaderThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!Thread.interrupted()) {
@@ -62,7 +60,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -84,6 +83,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						attachment = (Attachment) key.attachment();
 						try {
 							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getReadEvent().process(key);
+							attachment = (Attachment) key.attachment();
 							tryDo(HANDLER, key);
 						} catch (NumberFormatException e) {
 							// e.printStackTrace();
@@ -102,7 +102,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					break;
 				}
 			}
-			System.out.println("ReaderQueue-Dispatcher结束");
+			//System.out.println("ReaderQueue-Dispatcher结束");
 		}
 	}
 

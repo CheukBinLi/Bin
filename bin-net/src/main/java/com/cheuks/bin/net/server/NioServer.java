@@ -1,7 +1,6 @@
 package com.cheuks.bin.net.server;
 
 import java.io.IOException;
-import java.nio.channels.Selector;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,32 +48,6 @@ public class NioServer implements Server {
 			executorService.submit(new WriterThreadMananger());
 			executorService.submit(new HandlerListThread());
 			executorService.submit(new HandlerQueueThread());
-			// // 处理测试
-			// try {
-			// selectorThread.addServiceHandler(new ServiceHandlerTest());
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
-		}
-		return this;
-	}
-
-	public Server stop() {
-		if (null != executorService && !executorService.isShutdown()) {
-			executorService.shutdownNow();
-			try {
-				selectorThread.closeAllChannel();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			ports.clear();
-			try {
-				Selector.open().wakeup();
-				Selector.open().close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return this;
 	}

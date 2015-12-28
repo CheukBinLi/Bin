@@ -57,13 +57,10 @@ public class ByteBufferUtil {
 		}
 	}
 
+
 	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(512);
 		ByteArrayOutputStream out = null;
-		// scatteringByteChannel.read(buffer, 0, LENGTH_WAY);
-		// byte[] lenByte = new byte[LENGTH_WAY];
-		//		byte[] lenByte = get(scatteringByteChannel, LENGTH_WAY);
-		//		int length = Integer.valueOf(new String(lenByte));
 		int length = getIntegerLen(scatteringByteChannel, LENGTH_WAY);
 		if (length < 0)
 			return out;
@@ -119,7 +116,7 @@ public class ByteBufferUtil {
 		//		String formatChar = "%0" + LENGTH_WAY + "d";
 		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
 		byteBuffer.flip();
-		//		 System.err.println(new String(byteBuffer.array()));
+		//				 System.err.println(new String(byteBuffer.array()));
 		return byteBuffer;
 	}
 

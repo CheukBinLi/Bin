@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
 
-import com.cheuks.bin.util.Logger;
-
 public class ReleaseQueueThread extends AbstractControlThread {
 
 	final long timeOut;
@@ -20,14 +18,14 @@ public class ReleaseQueueThread extends AbstractControlThread {
 		Iterator<Release> it;
 		Release release;
 		long now;
-		// System.err.println("连接器启动");
-		System.out.println("ReleaseQueue-Dispatcher");
+		// //System.err.println("连接器启动");
+		//System.out.println("ReleaseQueue-Dispatcher");
 		while (!this.shutdown.get()) {
 			it = RELEASE_Queue.iterator();
 			now = System.currentTimeMillis();
-			// System.err.println(new SimpleDateFormat("HH:mm:ss").format(new
+			// //System.err.println(new SimpleDateFormat("HH:mm:ss").format(new
 			// Date(now)));
-			// System.err.println(RELEASE_Queue.size());
+			// //System.err.println(RELEASE_Queue.size());
 			while (it.hasNext()) {
 				release = it.next();
 				key = release.getKey();

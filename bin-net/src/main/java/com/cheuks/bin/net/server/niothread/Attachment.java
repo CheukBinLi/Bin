@@ -70,6 +70,7 @@ public class Attachment {
 		return attachment;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T getAttachmentX() {
 		if (null != attachment)
 			return (T) attachment;
@@ -135,11 +136,11 @@ public class Attachment {
 		}
 	}
 
-	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final Object messageInfo) throws ClosedChannelException {
+	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final Object attachment) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
 			updateHeartBeat();
-			this.attachment = messageInfo;
+			this.attachment = attachment;
 			key.selector().wakeup();
 			return key.channel().register(key.selector(), ops, this);
 		}

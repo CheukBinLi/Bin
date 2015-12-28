@@ -2,13 +2,11 @@ package com.cheuks.bin.net.server.niothread;
 
 import java.util.concurrent.TimeUnit;
 
-import com.cheuks.bin.util.Logger;
-
 public class ReleaseListThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		System.out.println("ReleaseList");
+		//System.out.println("ReleaseList");
 		while (!this.shutdown.get()) {
 			try {
 				if (null != (key = RELEASE_LIST.pollFirst(5, TimeUnit.MICROSECONDS))) {

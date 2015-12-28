@@ -1,7 +1,6 @@
 package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.StandardSocketOptions;
@@ -12,8 +11,6 @@ import java.nio.channels.ServerSocketChannel;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import com.cheuks.bin.util.Logger;
 
 public class SelectorThread extends AbstractControlThread {
 
@@ -60,7 +57,7 @@ public class SelectorThread extends AbstractControlThread {
 	}
 
 	public synchronized void addListener(Integer port, Integer serviceType) throws SocketException, ClosedChannelException, IOException {
-		SERVER_LIST.add(serverSocketChannel = ServerSocketChannel.open());
+		serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 		serverSocketChannel.socket().setReuseAddress(true);
 		serverSocketChannel.socket().setSoTimeout(60000);
@@ -69,12 +66,7 @@ public class SelectorThread extends AbstractControlThread {
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
 		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
-		System.err.println(serverSocketChannel.hashCode());
-		// if (null != TYPE_LIST.put(serverSocketChannel.hashCode(),
-		// serviceType))
-		// throw new IOException("重复端口");
-
-		// System.out.println(port + ":" + serverSocketChannel.hashCode());
+		SERVER_LIST.add(serverSocketChannel);
 	}
 
 	@Override
@@ -85,7 +77,6 @@ public class SelectorThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		System.out.println("启动");
 		while (!this.shutdown.get()) {
 			try {
 				select(this.interval);
@@ -123,10 +114,12 @@ public class SelectorThread extends AbstractControlThread {
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);
 				tryDo(RELEASE, key);
 				continue;
-			} else if (!getAddition(key).isLock()) {
+			}
+			else if (!getAddition(key).isLock()) {
 				if (key.isReadable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_READING, Attachment.AT_WRITING)) {
 					tryDo(READER, key);
-				} else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
+				}
+				else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
 					tryDo(WRITER, key);
 				}
 				continue;

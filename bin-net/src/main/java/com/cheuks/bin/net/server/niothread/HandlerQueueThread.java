@@ -1,15 +1,11 @@
 package com.cheuks.bin.net.server.niothread;
 
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.cheuks.bin.util.Logger;
 
 public class HandlerQueueThread extends AbstractControlThread {
 
@@ -47,7 +43,7 @@ public class HandlerQueueThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		System.out.println("HandlerQueue");
+		//System.out.println("HandlerQueue");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!this.shutdown.get()) {
@@ -57,7 +53,8 @@ public class HandlerQueueThread extends AbstractControlThread {
 						if (HANDLER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -68,7 +65,7 @@ public class HandlerQueueThread extends AbstractControlThread {
 				}
 			}
 		}
-		System.out.println("HandlerQueueThread结束");
+		//System.out.println("HandlerQueueThread结束");
 	}
 
 	class Dispatcher extends AbstractControlThread {
@@ -80,9 +77,13 @@ public class HandlerQueueThread extends AbstractControlThread {
 				try {
 					if (null != (key = HANDLER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = getAddition(key);
-						key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getHandleEvent().process(key, cache, cacheTag, SERVICE_HANDLER_MAP);
-						attachment = getAddition(key);
-						attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), attachment.getAttachment());
+						if (null != attachment.getAttachment()) {
+							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getHandleEvent().process(key, cache, cacheTag, SERVICE_HANDLER_MAP);
+							attachment = getAddition(key);
+							attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), attachment.getAttachment());
+						}
+						else
+							attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_WRITE, null);
 					}
 				} catch (InterruptedException e) {
 					// e.printStackTrace();

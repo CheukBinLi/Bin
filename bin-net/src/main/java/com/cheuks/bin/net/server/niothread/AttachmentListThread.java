@@ -2,8 +2,6 @@ package com.cheuks.bin.net.server.niothread;
 
 import java.util.UUID;
 
-import com.cheuks.bin.util.Logger;
-
 public class AttachmentListThread extends AbstractControlThread {
 
 	private int mix;
@@ -19,7 +17,7 @@ public class AttachmentListThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		System.out.println("AttachmentListThread");
+		//System.out.println("AttachmentListThread");
 		while (!this.shutdown.get()) {
 			synchronized (ATTACHMENT_LIST) {
 				if (ATTACHMENT_LIST.size() < this.mix)

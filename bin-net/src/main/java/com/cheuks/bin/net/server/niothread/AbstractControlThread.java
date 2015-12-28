@@ -1,6 +1,5 @@
 package com.cheuks.bin.net.server.niothread;
 
-import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -39,15 +38,6 @@ public abstract class AbstractControlThread extends Thread {
 
 	public AbstractControlThread() {
 		super();
-	}
-
-	public void closeAllChannel() throws IOException {
-		ServerSocketChannel tempX;
-		while (null != (tempX = SERVER_LIST.pop())) {
-			if (tempX.isOpen())
-				tempX.close();
-			System.err.println("XXX关闭");
-		}
 	}
 
 	@Override

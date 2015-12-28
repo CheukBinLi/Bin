@@ -5,7 +5,7 @@ import com.cheuks.bin.net.server.handler.CallMethod;
 public class ServiceHandlerTest_net extends CallMethod implements ServiceHandlerTestI {
 
 	public ServiceHandlerTest_net() {
-		super("127.0.0.1", 10088);
+		super("127.99.0.1", 10088);
 	}
 
 	public String classID() {
