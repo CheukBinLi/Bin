@@ -43,8 +43,8 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		}
 		CtMethod ctMethod = CtNewMethod.copy((CtMethod) additional, newClazz, null);
 		boolean isReturn = !ctMethod.getReturnType().getName().equals("void");
-		String result = "callMethod.call(\"" + this.a.classID() + "\",\"" + ReflectionUtil.newInstance().getMethodName(ctMethod) + "\"," + (ctMethod.getParameterTypes().length > 0 ? "new java.lang.Object[] {$args});" : "null);} catch (java.lang.Throwable e) {e.printStackTrace();}");
-		StringBuffer sb = new StringBuffer("{");
+		String result = "callMethod.call(\"" + this.a.classID() + "\",\"" + ReflectionUtil.newInstance().getMethodName(ctMethod) + "\"," + (ctMethod.getParameterTypes().length > 0 ? "$args);" : "null);") + "} catch (java.lang.Throwable e) {e.printStackTrace();}";
+		StringBuffer sb = new StringBuffer("{try {");
 		if (isReturn)
 			sb.append("try {return (" + ctMethod.getReturnType().getName() + ")").append(result).append("return ").append(ClassInfo.getReturn(ctMethod.getReturnType())).append(";");
 		else
