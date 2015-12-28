@@ -1,12 +1,11 @@
-package com.cheuks.bin.anythingtest.rmi;
+package com.cheuks.bin.net.server.handler.test;
 
 import java.util.Date;
 
 import com.cheuks.bin.bean.application.ApplicationContext;
 import com.cheuks.bin.bean.application.DefaultApplicationContext;
-import com.cheuks.bin.net.server.handler.test.ServiceHandlerTestI;
 
-public class T1 {
+public class clientX {
 
 	public static void main(String[] args) throws Throwable {
 		ApplicationContext ac = new DefaultApplicationContext("com.cheuks.bin", false, false, true);
