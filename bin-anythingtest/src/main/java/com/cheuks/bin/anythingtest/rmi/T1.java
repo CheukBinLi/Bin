@@ -10,7 +10,7 @@ public class T1 {
 
 	//	private com.cheuks.bin.net.server.handler.CallMethod callMethod = new com.cheuks.bin.net.server.handler.CallMethod(null,11);
 	public static void main(String[] args) throws Throwable {
-		ApplicationContext ac = new DefaultApplicationContext("com.cheuks.bin", false, false);
+		ApplicationContext ac = new DefaultApplicationContext("com.cheuks.bin", false, false,true);
 		Date now = new Date();
 		for (int i = 100; i-- > 0;) {
 			ServiceHandlerTestI ser = ac.getBeans("ServiceHandlerTestI");

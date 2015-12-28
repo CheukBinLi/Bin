@@ -64,7 +64,7 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 		final String beans = "beans";
 		while (it.hasNext()) {
 			tempEn = it.next();
-			if (null != BeanFactory.getBean(tempEn.getValue().getClassName()))
+			if (null != BeanFactory.getBean(tempEn.getValue().getClassName(), configInfo.isCloneModel()))
 				continue;
 			tempClazz = pool.get(tempEn.getValue().getClassName());
 			complete.put(tempEn.getValue().getClassName(), tempClazz);
@@ -106,14 +106,17 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 		List<HandlerInfo> handlerInfos;
 		Set<String> interecptMethodName = null;
 		int level = 0;
+		CtClass clone = ClassPool.getDefault().get("com.cheuks.bin.bean.classprocessing.CloneAdapter");
 		while (ctEn.hasNext()) {
-			interecptMethodName=null;
+			interecptMethodName = null;
 			level = 0;
 			handlerInfos = new ArrayList<HandlerInfo>();
 			tempCtEn = ctEn.next();
 			superClass = tempCtEn.getValue();
 			newClass = superClass.getClassPool().makeClass(superClass.getName() + Impl);
 			newClass.setSuperclass(superClass);
+			newClass.addInterface(clone);
+			newClass.addMethod(CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClass));
 			ctFields = superClass.getDeclaredFields();
 			ctMethods = superClass.getDeclaredMethods();
 			interceptStr = configInfo.getIntercepts().get(superClass.getName());

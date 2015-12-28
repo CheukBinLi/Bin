@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import com.cheuks.bin.bean.classprocessing.ClassInfo;
 import com.cheuks.bin.bean.classprocessing.ClassProcessingFactory;
+import com.cheuks.bin.bean.classprocessing.CloneAdapter;
 import com.cheuks.bin.bean.classprocessing.DefaultClassProcessingFactory;
 import com.cheuks.bin.bean.util.ShortNameUtil;
 import com.cheuks.bin.cache.CachePoolFactory;
@@ -15,7 +16,7 @@ public class BeanFactory {
 	private static CachePoolFactory cachePoolFactory = new DefaultCachePoolFactory();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> T getBean(String name) throws InstantiationException, IllegalAccessException {
+	public static <T> T getBean(String name, boolean cloneModel) throws InstantiationException, IllegalAccessException, CloneNotSupportedException {
 		//		System.out.println(name);
 		Object A;
 		A = cachePoolFactory.get4Map(ClassProcessingFactory.FULL_NAME_BEAN, name);
@@ -25,6 +26,8 @@ public class BeanFactory {
 			A = cachePoolFactory.get4Map(ClassProcessingFactory.SHORT_NAME_BEAN, name);
 		if (null == A)
 			return null;
+		if (cloneModel)
+			return (T) ((CloneAdapter) A).clone();
 		return (T) ((Class) A).newInstance();
 	}
 
@@ -34,7 +37,7 @@ public class BeanFactory {
 	 * @param key
 	 * @return NULL新添加、Object复盖
 	 */
-	public static Object addBean(@SuppressWarnings("rawtypes") Class value, Object... key) {
+	public static Object addBean(@SuppressWarnings("rawtypes") Object value, Object... key) {
 		return cachePoolFactory.addNFloop4Map(true, value, key);
 	}
 

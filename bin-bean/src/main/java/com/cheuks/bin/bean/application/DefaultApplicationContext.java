@@ -3,6 +3,7 @@ package com.cheuks.bin.bean.application;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.cheuks.bin.bean.classprocessing.AbstractClassProcessingFactory;
 import com.cheuks.bin.bean.classprocessing.CreateClassFactory;
@@ -20,8 +21,10 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 
 	private static boolean isRuned = false;
 
+	public static AtomicBoolean isCloneModel = new AtomicBoolean();
+
 	public <T> T getBeans(String name) throws Throwable {
-		return getBean(name);
+		return getBean(name, isCloneModel.get());
 	}
 
 	/***
@@ -31,8 +34,8 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 	 * @param initSystemClassLoader 是否附加到系统加载器
 	 * @throws Throwable
 	 */
-	public DefaultApplicationContext(String Scan, boolean forced, boolean initSystemClassLoader) throws Throwable {
-		this.action(Scan, false, forced, initSystemClassLoader);
+	public DefaultApplicationContext(String Scan, boolean forced, boolean initSystemClassLoader, boolean cloneModel) throws Throwable {
+		this.action(Scan, false, forced, initSystemClassLoader, cloneModel);
 	}
 
 	/***
@@ -52,14 +55,14 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 	 */
 	public DefaultApplicationContext(String config, boolean forced) throws Throwable {
 		super();
-		this.action(config, true, forced, false);
+		this.action(config, true, forced, false, true);
 	}
 
 	public DefaultApplicationContext() {
 		super();
 	}
 
-	private void action(String config, boolean isXml, boolean forced, boolean initSystemClassLoader) throws Throwable {
+	private void action(String config, boolean isXml, boolean forced, boolean initSystemClassLoader, boolean cloneModel) throws Throwable {
 		if (isRuned && !forced)
 			return;
 		isRuned = true;
@@ -74,9 +77,12 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 				in = new FileInputStream(file);
 			}
 			configInfo = (DefaultConfigInfo) XmlHandler.newInstance().read(in);
+			cloneModel = configInfo.isCloneModel();
 		}
 		else
 			configInfo = new DefaultConfigInfo(config, initSystemClassLoader);
+
+		isCloneModel.set(cloneModel);
 
 		//附加装载容器
 		if (configInfo.isInitSystemClassLoader())
@@ -107,7 +113,7 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 			beanQueue.addAll(scanToPack.getCompleteClass(Scan.doScan(configInfo.getScanToPack()), configInfo));
 		}
 		//生成
-		CreateClassFactory.newInstance().create(beanQueue, configInfo.isInitSystemClassLoader());
+		CreateClassFactory.newInstance().create(beanQueue, configInfo.isInitSystemClassLoader(), cloneModel);
 		//		xmlX.anthingToClass(xmlBeanQueue, configInfo.isInitSystemClassLoader());
 		//		xmlX.anthingToClass(scanToPackQueue, configInfo.isInitSystemClassLoader());
 		//		for (int i = 0, len = xmlBeanQueue.size(); i < len; i++) {
@@ -131,4 +137,5 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 			e.printStackTrace();
 		}
 	}
+
 }

@@ -22,13 +22,13 @@ public class CreateClassFactory {
 		return newInstance;
 	}
 
-	public void create(final CreateClassInfo classInfo, final boolean initSystemClassLoader) throws InterruptedException {
+	public void create(final CreateClassInfo classInfo, final boolean initSystemClassLoader, final boolean cloneModel) throws InterruptedException, InstantiationException, IllegalAccessException {
 		//第一节
 		DefaultTempClass tempClass;
 		for (int i = 0, len = classInfo.getFirstQueue().size(); i < len; i++) {
 			try {
 				tempClass = classInfo.getFirstQueue().get(i);
-				AbstractClassProcessingFactory.anthingToClass(tempClass.getNewClazz(), tempClass.getSuperClazz().getName(), initSystemClassLoader);
+				AbstractClassProcessingFactory.anthingToClass(tempClass.getNewClazz(), tempClass.getSuperClazz().getName(), initSystemClassLoader, cloneModel);
 			} catch (CannotCompileException e) {
 				e.printStackTrace();
 			}
@@ -61,61 +61,10 @@ public class CreateClassFactory {
 				} catch (DuplicateMemberException e) {
 					//					e.printStackTrace();
 				}
-				AbstractClassProcessingFactory.anthingToClass(newClazz, tempClass.getSuperClazz().getName(), isInitSystemClassLoader());
+				AbstractClassProcessingFactory.anthingToClass(newClazz, tempClass.getSuperClazz().getName(), isInitSystemClassLoader(), cloneModel);
 			} catch (Exception e) {
 				e.printStackTrace();
 				errorQueue.put(tempClass);
-			}
-		}
-	}
-
-	class worker extends RecursiveAction {
-
-		private DefaultTempClass tempClass;
-
-		private boolean assembly;
-
-		/***
-		 * 
-		 * @param tempClass 建立的CCLASS
-		 * @param assembly 是否需要组装
-		 */
-		public worker(DefaultTempClass tempClass, boolean assembly) {
-			super();
-			this.tempClass = tempClass;
-			this.assembly = assembly;
-		}
-
-		@Override
-		protected void compute() {
-			//建立构造、构造加载
-			try {
-				CtConstructor tempC;
-				CtClass newClazz = tempClass.getNewClazz();
-				CtConstructor[] ctConstructors = tempClass.getSuperClazz().getDeclaredConstructors();
-				CtConstructor defauleConstructor = CtNewConstructor.defaultConstructor(newClazz);
-				defauleConstructor.setBody(tempClass.getConstructor());
-				defauleConstructor.addCatch("", newClazz.getClassPool().get("java.lang.Exception"));
-				//################构造###################
-				newClazz.addConstructor(defauleConstructor);
-
-				try {
-					for (CtConstructor c : ctConstructors) {
-						tempC = CtNewConstructor.copy(c, newClazz, null);
-						tempC.setBody("{super($$);}");
-						newClazz.addConstructor(tempC);
-					}
-				} catch (DuplicateMemberException e) {
-					//				e.printStackTrace();
-				}
-				AbstractClassProcessingFactory.anthingToClass(newClazz, tempClass.getSuperClazz().getName(), initSystemClassLoader);
-			} catch (Exception e) {
-				e.printStackTrace();
-				try {
-					errorQueue.put(tempClass);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
 			}
 		}
 	}

@@ -31,7 +31,7 @@ public class Scan_Classprocessing {
 		//		Thread.sleep(50);
 		//		AutoLoadTestI i = BeanFactory.getBean("autoLoadTestI");
 		//		i.hello("王小牛");
-		IocTest1 i = BeanFactory.getBean("iocTest1");
+		IocTest1 i = BeanFactory.getBean("iocTest1", false);
 		i.aaxx("王小牛0_0");
 
 	}

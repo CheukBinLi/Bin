@@ -24,14 +24,14 @@ public class Xml_Classprocessing {
 
 		IocTest1 i = null;
 		for (int z = 0, len = 100000000; z < len; z++) {
-			i = BeanFactory.getBean("IocTest1");
+			i = BeanFactory.getBean("IocTest1", false);
 			i.aaxx("xxxx");
 		}
 		end = new Date();
 		System.out.println("i使用时间" + (end.getTime() - now.getTime()));
 
 		now = new Date();
-		XmlIocTest1 x = BeanFactory.getBean("XmlIocTest1");
+		XmlIocTest1 x = BeanFactory.getBean("XmlIocTest1", true);
 		x.aaxx("123xxxx");
 		x.aaxx3("xxxxxxxxxxxxxx3", "123");
 		end = new Date();

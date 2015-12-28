@@ -28,9 +28,14 @@ public class DefaultConfigInfo implements Serializable, XmlType, ConfigInfo {
 		return XmlType_InitSystemClassLoader.equals(tag);
 	}
 
+	public boolean isCloneModel(String tag) {
+		return XmlType_CloneModel.equals(tag);
+	}
+
 	private static final long serialVersionUID = 1L;
 	private CachePool cachePool;
 	private String scanToPack;
+	private boolean CloneModel;
 	private boolean initSystemClassLoader;
 	private Map<String, Bean> beans = new HashMap<String, DefaultConfigInfo.Bean>();
 	/***
@@ -222,6 +227,14 @@ public class DefaultConfigInfo implements Serializable, XmlType, ConfigInfo {
 		super();
 		this.scanToPack = scanToPack;
 		this.initSystemClassLoader = initSystemClassLoader;
+	}
+
+	public boolean isCloneModel() {
+		return CloneModel;
+	}
+
+	public void setCloneModel(Attributes a) {
+		CloneModel = Boolean.valueOf(a.getValue(XmlType_Value));
 	}
 
 }

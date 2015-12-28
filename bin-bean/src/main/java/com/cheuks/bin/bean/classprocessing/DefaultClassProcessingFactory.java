@@ -20,6 +20,7 @@ import com.cheuks.bin.bean.classprocessing.handler.DefaultRmiClientHandler;
 import com.cheuks.bin.bean.classprocessing.handler.HandlerInfo;
 import com.cheuks.bin.bean.util.ExecutorServiceFatory;
 import com.cheuks.bin.bean.util.ShortNameUtil;
+import com.cheuks.bin.bean.xml.DefaultConfigInfo;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -42,7 +43,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 		cache.put(ClassProcessingFactory.SHORT_NAME_CACHE, shortName);
 		Iterator<String> it = clazzs.iterator();
 		while (it.hasNext()) {
-			ExecutorServiceFatory.SINGLE_EXECUTOR_SERVICE.execute(new Worker(countDownLatch, cache, it.next()));
+			ExecutorServiceFatory.SINGLE_EXECUTOR_SERVICE.execute(new Worker(countDownLatch, cache, it.next(), (DefaultConfigInfo) config));
 		}
 		countDownLatch.await();
 		//
@@ -60,20 +61,23 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 		private Map<String, Map> cache;
 		private String className;
 		private List<String> xmlAppendList;
+		private DefaultConfigInfo configInfo;
 		private boolean falgs;
 
-		public Worker(CountDownLatch countDownLatch, Map<String, Map> cache, String className) {
+		public Worker(CountDownLatch countDownLatch, Map<String, Map> cache, String className, DefaultConfigInfo configInfo) {
 			super();
 			this.countDownLatch = countDownLatch;
 			this.cache = cache;
 			this.className = className;
+			this.configInfo = configInfo;
 		}
 
-		public Worker(CountDownLatch countDownLatch, Map<String, Map> cache, List<String> xmlAppendList) {
+		public Worker(CountDownLatch countDownLatch, Map<String, Map> cache, List<String> xmlAppendList, DefaultConfigInfo configInfo) {
 			super();
 			this.countDownLatch = countDownLatch;
 			this.cache = cache;
 			this.xmlAppendList = xmlAppendList;
+			this.configInfo = configInfo;
 			this.falgs = true;
 		}
 
@@ -91,7 +95,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 					CtClass clazz = pool.get(className);
 
 					Object o = clazz.getAnnotation(Register.class);
-					if (null == o || null != BeanFactory.getBean(clazz.getName()))
+					if (null == o || null != BeanFactory.getBean(clazz.getName(), configInfo.isCloneModel()))
 						continue;
 					String name = ((Register) o).value();
 					if (name.length() > 0)
@@ -114,6 +118,8 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 			} catch (InstantiationException e1) {
 				e1.printStackTrace();
 			} catch (IllegalAccessException e1) {
+				e1.printStackTrace();
+			} catch (CloneNotSupportedException e1) {
 				e1.printStackTrace();
 			} finally {
 				if (null != countDownLatch)
@@ -147,6 +153,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 		List<HandlerInfo> handlerInfos = null;
 		boolean appendTry;
 		boolean isInterface;
+		CtClass clone = ClassPool.getDefault().get("com.cheuks.bin.bean.classprocessing.CloneAdapter");
 		while (it.hasNext()) {
 			level = 0;
 			handlerInfos = new ArrayList<HandlerInfo>();
@@ -164,6 +171,11 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 				newClazz.addInterface(tempClazz);
 			else
 				newClazz.setSuperclass(tempClazz);
+			//clone
+			newClazz.addInterface(clone);
+			//实现克隆
+//			CtMethod x=CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz)
+			newClazz.addMethod(CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz));
 
 			HandlerInfo handlerInfo;
 			for (ClassProcessingHandler<CtClass, Object, CtMember, CtClass, HandlerInfo> cph : handler) {
@@ -236,7 +248,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 						newClazz.getClassPool().importPackage(s);
 					}
 			}
-//			System.out.println(level + ":" + newClazz.getName());
+			//			System.out.println(level + ":" + newClazz.getName());
 			if (level == 0)
 				//				A1.put(en.getKey(), newClazz);
 				result.addFirstQueue(new DefaultTempClass(tempClazz, newClazz));

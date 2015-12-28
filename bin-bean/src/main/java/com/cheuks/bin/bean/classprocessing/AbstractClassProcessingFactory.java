@@ -31,7 +31,7 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 			}
 	}
 
-	public static void anthingToClass(final CtClass newClazz, final String superClazzName, boolean initSystemClassLoader) throws CannotCompileException {
+	public static void anthingToClass(final CtClass newClazz, final String superClazzName, boolean initSystemClassLoader, boolean cloneModel) throws CannotCompileException, InstantiationException, IllegalAccessException {
 		final Class c = newClazz.toClass();
 		//反编
 		//		try {
@@ -40,9 +40,18 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 		//			//					errorQueue.add(en);
 		//			e.printStackTrace();
 		//		}
-		BeanFactory.addBean(c, FULL_NAME_BEAN, superClazzName);
-		BeanFactory.addBean(c, NICK_NAME_BEAN, ShortNameUtil.makeLowerHumpNameShortName(superClazzName));
-		BeanFactory.addBean(c, SHORT_NAME_BEAN, ShortNameUtil.makeShortName(superClazzName));
+		if (cloneModel) {
+			final Object parentObject = c.newInstance();
+			BeanFactory.addBean(parentObject, FULL_NAME_BEAN, superClazzName);
+			BeanFactory.addBean(parentObject, NICK_NAME_BEAN, ShortNameUtil.makeLowerHumpNameShortName(superClazzName));
+			BeanFactory.addBean(parentObject, SHORT_NAME_BEAN, ShortNameUtil.makeShortName(superClazzName));
+		}
+		else {
+			BeanFactory.addBean(c, FULL_NAME_BEAN, superClazzName);
+			BeanFactory.addBean(c, NICK_NAME_BEAN, ShortNameUtil.makeLowerHumpNameShortName(superClazzName));
+			BeanFactory.addBean(c, SHORT_NAME_BEAN, ShortNameUtil.makeShortName(superClazzName));
+		}
+
 		//		System.err.println(ShortNameUtil.makeShortName(en.getKey()));
 
 		if (initSystemClassLoader)

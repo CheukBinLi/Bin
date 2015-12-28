@@ -73,6 +73,9 @@ public class XmlHandler extends DefaultHandler {
 		else if (defaultConfigInfo.isInitSystemClassLoader(qName)) {
 			defaultConfigInfo.setInitSystemClassLoader(attributes);
 		}
+		else if (defaultConfigInfo.isCloneModel(qName)) {
+			defaultConfigInfo.setCloneModel(attributes);
+		}
 		super.startElement(uri, localName, qName, attributes);
 	}
 
