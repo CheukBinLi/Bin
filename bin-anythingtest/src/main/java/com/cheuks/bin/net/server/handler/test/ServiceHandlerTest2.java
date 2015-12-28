@@ -1,5 +1,7 @@
 package com.cheuks.bin.net.server.handler.test;
 
+import com.cheuks.bin.annotation.Register;
+import com.cheuks.bin.annotation.RmiClient;
 import com.cheuks.bin.net.server.handler.MessageInfo;
 
 /***
@@ -8,33 +10,32 @@ import com.cheuks.bin.net.server.handler.MessageInfo;
  * @author Ben
  *
  */
-public class ServiceHandlerTest implements ServiceHandlerTestI {
+
+@Register
+@RmiClient(path = "127.0.0.1:10088", classID = "x/1.0")
+public class ServiceHandlerTest2 implements ServiceHandlerTestI {
 
 	public String classID() {
-		return "x/1.0";
+		return "";
 	}
 
 	public String a() {
-		return "aaaaaaaaaaaaaaaasdflkasdklfsdbfwrlkwsdfjsdklfjl";
+		return null;
 	}
 
 	public MessageInfo mmx() throws Throwable {
-		MessageInfo mi = new MessageInfo();
-		mi.setMethod("xxxxxxxxxxxx");
-		mi.setPath("123");
-		return mi;
+		return null;
 	}
 
 	public void mmx1() throws Throwable {
-		System.out.println("mmx1");
 	}
 
 	public String a(String haha) throws Throwable {
-		return haha + "叼嗱星!";
+		return "";
 	}
 
 	public String a(String haha, int a) throws Throwable {
-		// TODO Auto-generated method stub
-		return haha+a;
+		return "";
 	}
+
 }

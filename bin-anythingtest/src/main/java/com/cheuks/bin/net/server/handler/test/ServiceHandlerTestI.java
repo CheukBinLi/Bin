@@ -10,7 +10,11 @@ import com.cheuks.bin.net.server.handler.ServiceHandler;
 public interface ServiceHandlerTestI extends ServiceHandler {
 	public String a() throws Throwable;
 
+	public String a(String haha) throws Throwable;
+
 	public MessageInfo mmx() throws Throwable;
 
 	public void mmx1() throws Throwable;
+
+	public String a(String haha, int a) throws Throwable;
 }

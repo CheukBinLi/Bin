@@ -34,18 +34,17 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 	public static void anthingToClass(final CtClass newClazz, final String superClazzName, boolean initSystemClassLoader, boolean cloneModel) throws CannotCompileException, InstantiationException, IllegalAccessException {
 		final Class c = newClazz.toClass();
 		try {
-			newClazz.writeFile("C:\\Users\\Ben\\Desktop");
+			newClazz.writeFile("D:\\Desktop");
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (cloneModel) {
-			System.out.println(c.getName());
 			final Object parentObject = c.newInstance();
 			BeanFactory.addBean(parentObject, FULL_NAME_BEAN, superClazzName);
 			BeanFactory.addBean(parentObject, NICK_NAME_BEAN, ShortNameUtil.makeLowerHumpNameShortName(superClazzName));
 			BeanFactory.addBean(parentObject, SHORT_NAME_BEAN, ShortNameUtil.makeShortName(superClazzName));
-		}
-		else {
+		} else {
 			BeanFactory.addBean(c, FULL_NAME_BEAN, superClazzName);
 			BeanFactory.addBean(c, NICK_NAME_BEAN, ShortNameUtil.makeLowerHumpNameShortName(superClazzName));
 			BeanFactory.addBean(c, SHORT_NAME_BEAN, ShortNameUtil.makeShortName(superClazzName));
@@ -94,8 +93,7 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 			final Map<String, Method> m = new ConcurrentHashMap<String, Method>();
 			fields = f;
 			methods = m;
-		}
-		else {
+		} else {
 			final Map<String, Field> f = new HashMap<String, Field>();
 			final Map<String, Method> m = new HashMap<String, Method>();
 			fields = f;
