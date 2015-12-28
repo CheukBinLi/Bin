@@ -46,11 +46,11 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		String result = "callMethod.call(\"" + this.a.classID() + "\",\"" + ReflectionUtil.newInstance().getMethodName(ctMethod) + "\"," + (ctMethod.getParameterTypes().length > 0 ? "$args);" : "null);") + "} catch (java.lang.Throwable e) {e.printStackTrace();}";
 		StringBuffer sb = new StringBuffer("{try {");
 		if (isReturn)
-			sb.append("try {return (" + ctMethod.getReturnType().getName() + ")").append(result).append("return ").append(ClassInfo.getReturn(ctMethod.getReturnType())).append(";");
+			sb.append("return (" + ctMethod.getReturnType().getName() + ")").append(result).append("return ").append(ClassInfo.getReturn(ctMethod.getReturnType())).append(";");
 		else
 			sb.append(result);
 		sb.append("}");
-		//		System.out.println(sb.toString());
+		// System.out.println(sb.toString());
 		ctMethod.setBody(sb.toString());
 		newClazz.addMethod(ctMethod);
 		return new HandlerInfo(null, newClazz, ctMethod);

@@ -13,14 +13,14 @@ import javassist.NotFoundException;
 
 /***
  * 
- * Copyright 2015    CHEUK.BIN.LI Individual All
- *  
+ * Copyright 2015 CHEUK.BIN.LI Individual All
+ * 
  * ALL RIGHT RESERVED
- *  
+ * 
  * CREATE ON 2015年11月15日 下午1:18:29
- *  
+ * 
  * EMAIL:20796698@QQ.COM
- *  
+ * 
  * GITHUB:https://github.com/fdisk123
  * 
  * @author CHEUK.BIN.LI
@@ -74,10 +74,14 @@ public class ClassInfo {
 
 	/***
 	 * 
-	 * @param name 名称
-	 * @param clazz 扩展用：null
-	 * @param fields  字段
-	 * @param methods 方法
+	 * @param name
+	 *            名称
+	 * @param clazz
+	 *            扩展用：null
+	 * @param fields
+	 *            字段
+	 * @param methods
+	 *            方法
 	 */
 	public ClassInfo(String name, Class clazz, Map<String, Field> fields, Map<String, Method> methods) {
 		super();
@@ -89,23 +93,25 @@ public class ClassInfo {
 
 	/***
 	 * 方法名加工
+	 * 
 	 * @param m
 	 * @return
 	 */
 	public static final String getMethod(Method m) {
 		String ax = String.format("%s %s %s(%s);", Modifier.toString(m.getModifiers()), m.getReturnType().getName(), m.getName(), getParameterTypes(m.getParameterTypes()));
-		//		System.out.println(ax);
+		// System.out.println(ax);
 		return ax;
 	}
 
 	/***
 	 * 方法名加工
+	 * 
 	 * @param m
 	 * @return
 	 */
 	public static final String getMethod(CtMethod m) throws NotFoundException {
 		String ax = String.format("%s %s %s(%s);", Modifier.toString(m.getModifiers()), m.getReturnType().getName(), m.getName(), getParameterTypes(m.getParameterTypes()));
-		//		System.out.println(ax);
+		// System.out.println(ax);
 		return ax;
 	}
 
@@ -125,6 +131,7 @@ public class ClassInfo {
 
 	/***
 	 * 返回类型
+	 * 
 	 * @param c
 	 * @return
 	 */
@@ -163,7 +170,9 @@ public class ClassInfo {
 			return "null";
 		else if (c.getSimpleName().equals("float"))
 			return "-1F";
-		return "";
+		else if (c.getSimpleName().equals("void"))
+			return "";
+		return "null";
 	}
 
 	public static void main(String[] args) throws NotFoundException {
