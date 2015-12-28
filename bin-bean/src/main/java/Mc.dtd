@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT Context (InitSystemClassLoader*,Bean*,Intercept*,ScanToPack*)>
-<!--<!ELEMENT Context (CachePool,Bean*,Intercept*,ScanToPack*)>-->
+<!ELEMENT Context (CloneModel,InitSystemClassLoader,Bean*,Intercept*,ScanToPack)>
+<!--<!ELEMENT Context (CachePool,Bean*,Intercept*,ScanToPack*,CloneModel)>-->
 <!ELEMENT CachePool EMPTY>
 <!ELEMENT Bean EMPTY>
 <!ELEMENT Intercept EMPTY>
 <!ELEMENT ScanToPack EMPTY>
 <!ELEMENT InitSystemClassLoader EMPTY>
+<!ELEMENT CloneModel EMPTY>
 
 <!--CachePool-->
 <!--<!ATTLIST CachePool class (com.ben.mc.cache.DefaultCachePoolFactory) #REQUIRED>-->
@@ -27,3 +28,6 @@
 <!ATTLIST ScanToPack value CDATA #REQUIRED>
 <!--ScanToPack-->
 <!ATTLIST InitSystemClassLoader value (true|false) #REQUIRED>
+
+<!--CloneModel-->
+<!ATTLIST CloneModel value (true|false) #REQUIRED>
