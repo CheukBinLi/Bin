@@ -21,7 +21,7 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 
 	private static boolean isRuned = false;
 
-	public static AtomicBoolean isCloneModel = new AtomicBoolean();
+	public static final AtomicBoolean isCloneModel = new AtomicBoolean();
 
 	public <T> T getBeans(String name) throws Throwable {
 		return getBean(name, isCloneModel.get());
@@ -32,6 +32,7 @@ public class DefaultApplicationContext extends BeanFactory implements Applicatio
 	 * @param Scan 搜索路径
 	 * @param forced 是否强制加载
 	 * @param initSystemClassLoader 是否附加到系统加载器
+	 * @param cloneModel 是否使用对角克隆模式
 	 * @throws Throwable
 	 */
 	public DefaultApplicationContext(String Scan, boolean forced, boolean initSystemClassLoader, boolean cloneModel) throws Throwable {

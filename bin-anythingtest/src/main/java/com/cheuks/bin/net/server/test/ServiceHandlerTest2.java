@@ -1,4 +1,4 @@
-package com.cheuks.bin.net.server.handler.test;
+package com.cheuks.bin.net.server.test;
 
 import com.cheuks.bin.annotation.Register;
 import com.cheuks.bin.annotation.RmiClient;

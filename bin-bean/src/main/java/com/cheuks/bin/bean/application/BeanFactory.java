@@ -14,6 +14,7 @@ import com.cheuks.bin.cache.DefaultCachePoolFactory;
 public class BeanFactory {
 
 	private static CachePoolFactory cachePoolFactory = new DefaultCachePoolFactory();
+	//	private static CachePoolFactory lineCachePoolFactory = new DefaultLineCachePoolFactory();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> T getBean(String name, boolean cloneModel) throws InstantiationException, IllegalAccessException, CloneNotSupportedException {
