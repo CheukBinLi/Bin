@@ -17,30 +17,48 @@ public class CallMethod {
 	SocketChannel sc;
 	private String ip;
 	private int port;
+	private boolean shortConnect;
+	private long connectionDateTime;
+	private long timeOut;
 
-	public CallMethod(String ip, int port) {
+	public CallMethod(String ip, int port, boolean shortConnect, int timeOut) {
 		super();
 		this.ip = ip;
 		this.port = port;
+		this.shortConnect = shortConnect;
+		this.timeOut = timeOut;
+	}
+
+	private boolean timeOutChecked(long lastConnectionTime, long timeOut) {
+		return System.currentTimeMillis() - lastConnectionTime < timeOut;
 	}
 
 	public SocketChannel getConnection() throws IOException {
-		SocketChannel sc = SocketChannel.open();
-		sc.connect(new InetSocketAddress(this.ip, this.port));
-		return sc;
+		try {
+			if (null != sc && sc.isConnected() && sc.isOpen() && timeOutChecked(this.connectionDateTime, this.timeOut))
+				return sc;
+			sc = SocketChannel.open();
+			sc.connect(new InetSocketAddress(this.ip, this.port));
+			return sc;
+		} finally {
+			connectionDateTime = System.currentTimeMillis();
+		}
 	}
 
 	public Object call(String path, String methodName, Object... params) throws NumberFormatException, Throwable {
-		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setPath(path).setMethod(methodName);
-		messageInfo.setParams(params);
-		sc = getConnection();
-		sc.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)));
-		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(sc));
 		try {
-		} catch (java.lang.Throwable e) {
-			e.printStackTrace();
+			MessageInfo messageInfo = new MessageInfo();
+			messageInfo.setPath(path).setMethod(methodName);
+			messageInfo.setParams(params);
+			sc = getConnection();
+			sc.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)));
+			messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(sc));
+			if (null != messageInfo.getThrowable())
+				throw messageInfo.getThrowable();
+			return messageInfo.getResult();
+		} finally {
+			if (shortConnect && sc.isOpen())
+				sc.close();
 		}
-		return messageInfo.getResult();
 	}
 }

@@ -6,7 +6,6 @@ import java.nio.channels.SocketChannel;
 import com.cheuks.bin.net.server.handler.MessageInfo;
 import com.cheuks.bin.net.server.niothread.Attachment;
 import com.cheuks.bin.net.util.ByteBufferUtil;
-import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
 
 public class RmiWriteEvent implements WriteEvent {
@@ -17,10 +16,12 @@ public class RmiWriteEvent implements WriteEvent {
 	public SelectionKey process(SelectionKey key, Serializ serializ) throws Throwable {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
-		channel.write(ByteBufferUtil.getBuffer(serializ.serializ((MessageInfo) attachment.getAttachment())));
-		// 注册读
-		// attachment.registerRead();
-		attachment.registerClose(key);
+		MessageInfo mi = (MessageInfo) attachment.getAttachment();
+		channel.write(ByteBufferUtil.getBuffer(serializ.serializ(mi)));
+		if (mi.isShortConnect())
+			attachment.registerClose(key);
+		else
+			attachment.registerRead();
 		return key;
 	}
 }

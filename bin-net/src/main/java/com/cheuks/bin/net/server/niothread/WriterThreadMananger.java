@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.net.server.handler.MessageInfo;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 
 public class WriterThreadMananger extends AbstractControlThread {
@@ -70,6 +69,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					executorService.shutdownNow();
+					// Logger.getDefault().error(this.getClass(), e);
 					break;
 				}
 			}
@@ -101,7 +101,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							e.printStackTrace();
+							//							e.printStackTrace();
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {
@@ -109,11 +109,11 @@ public class WriterThreadMananger extends AbstractControlThread {
 						}
 					}
 				} catch (InterruptedException e) {
+					// e.printStackTrace();
 					break;
 				}
 
 			}
-			//System.out.println("WriteQueue-Dispatcher结束");
 		}
 	}
 }

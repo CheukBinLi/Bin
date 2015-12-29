@@ -26,20 +26,23 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		return new HashSet<Integer>(Arrays.asList(Type));
 	}
 
-	String imp = "private com.cheuks.bin.net.server.handler.CallMethod callMethod = new com.cheuks.bin.net.server.handler.CallMethod(\"%s\",%d);";
+	String imp = "private com.cheuks.bin.net.server.handler.CallMethod callMethod = new com.cheuks.bin.net.server.handler.CallMethod(\"%s\",%d,%b,%d);";
 
 	public HandlerInfo doProcessing(Map<String, Map> cache, CtClass newClazz, CtMember additional, Object config) throws Throwable {
 		try {
 			if (null == newClazz.getDeclaredField("callMethod")) {
 				String[] path = this.a.path().split(":");
-				if (path.length == 2)
-					newClazz.addField(CtField.make(String.format(imp, path[0], path[1]), newClazz));
+				if (path.length != 2) {
+					return null;
+				}
+				newClazz.addField(CtField.make(String.format(imp, path[0], Integer.valueOf(path[1]), this.a.shortConnect(), this.a.timeOut()), newClazz));
 			}
 		} catch (NotFoundException e) {
 			String[] path = this.a.path().split(":");
-			if (path.length != 2)
+			if (path.length != 2) {
 				return null;
-			newClazz.addField(CtField.make(String.format(imp, path[0], Integer.valueOf(path[1])), newClazz));
+			}
+			newClazz.addField(CtField.make(String.format(imp, path[0], Integer.valueOf(path[1]), this.a.shortConnect(), this.a.timeOut()), newClazz));
 		}
 		CtMethod ctMethod = CtNewMethod.copy((CtMethod) additional, newClazz, null);
 		boolean isReturn = !ctMethod.getReturnType().getName().equals("void");
@@ -50,9 +53,10 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		else
 			sb.append(result);
 		sb.append("}");
+		//		System.out.println(sb.toString());
 		ctMethod.setBody(sb.toString());
 		newClazz.addMethod(ctMethod);
 		return new HandlerInfo(null, newClazz, ctMethod);
-	}
 
+	}
 }
