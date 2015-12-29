@@ -8,9 +8,10 @@
 							<module>bin-anythingtest</module>
 
 @例子:
+
 	IOC/AOP:
-可以用xml写配置。 mc-bean 包里包含MC.dtd(约束)、bean.xml两个文件(例子，可以配合com.cheuks.bin.anythingtest.bean.mc.mc_test.java例子运行)
-可以不用xml直接传入描述路径运行即可。
+	可以用xml写配置。 mc-bean 包里包含MC.dtd(约束)、bean.xml两个文件(例子，可以配合com.cheuks.bin.anythingtest.bean.mc.mc_test.java例子运行)
+	可以不用xml直接传入描述路径运行即可。
 @例子:
 
 		public static void main(String[] args) throws Throwable {
@@ -95,6 +96,7 @@ xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Int
 
 
 @例子:  远程调用
+
       服务端 :com.cheuks.bin.net.server.test.ServerX.java
       客户端 :com.cheuks.bin.net.server.test.clientX.java
 
