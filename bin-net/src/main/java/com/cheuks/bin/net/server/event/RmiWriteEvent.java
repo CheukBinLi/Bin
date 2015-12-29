@@ -18,11 +18,14 @@ public class RmiWriteEvent implements WriteEvent {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
 		// channel.write(ByteBufferUtil.getBuffer(("服务回复：" +
-		channel.write(ByteBufferUtil.getBuffer(serializ.serializ((MessageInfo) attachment.getAttachment())));
+		MessageInfo mi = (MessageInfo) attachment.getAttachment();
+		channel.write(ByteBufferUtil.getBuffer(serializ.serializ(mi)));
 		// throw new Throwable("channel读取失败");
 		// 注册读
-		// attachment.registerRead();
-		attachment.registerClose(key);
+		if (mi.isShortConnect())
+			attachment.registerClose(key);
+		else
+			attachment.registerRead();
 		return key;
 	}
 }

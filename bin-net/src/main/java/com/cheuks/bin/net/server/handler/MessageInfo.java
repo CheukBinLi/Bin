@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class MessageInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private boolean shortConnect;
 	private String path;
 	private String method;
 	private Object[] params;
@@ -53,6 +54,15 @@ public class MessageInfo implements Serializable {
 
 	public MessageInfo setThrowable(Throwable throwable) {
 		this.throwable = throwable;
+		return this;
+	}
+
+	public boolean isShortConnect() {
+		return shortConnect;
+	}
+
+	public MessageInfo setShortConnect(boolean shortConnect) {
+		this.shortConnect = shortConnect;
 		return this;
 	}
 }

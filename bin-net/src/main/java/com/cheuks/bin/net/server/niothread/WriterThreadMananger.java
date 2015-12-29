@@ -109,7 +109,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							e.printStackTrace();
+							//							e.printStackTrace();
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {

@@ -12,7 +12,7 @@ import com.cheuks.bin.net.server.handler.MessageInfo;
  */
 
 @Register
-@RmiClient(path = "127.0.0.1:10088", classID = "x/1.0")
+@RmiClient(path = "127.0.0.1:10088", classID = "x/1.0", shortConnect = true)
 public class ServiceHandlerTest2 implements ServiceHandlerTestI {
 
 	public String classID() {

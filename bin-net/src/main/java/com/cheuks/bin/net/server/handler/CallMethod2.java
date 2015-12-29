@@ -43,15 +43,5 @@ public class CallMethod2 {
 		out.close();
 		in.close();
 		return messageInfo.getResult();
-		//		MessageInfo messageInfo = new MessageInfo();
-		//		messageInfo.setPath("x/1.0").setMethod("java.lang.String:a");
-		//		s = getConnection(null);
-		//		OutputStream out = s.getOutputStream();
-		//		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
-		//		InputStream in = s.getInputStream();
-		//		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(in));
-		//		out.close();
-		//		in.close();
-		//		return messageInfo.getResult();
 	}
 }

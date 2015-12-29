@@ -19,4 +19,10 @@ public @interface RmiClient {
 
 	public String classID();
 
+	/***
+	 * 是否使用短连接
+	 * @return
+	 */
+	public boolean shortConnect() default false;
+
 }
