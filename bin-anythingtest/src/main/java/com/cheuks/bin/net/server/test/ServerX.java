@@ -11,7 +11,7 @@ public class ServerX {
 	public static void main(String[] args) throws Throwable {
 		Server server = NioServer.newInstance();
 		server.start(2000, 10000);
-		server.addService(10088, Server.SERVICE_TYPE_RMI).addService(10087, Server.SERVICE_TYPE_MESSAGE);
+		server.addService(10088, Server.SERVICE_TYPE_RMI);
 		server.addHandler(new ServiceHandlerTest());
 		server.addEventHandle(new EventInfo(new RmiReadEvent(), new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);
 	}
