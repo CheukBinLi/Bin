@@ -99,6 +99,7 @@ xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Int
       客户端 :com.cheuks.bin.net.server.test.clientX.java
 
 @服务端
+
 		   public class ServerX {
 			public static void main(String[] args) throws Throwable {
 				Server server = NioServer.newInstance();//实现例
@@ -113,6 +114,7 @@ xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Int
           实现public String classID();  对象唯一标志。
           
 @客户端
+
 			public class clientX {
 			public static void main(String[] args) throws Throwable {
 				ApplicationContext ac = new DefaultApplicationContext("com.cheuks.bin", false, false, true);//扫描注入
