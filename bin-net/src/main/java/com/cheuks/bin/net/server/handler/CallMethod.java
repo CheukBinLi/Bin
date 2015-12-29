@@ -18,20 +18,31 @@ public class CallMethod {
 	private String ip;
 	private int port;
 	private boolean shortConnect;
+	private long connectionDateTime;
+	private long timeOut;
 
-	public CallMethod(String ip, int port, boolean shortConnect) {
+	public CallMethod(String ip, int port, boolean shortConnect, int timeOut) {
 		super();
 		this.ip = ip;
 		this.port = port;
 		this.shortConnect = shortConnect;
+		this.timeOut = timeOut;
+	}
+
+	private boolean timeOutChecked(long lastConnectionTime, long timeOut) {
+		return System.currentTimeMillis() - lastConnectionTime < timeOut;
 	}
 
 	public SocketChannel getConnection() throws IOException {
-		if (null != sc && sc.isConnected() && sc.isOpen() && !sc.socket().isClosed())
+		try {
+			if (null != sc && sc.isConnected() && sc.isOpen() && timeOutChecked(this.connectionDateTime, this.timeOut))
+				return sc;
+			sc = SocketChannel.open();
+			sc.connect(new InetSocketAddress(this.ip, this.port));
 			return sc;
-		sc = SocketChannel.open();
-		sc.connect(new InetSocketAddress(this.ip, this.port));
-		return sc;
+		} finally {
+			connectionDateTime = System.currentTimeMillis();
+		}
 	}
 
 	public Object call(String path, String methodName, Object... params) throws NumberFormatException, Throwable {

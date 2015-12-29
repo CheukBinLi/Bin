@@ -25,4 +25,6 @@ public @interface RmiClient {
 	 */
 	public boolean shortConnect() default false;
 
+	public long timeOut() default 10000L;
+
 }

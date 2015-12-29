@@ -109,7 +109,7 @@ public class SelectorThread extends AbstractControlThread {
 				}
 				attachment = createAttachment().updateHeartBeatAndSetActionTypeAndServiceCode(Attachment.AT_READING, key);
 				channel = ((ServerSocketChannel) key.channel()).accept();
-				System.out.println(attachment.getId());
+				//				System.out.println(attachment.getId());
 				channel.configureBlocking(false);
 				channel.finishConnect();
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);

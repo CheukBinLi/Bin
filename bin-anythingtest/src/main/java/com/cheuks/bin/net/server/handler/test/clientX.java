@@ -16,6 +16,7 @@ public class clientX {
 			System.err.println("运行时间:" + (new Date().getTime() - now.getTime()) + "ms " + ser.a());
 			System.out.println(ser.mmx().getMethod());
 			System.err.println(ser.a("哈哈哈哈哈:" + i + ":"));
+			Thread.sleep(30000);
 			System.err.println(ser.a("哈佬:" + i + ":", i));
 			now = new Date();
 		}
