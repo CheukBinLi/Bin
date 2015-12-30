@@ -3,6 +3,9 @@ package com.cheuks.bin.net.server.handler.test;
 import com.cheuks.bin.net.server.NioServer;
 import com.cheuks.bin.net.server.Server;
 import com.cheuks.bin.net.server.event.EventInfo;
+import com.cheuks.bin.net.server.event.MessageHandleEvent;
+import com.cheuks.bin.net.server.event.MessageReadEvent;
+import com.cheuks.bin.net.server.event.MessageWriteEvent;
 import com.cheuks.bin.net.server.event.RmiHandleEvent;
 import com.cheuks.bin.net.server.event.RmiReadEvent;
 import com.cheuks.bin.net.server.event.RmiWriteEvent;
@@ -14,5 +17,6 @@ public class ServerX {
 		server.addService(10088, Server.SERVICE_TYPE_RMI).addService(10087, Server.SERVICE_TYPE_MESSAGE);
 		server.addHandler(new ServiceHandlerTest());
 		server.addEventHandle(new EventInfo(new RmiReadEvent(), new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);
+		server.addEventHandle(new EventInfo(new MessageReadEvent(), new MessageWriteEvent(), new MessageHandleEvent()), Server.SERVICE_TYPE_MESSAGE);
 	}
 }
