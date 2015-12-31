@@ -26,13 +26,190 @@ import java.nio.channels.ScatteringByteChannel;
  */
 public class ByteBufferUtil {
 
-	private static int LENGTH_WAY = 8;
-	private static String formatChar = "%0" + LENGTH_WAY + "d";
-	private int serverType;
-	private int connectionType;
+	/***
+	 * 数据结构    SERVICE+CONNECT_TYPE+SERVICE_HANDLE_PATH_LEN+LENGTH_LEN
+	 */
 
-	public static class connectionMsg {
+	//	private static final String formatChar = "%0" + LENGTH_WAY + "d";
+	private static final int LENGTH_LEN = 8;
+	private static final int SERVICE_LEN = 2;//服务类型
+	private static final int CONNECT_TYPE_LEN = 1;//长短连接
+	private static final int SERVICE_HANDLE_ID_LEN = 8;//服务类型
+	private static final int HEARDER_LEN = LENGTH_LEN + SERVICE_LEN + SERVICE_HANDLE_ID_LEN + CONNECT_TYPE_LEN;//报头长度
+
+	private static final String ServiceFormat = "%" + SERVICE_LEN + "d";
+	private static final String ConnectTypeFormat = "%" + CONNECT_TYPE_LEN + "d";
+	private static final String ServiceHandleIdFormat = "%" + SERVICE_HANDLE_ID_LEN + "d";
+	private static final String LengthFormat = "%" + LENGTH_LEN + "s";
+
+	public int getLength(ScatteringByteChannel scatteringByteChannel, int size) throws IOException {
+		ByteBuffer len = ByteBuffer.allocate(size);
+		scatteringByteChannel.read(len);
+		len.flip();
+		return Integer.valueOf(new String(len.array()).trim());
+	}
+
+	/***
+	 * 
+	 * @param data 主数据
+	 * @param seek 偏移
+	 * @param b 待插入数据
+	 * @return 主数据
+	 */
+	protected byte[] insertDate(byte[] data, int seek, byte[] b) {
+		for (int i = 0, len = b.length; i < len; i++, seek++)
+			data[seek] = b[i];
+		return data;
+	}
+
+	protected ByteBuffer createPackageByByteBuffer(int serviceType, int connectType, int serviceHandleIdType, byte[] o) {
+		return ByteBuffer.wrap(createPackageByBytes(serviceType, connectType, serviceHandleIdType, o));
+	}
+
+	protected byte[] createPackageByBytes(int serviceType, int connectType, int serviceHandleIdType, byte[] o) {
+		byte[] data = new byte[HEARDER_LEN + o.length];
+		data = insertDate(data, 0, String.format(ServiceFormat, serviceType).getBytes());
+		data = insertDate(data, SERVICE_LEN, String.format(ConnectTypeFormat, connectType).getBytes());
+		data = insertDate(data, SERVICE_LEN + CONNECT_TYPE_LEN, String.format(ServiceHandleIdFormat, serviceHandleIdType).getBytes());
+		data = insertDate(data, HEARDER_LEN - LENGTH_LEN, String.format(LengthFormat, Integer.toHexString(o.length)).getBytes());
+		data = insertDate(data, HEARDER_LEN, o);
+		return data;
+	}
+
+	protected DataPacket dataSerial(ScatteringByteChannel scatteringByteChannel) throws IOException {
+		ByteBuffer hearder = ByteBuffer.allocate(HEARDER_LEN);
+		DataPacket dataPacket = new DataPacket();
+		byte[] temp = new byte[HEARDER_LEN];
+		scatteringByteChannel.read(hearder);
+		hearder.flip();
+		hearder.get(temp, 0, SERVICE_LEN);
+		dataPacket.setServiceType(temp, SERVICE_LEN);
+
+		hearder.get(temp, CONNECT_TYPE_LEN, CONNECT_TYPE_LEN);
+		dataPacket.setConnectType(temp, CONNECT_TYPE_LEN);
+
+		hearder.get(temp, SERVICE_LEN + CONNECT_TYPE_LEN, SERVICE_HANDLE_ID_LEN);
+		dataPacket.setServiceHandleId(temp, SERVICE_HANDLE_ID_LEN);
+
+		hearder.get(temp, HEARDER_LEN - LENGTH_LEN, LENGTH_LEN);
+		dataPacket.setDataLength(temp, LENGTH_LEN);
+
+		ByteBuffer data = ByteBuffer.allocate(dataPacket.getDataLength());
+		scatteringByteChannel.read(data);
+		return dataPacket.setData(data.array());
+	}
+
+	public DataPacket dataSerial(InputStream in) {
+		DataPacket dataPacket = new DataPacket();
+		int code;
+		while(){}
 		
+		
+		
+		return dataPacket;
+	}
+
+	public byte[] createData(DataPacket dataPacket) {
+		return createPackageByBytes(dataPacket.getServiceType(), dataPacket.getConnectType(), dataPacket.getServiceHandleId(), dataPacket.getData());
+	}
+
+	public byte[] createData(int serviceType, int connectType, int serviceHandleIdType, byte[] data) {
+		return createPackageByBytes(serviceType, connectType, serviceHandleIdType, data);
+	}
+
+	public byte[] createData(int serviceType, int connectType, int serviceHandleIdType, String data) {
+		return createPackageByBytes(serviceType, connectType, serviceHandleIdType, data.getBytes());
+	}
+
+	public static class DataPacket {
+
+		public DataPacket() {
+			super();
+		}
+
+		private int serviceType;
+		private int connectType;
+		private int serviceHandleId;
+		private int dataLength;
+		private byte[] data;
+
+		public DataPacket(int serviceType, int connectType, int serviceHandleId, byte[] data) {
+			super();
+			this.serviceType = serviceType;
+			this.connectType = connectType;
+			this.serviceHandleId = serviceHandleId;
+			this.data = data;
+		}
+
+		public int getServiceType() {
+			return serviceType;
+		}
+
+		public DataPacket setServiceType(int serviceType) {
+			this.serviceType = serviceType;
+			return this;
+		}
+
+		public DataPacket setServiceType(byte[] serviceType, int length) {
+			this.serviceType = Integer.valueOf(new String(serviceType, 0, length));
+			return this;
+		}
+
+		public int getConnectType() {
+			return connectType;
+		}
+
+		public DataPacket setConnectType(int connectType) {
+			this.connectType = connectType;
+			return this;
+		}
+
+		public DataPacket setConnectType(byte[] connectType, int length) {
+			this.connectType = Integer.valueOf(new String(connectType, 0, length));
+			return this;
+		}
+
+		public int getServiceHandleId() {
+			return serviceHandleId;
+		}
+
+		public DataPacket setServiceHandleId(int serviceHandleId) {
+			this.serviceHandleId = serviceHandleId;
+			return this;
+		}
+
+		public DataPacket setServiceHandleId(byte[] serviceHandleId, int length) {
+			this.serviceHandleId = Integer.valueOf(new String(serviceHandleId, 0, length));
+			return this;
+		}
+
+		public byte[] getData() {
+			return data;
+		}
+
+		public DataPacket setData(byte[] data) {
+			this.data = data;
+			return this;
+		}
+
+		public int getDataLength() {
+			return dataLength;
+		}
+
+		public DataPacket setDataLength(int dataLength) {
+			this.dataLength = dataLength;
+			return this;
+		}
+
+		public DataPacket setDataLength(byte[] dataLength, int length) {
+			this.dataLength = Integer.valueOf(new String(dataLength, 0, length));
+			return this;
+		}
+	}
+
+	public static void main(String[] args) {
+		ByteBufferUtil b = new ByteBufferUtil();
+		System.out.println(new String(b.createPackageByBytes(2, 3, 11232, "内容.....   ..!".getBytes())));
 	}
 
 }

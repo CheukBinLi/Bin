@@ -170,6 +170,8 @@ public class ByteBufferUtil2 {
 
 		String f = "%12s";
 		System.err.println(String.format(f, "xxxxx"));
+		System.err.println(String.format("%0#16x", 0x1869f));
+		System.err.println(Integer.parseInt("1869f".trim(), 16));
 	}
 
 }
