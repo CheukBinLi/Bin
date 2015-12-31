@@ -9,6 +9,7 @@ import com.cheuks.bin.net.server.niothread.Attachment;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class RmiReadEvent implements ReadEvent {
 
@@ -20,11 +21,8 @@ public class RmiReadEvent implements ReadEvent {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
 		//							channel.configureBlocking(false);
-		ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
-		if (null != out && out.size() > 0)
-			attachment.setAttachment((MessageInfo) serializ.toObject(out));
-		else
-			attachment.setAttachment(null);
+		DataPacket dataPacket = ByteBufferUtil.newInstance().getData(channel);
+		attachment.setAttachment(dataPacket);
 		return key;
 	}
 }

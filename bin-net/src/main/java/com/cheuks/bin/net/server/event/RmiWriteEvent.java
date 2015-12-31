@@ -8,6 +8,7 @@ import com.cheuks.bin.net.server.niothread.Attachment;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class RmiWriteEvent implements WriteEvent {
 
@@ -17,9 +18,8 @@ public class RmiWriteEvent implements WriteEvent {
 	public SelectionKey process(SelectionKey key, Serializ serializ) throws Throwable {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
-		// channel.write(ByteBufferUtil.getBuffer(("服务回复：" +
-		MessageInfo mi = (MessageInfo) attachment.getAttachment();
-		channel.write(ByteBufferUtil.getBuffer(serializ.serializ(mi)));
+		DataPacket dataPacket = attachment.getAttachmentX();
+		channel.write(ByteBufferUtil.newInstance().create);
 		// throw new Throwable("channel读取失败");
 		// 注册读
 		if (mi.isShortConnect())
