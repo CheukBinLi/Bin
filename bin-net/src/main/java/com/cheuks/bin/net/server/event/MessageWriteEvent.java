@@ -16,7 +16,7 @@ public class MessageWriteEvent implements WriteEvent {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
 		// channel.write(ByteBufferUtil.getBuffer(("服务回复：" +
-		channel.write(ByteBufferUtil.getBuffer((byte[]) attachment.getAttachmentX()));
+		//#		channel.write(ByteBufferUtil.getBuffer((byte[]) attachment.getAttachmentX()));
 		// throw new Throwable("channel读取失败");
 		// 注册读
 		//		if (mi.isShortConnect())

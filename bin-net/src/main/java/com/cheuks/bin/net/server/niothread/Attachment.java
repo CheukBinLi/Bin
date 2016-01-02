@@ -7,6 +7,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
+
 public class Attachment {
 
 	public final static int AT_READING = 1;
@@ -23,7 +25,7 @@ public class Attachment {
 	private final AtomicLong connectionTime = new AtomicLong();
 	private final AtomicInteger actionType = new AtomicInteger();
 	private int serviceCode;
-	private Object attachment;
+	private DataPacket attachment;
 
 	public Attachment updateHeartBeat() {
 		this.connectionTime.set(getCurrentTime());
@@ -66,18 +68,18 @@ public class Attachment {
 		return this;
 	}
 
-	public Object getAttachment() {
+	public DataPacket getAttachment() {
 		return attachment;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> T getAttachmentX() {
-		if (null != attachment)
-			return (T) attachment;
-		return null;
-	}
+	//	@SuppressWarnings("unchecked")
+	//	public <T> T getAttachmentX() {
+	//		if (null != attachment)
+	//			return (T) attachment;
+	//		return null;
+	//	}
 
-	public Attachment setAttachment(Object attachment) {
+	public Attachment setAttachment(DataPacket attachment) {
 		this.attachment = attachment;
 		return this;
 	}
@@ -136,7 +138,7 @@ public class Attachment {
 		}
 	}
 
-	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final Object attachment) throws ClosedChannelException {
+	public SelectionKey unLockAndUpdateHeartBeat(final SelectionKey key, int ops, final DataPacket attachment) throws ClosedChannelException {
 		synchronized (lock) {
 			unLock();
 			updateHeartBeat();

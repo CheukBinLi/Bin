@@ -70,8 +70,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 						if (WRITER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -98,9 +97,8 @@ public class WriterThreadMananger extends AbstractControlThread {
 								key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getWriteEvent().process(key, serializ);
 								if (!key.isValid())
 									continue;
-							}
-							else {
-								((SocketChannel) key.channel()).write(ByteBufferUtil.getBuffer("".getBytes()));
+							} else {
+								((SocketChannel) key.channel()).write(ByteBufferUtil.newInstance().createPackageByByteBuffer(null));
 								attachment.registerRead();
 							}
 							attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), null);

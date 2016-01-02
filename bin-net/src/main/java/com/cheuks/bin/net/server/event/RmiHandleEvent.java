@@ -15,9 +15,11 @@ public class RmiHandleEvent implements HandleEvent {
 
 	protected static Serializ serializ = new DefaultSerializImpl();
 
-	public SelectionKey process(SelectionKey key, final CachePoolFactory cache, final String cacheTag, final ConcurrentHashMap<String, ServiceHandler> SERVICE_HANDLER_MAP) throws Throwable {
+	public SelectionKey process(SelectionKey key, Serializ serializ, final CachePoolFactory cache, final String cacheTag, final ConcurrentHashMap<String, ServiceHandler> SERVICE_HANDLER_MAP) throws Throwable {
 		Attachment attachment = (Attachment) key.attachment();
-		MessageInfo messageInfo = attachment.getAttachmentX();
+
+		MessageInfo messageInfo = serializ.toObject(attachment.getAttachment().getData());
+
 		Method m = cache.get4Map(cacheTag, messageInfo.getPath(), messageInfo.getMethod());
 		ServiceHandler serviceHandler = SERVICE_HANDLER_MAP.get(messageInfo.getPath());
 		Object result = null;
@@ -29,7 +31,9 @@ public class RmiHandleEvent implements HandleEvent {
 			} catch (IllegalAccessException e) {
 				mi.setThrowable(e);
 			}
-		attachment.setAttachment(mi).registerWrite();
+		attachment.getAttachment().setData(serializ.serializ(mi));
+		attachment.registerWrite();
 		return key;
 	}
+
 }

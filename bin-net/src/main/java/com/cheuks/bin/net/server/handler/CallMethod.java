@@ -8,6 +8,7 @@ import java.nio.channels.SocketChannel;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class CallMethod {
 
@@ -51,8 +52,8 @@ public class CallMethod {
 			messageInfo.setPath(path).setMethod(methodName);
 			messageInfo.setParams(params);
 			sc = getConnection();
-			sc.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)));
-			messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(sc));
+			sc.write(ByteBufferUtil.newInstance().createPackageByByteBuffer(DataPacket.SERVICE_TYPE_RMI, DataPacket.CONNECT_TYPE_LONG, defaultSerializ.serializ(messageInfo)));
+			messageInfo = defaultSerializ.toObject(ByteBufferUtil.newInstance().getData(sc, false).getData());
 			if (null != messageInfo.getThrowable())
 				throw messageInfo.getThrowable();
 			return messageInfo.getResult();

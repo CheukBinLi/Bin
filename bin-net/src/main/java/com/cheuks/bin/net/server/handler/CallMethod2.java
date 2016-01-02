@@ -33,15 +33,15 @@ public class CallMethod2 {
 
 	public Object call(String path, String methodName, Object... params) throws NumberFormatException, Throwable {
 		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.setPath(path).setMethod(methodName);
-		messageInfo.setParams(params);
-		s = getConnection();
-		OutputStream out = s.getOutputStream();
-		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
-		InputStream in = s.getInputStream();
-		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(in));
-		out.close();
-		in.close();
+//		messageInfo.setPath(path).setMethod(methodName);
+//		messageInfo.setParams(params);
+//		s = getConnection();
+//		OutputStream out = s.getOutputStream();
+//		out.write(ByteBufferUtil.getBuffer(defaultSerializ.serializ(messageInfo)).array());
+//		InputStream in = s.getInputStream();
+//		messageInfo = defaultSerializ.toObject(ByteBufferUtil.getByte(in));
+//		out.close();
+//		in.close();
 		return messageInfo.getResult();
 	}
 }

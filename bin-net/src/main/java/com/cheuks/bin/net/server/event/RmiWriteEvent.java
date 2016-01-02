@@ -18,11 +18,13 @@ public class RmiWriteEvent implements WriteEvent {
 	public SelectionKey process(SelectionKey key, Serializ serializ) throws Throwable {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
-		DataPacket dataPacket = attachment.getAttachmentX();
-		channel.write(ByteBufferUtil.newInstance().create);
+
+		DataPacket dataPacket = attachment.getAttachment();
+
+		channel.write(ByteBufferUtil.newInstance().createPackageByByteBuffer(dataPacket.getData()));
 		// throw new Throwable("channel读取失败");
 		// 注册读
-		if (mi.isShortConnect())
+		if (dataPacket.getConnectType() == DataPacket.CONNECT_TYPE_SHORT)
 			attachment.registerClose(key);
 		else
 			attachment.registerRead();

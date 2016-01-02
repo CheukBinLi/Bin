@@ -53,8 +53,7 @@ public class HandlerQueueThread extends AbstractControlThread {
 						if (HANDLER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -78,11 +77,10 @@ public class HandlerQueueThread extends AbstractControlThread {
 					if (null != (key = HANDLER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = getAddition(key);
 						if (null != attachment.getAttachment()) {
-							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getHandleEvent().process(key, cache, cacheTag, SERVICE_HANDLER_MAP);
+							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getHandleEvent().process(key, serializ, cache, cacheTag, SERVICE_HANDLER_MAP);
 							attachment = getAddition(key);
 							attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), attachment.getAttachment());
-						}
-						else
+						} else
 							attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_WRITE, null);
 					}
 				} catch (InterruptedException e) {
