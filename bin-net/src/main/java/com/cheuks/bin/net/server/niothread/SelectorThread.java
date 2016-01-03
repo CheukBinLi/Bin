@@ -65,7 +65,7 @@ public class SelectorThread extends AbstractControlThread {
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
+//		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
 		SERVER_LIST.add(serverSocketChannel);
 	}
 

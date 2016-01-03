@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class MessageTest {
 
@@ -14,10 +15,10 @@ public class MessageTest {
 		Socket s = new Socket();
 		s.connect(new InetSocketAddress("127.0.0.1", 10087));
 		OutputStream out = s.getOutputStream();
-		out.write(ByteBufferUtil.getBytes("Message测试"));
+		out.write(ByteBufferUtil.newInstance().createData(DataPacket.SERVICE_TYPE_MESSAGE, DataPacket.CONNECT_TYPE_SHORT, "Message Test...!".getBytes()));
 		out.flush();
 		InputStream in = s.getInputStream();
-		System.err.println(new String(ByteBufferUtil.getByte(in).toByteArray()));
+		System.err.println(new String(ByteBufferUtil.newInstance().getData(in, false).getData()));
 		in.close();
 		out.close();
 		s.close();

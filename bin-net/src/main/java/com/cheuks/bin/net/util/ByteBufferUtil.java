@@ -95,7 +95,6 @@ public class ByteBufferUtil implements ConstantType {
 		byte[] data = new byte[HEARDER_LEN + o.length];
 		//		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, serviceHandleIdType, Integer.toHexString(o.length)).getBytes());
 		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, Integer.toHexString(o.length)).getBytes());
-		System.out.println(new String(data));
 		data = insertDate(data, HEARDER_LEN, o);
 		return data;
 	}

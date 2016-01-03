@@ -6,6 +6,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.cheuks.bin.net.server.event.EventInfo;
+import com.cheuks.bin.net.server.event.HeartbeatHandleEvent;
+import com.cheuks.bin.net.server.event.HeartbeatWriteEvent;
+import com.cheuks.bin.net.server.event.MessageHandleEvent;
+import com.cheuks.bin.net.server.event.MessageWriteEvent;
+import com.cheuks.bin.net.server.event.RmiHandleEvent;
+import com.cheuks.bin.net.server.event.RmiWriteEvent;
 import com.cheuks.bin.net.server.handler.ServiceHandler;
 import com.cheuks.bin.net.server.niothread.AttachmentListThread;
 import com.cheuks.bin.net.server.niothread.HandlerListThread;
@@ -15,6 +21,7 @@ import com.cheuks.bin.net.server.niothread.ReleaseListThread;
 import com.cheuks.bin.net.server.niothread.ReleaseQueueThread;
 import com.cheuks.bin.net.server.niothread.SelectorThread;
 import com.cheuks.bin.net.server.niothread.WriterThreadMananger;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 import com.cheuks.bin.net.util.Serializ;
 
 public class NioServer implements Server {
@@ -48,6 +55,14 @@ public class NioServer implements Server {
 			executorService.submit(new WriterThreadMananger());
 			executorService.submit(new HandlerListThread());
 			executorService.submit(new HandlerQueueThread());
+			//初始化服务
+			try {
+				addEventHandle(new EventInfo(new RmiWriteEvent(), new RmiHandleEvent()), DataPacket.SERVICE_TYPE_RMI);
+				addEventHandle(new EventInfo(new HeartbeatWriteEvent(), new HeartbeatHandleEvent()), DataPacket.SERVICE_TYPE_HEARTBEAT);
+				addEventHandle(new EventInfo(new MessageWriteEvent(), new MessageHandleEvent()), DataPacket.SERVICE_TYPE_MESSAGE);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 		}
 		return this;
 	}

@@ -94,7 +94,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 						attachment = (Attachment) key.attachment();
 						try {
 							if (null != attachment.getAttachment()) {
-								key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getWriteEvent().process(key, serializ);
+								key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getWriteEvent().process(key, serializ);
 								if (!key.isValid())
 									continue;
 							} else {

@@ -3,10 +3,14 @@ package com.cheuks.bin.net.server.niothread;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
+import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class ReaderThreadMananger extends AbstractControlThread {
 
@@ -60,8 +64,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -82,15 +85,19 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					if (null != (key = READER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
 						try {
-							key = EVENT_LIST.get(TYPE_LIST.get(attachment.getServiceCode())).getReadEvent().process(key);
+							//							key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getReadEvent().process(key);
+							//							attachment = (Attachment) key.attachment();
 							attachment = (Attachment) key.attachment();
+							channel = (SocketChannel) key.channel();
+							DataPacket dataPacket = ByteBufferUtil.newInstance().getData(channel, true);
+							attachment.setAttachment(dataPacket);
 							tryDo(HANDLER, key);
 						} catch (NumberFormatException e) {
 							// e.printStackTrace();
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							e.printStackTrace();
+							// e.printStackTrace();
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {

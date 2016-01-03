@@ -32,7 +32,17 @@ public abstract class AbstractControlThread extends Thread {
 	protected final static CachePoolFactory cache = DefaultCachePoolFactory.newInstance();
 	protected final static String cacheTag = "ServiceHandler";
 	protected volatile static Serializ serializ = new DefaultSerializImpl();
-	protected int pollInterval = 2;
+	protected final int pollInterval = 2;
+
+	//	// 新
+	//	/***
+	//	 * @1:channel.hashCode @2:type
+	//	 */
+	//	protected final static ConcurrentHashMap<Integer, Integer> TYPE_LIST = new ConcurrentHashMap<Integer, Integer>();
+	/***
+	 * @1:type @2:处理接口
+	 */
+	protected final static ConcurrentHashMap<Integer, EventInfo> EVENT_LIST = new ConcurrentHashMap<Integer, EventInfo>();
 
 	protected AtomicBoolean shutdown = new AtomicBoolean();
 
@@ -44,16 +54,6 @@ public abstract class AbstractControlThread extends Thread {
 	public void interrupt() {
 		this.shutdown.set(true);
 	}
-
-	// 新
-	/***
-	 * @1:channel.hashCode @2:type
-	 */
-	protected final static ConcurrentHashMap<Integer, Integer> TYPE_LIST = new ConcurrentHashMap<Integer, Integer>();
-	/***
-	 * @1:type @2:处理接口
-	 */
-	protected final static ConcurrentHashMap<Integer, EventInfo> EVENT_LIST = new ConcurrentHashMap<Integer, EventInfo>();
 
 	protected final static void clearAll() {
 		ACCEPT_QUEUE.clear();
@@ -68,7 +68,7 @@ public abstract class AbstractControlThread extends Thread {
 		SERVER_LIST.clear();
 		ATTACHMENT_LIST.clear();
 		EVENT_LIST.clear();
-		TYPE_LIST.clear();
+		//		TYPE_LIST.clear();
 	}
 
 	protected static final int ACCEPT = 1, READER = 2, WRITER = 4, RELEASE = 8, HANDLER = 16;
