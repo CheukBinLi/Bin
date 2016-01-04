@@ -22,7 +22,6 @@
 		<module>bin-cache</module>
 		<module>bin-bean</module>
 		<module>bin-anythingtest</module>
-		<module>bin-webtest</module>
 		<module>bin-util</module>
 	</modules>
 </project>
