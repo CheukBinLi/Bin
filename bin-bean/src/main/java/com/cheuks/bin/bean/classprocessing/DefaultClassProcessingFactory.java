@@ -211,8 +211,6 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 						cloneStr.append("o.").append(f.getName()).append(" = (").append(f.getType().getName()).append(")").append("o.").append(f.getName()).append(".clone();");
 					}
 				}
-				//					if (cloneClass == f.getType())
-				//						System.err.println(f.getType());
 			}
 			cloneStr.append("return o;}");
 			ctClone.setBody(cloneStr.toString());
