@@ -12,7 +12,7 @@ public class clientX {
 	public static void main(String[] args) throws Throwable {
 		final ApplicationContext ac = new DefaultApplicationContext("com.cheuks.bin", false, false, true);
 		ExecutorService executorService = Executors.newCachedThreadPool();
-		for (int i = 2; i-- > 0;) {
+		for (int i = 100; i-- > 0;) {
 			executorService.submit(new Runnable() {
 				public void run() {
 					try {
@@ -36,5 +36,12 @@ public class clientX {
 			Thread.sleep(50);
 		}
 	}
+
+//	static {
+//		com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL o = null;
+//		o = (com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL) super.clone();
+//		o.callMethod = (com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL) o.com.cheuks.bin.net.server.handler.CallMethod.clone();
+//		return o;
+//	}
 
 }
