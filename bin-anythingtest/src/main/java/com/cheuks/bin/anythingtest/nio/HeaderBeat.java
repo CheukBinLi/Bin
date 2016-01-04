@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class HeaderBeat {
 	private static Socket s;
@@ -18,9 +18,9 @@ public class HeaderBeat {
 		InputStream in = s.getInputStream();
 		OutputStream out = s.getOutputStream();
 		for (int i = 0; i < 4; i++) {
-			out.write(ByteBufferUtil.getBuffer(("").getBytes()).array());
+			out.write(ByteBufferUtil2.getBuffer(("").getBytes()).array());
 			out.flush();
-			System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()) + ":" + s.getLocalPort());
+			System.out.println(new String(ByteBufferUtil2.getByte(in).toByteArray()) + ":" + s.getLocalPort());
 			Thread.sleep(2000);
 		}
 		// countDownLatch.await();

@@ -7,7 +7,7 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
-import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class ReaderMananger extends AbstractMananger {
 
@@ -20,7 +20,7 @@ public class ReaderMananger extends AbstractMananger {
 					msg = (ConnectionMsg) key.attachment();
 					try {
 						channel = (SocketChannel) key.channel();
-						ByteArrayOutputStream out = ByteBufferUtil.getByte(channel);
+						ByteArrayOutputStream out = ByteBufferUtil2.getByte(channel);
 						// channel.shutdownInput();
 						key = channel.register(key.selector(), SelectionKey.OP_WRITE, msg.enableSelectable().updateConnectionTime());
 						key.selector().wakeup();

@@ -31,13 +31,13 @@ public class Logger implements Log {
 	public Logger() {
 		super();
 		try {
-			System.err.println();
+			//			System.err.println();
 			raf = new RandomAccessFile(new File(this.getClass().getResource("/").getFile() + dataFormat.format(new Date()) + "_log.txt"), "rws");
-			// System.out.println(raf.length());
-			// if (raf.length() < 10240000)
-			// raf.seek(raf.length());
-			// else
-			// raf.setLength(0);
+			//			System.out.println(raf.length());
+			//			if (raf.length() < 10240000)
+			//				raf.seek(raf.length());
+			//			else
+			//				raf.setLength(0);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -93,6 +93,10 @@ public class Logger implements Log {
 	}
 
 	private Logger write(String msg) throws IOException {
+		if (raf.length() < 102400)
+			raf.seek(raf.length());
+		else
+			raf.setLength(0);
 		raf.write(msg.getBytes());
 		return this;
 	}

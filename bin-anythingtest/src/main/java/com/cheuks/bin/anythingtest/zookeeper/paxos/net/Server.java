@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class Server extends Thread {
 
@@ -120,14 +120,14 @@ public class Server extends Thread {
 				}
 				else if (key.isReadable()) {
 					client = (SocketChannel) key.channel();
-					ByteArrayOutputStream out = ByteBufferUtil.getByte(client);
+					ByteArrayOutputStream out = ByteBufferUtil2.getByte(client);
 					System.err.println(new String(out.toByteArray()));
 					client.register(key.selector(), SelectionKey.OP_WRITE);
 					System.err.println("写");
 				}
 				else if (key.isWritable()) {
 					client = (SocketChannel) key.channel();
-					client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
+					client.write(ByteBufferUtil2.getBuffer("服务器：结束对话".getBytes()));
 					// key.cancel();
 					// client.close();
 					System.err.println("结束");
@@ -156,14 +156,14 @@ public class Server extends Thread {
 			try {
 				if (key.isReadable()) {
 					client = (SocketChannel) key.channel();
-					ByteArrayOutputStream out = ByteBufferUtil.getByte(client);
+					ByteArrayOutputStream out = ByteBufferUtil2.getByte(client);
 					System.err.println(new String(out.toByteArray()));
 					client.register(selector, SelectionKey.OP_WRITE);
 					System.err.println("写");
 				}
 				else if (key.isWritable()) {
 					client = (SocketChannel) key.channel();
-					client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
+					client.write(ByteBufferUtil2.getBuffer("服务器：结束对话".getBytes()));
 					key.cancel();
 					client.close();
 					System.err.println("结束");

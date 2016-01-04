@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
-import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class Server_v1 implements Runnable {
 
@@ -46,13 +46,13 @@ public class Server_v1 implements Runnable {
 							client.register(key.selector(), SelectionKey.OP_READ);
 						} else if (key.isReadable()) {
 							client = (SocketChannel) key.channel();
-							ByteArrayOutputStream out = ByteBufferUtil.getByte(client);
+							ByteArrayOutputStream out = ByteBufferUtil2.getByte(client);
 							// System.err.println(new
 							// String(out.toByteArray()));
 							client.register(key.selector(), SelectionKey.OP_WRITE);
 						} else if (key.isWritable()) {
 							client = (SocketChannel) key.channel();
-							client.write(ByteBufferUtil.getBuffer("服务器：结束对话".getBytes()));
+							client.write(ByteBufferUtil2.getBuffer("服务器：结束对话".getBytes()));
 							key.cancel();
 							client.close();
 						}

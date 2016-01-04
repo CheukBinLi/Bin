@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
-import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class Client_v1 {
 
@@ -87,9 +87,9 @@ public class Client_v1 {
 				InputStream in = s.getInputStream();
 				OutputStream out = s.getOutputStream();
 				for (int i = 0; i < 4; i++) {
-					out.write(ByteBufferUtil.getBuffer((ax + ":客户端：" + i + "-你好吗:").getBytes()).array());
+					out.write(ByteBufferUtil2.getBuffer((ax + ":客户端：" + i + "-你好吗:").getBytes()).array());
 					out.flush();
-					System.out.println(new String(ByteBufferUtil.getByte(in).toByteArray()) + ":" + s.getLocalPort());
+					System.out.println(new String(ByteBufferUtil2.getByte(in).toByteArray()) + ":" + s.getLocalPort());
 				}
 				// countDownLatch.await();
 				Thread.sleep(2000);
