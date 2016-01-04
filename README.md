@@ -1,6 +1,9 @@
 请跳转到2.01
 https://github.com/fdisk123/Bin/tree/2.01
 
+功能：IOC/AOP/RMI/网络消息等等
+
+
 @Maven打包
 
 							<module>bin-annotation</module>
