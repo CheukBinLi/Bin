@@ -34,12 +34,12 @@ public abstract class AbstractClassProcessingFactory<C> implements ClassProcessi
 	public static void anthingToClass(final CtClass newClazz, final String superClazzName, boolean initSystemClassLoader, boolean cloneModel) throws CannotCompileException, InstantiationException, IllegalAccessException {
 		final Class c = newClazz.toClass();
 		//反编
-		//		try {
-		//			newClazz.writeFile("C:/Users/Ben/Desktop");
-		//		} catch (Exception e) {
-		//			//					errorQueue.add(en);
-		//			e.printStackTrace();
-		//		}
+		try {
+			newClazz.writeFile("C:/Users/Ben/Desktop");
+		} catch (Exception e) {
+			//					errorQueue.add(en);
+			e.printStackTrace();
+		}
 		if (cloneModel) {
 			final Object parentObject = c.newInstance();
 			BeanFactory.addBean(parentObject, FULL_NAME_BEAN, superClazzName);

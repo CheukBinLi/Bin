@@ -10,7 +10,7 @@ import com.cheuks.bin.net.util.DefaultSerializImpl;
 import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
-public class CallMethod {
+public class CallMethod implements Cloneable {
 
 	protected SocketChannel channel;
 	protected static Serializ defaultSerializ = new DefaultSerializImpl();
@@ -62,4 +62,10 @@ public class CallMethod {
 				sc.close();
 		}
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 }

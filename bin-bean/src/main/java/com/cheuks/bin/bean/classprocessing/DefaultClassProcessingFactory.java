@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
-import com.cheuks.bin.annotation.AutoLoad;
 import com.cheuks.bin.annotation.Register;
 import com.cheuks.bin.bean.application.BeanFactory;
 import com.cheuks.bin.bean.classprocessing.handler.ClassProcessingHandler;
@@ -154,7 +153,10 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 		boolean appendTry;
 		boolean isInterface;
 		CtClass clone = ClassPool.getDefault().get("com.cheuks.bin.bean.classprocessing.CloneAdapter");
+		StringBuffer cloneStr = new StringBuffer();
+		CtClass cloneClass = ClassPool.getDefault().get("java.lang.Cloneable");
 		while (it.hasNext()) {
+			cloneStr.setLength(0);
 			level = 0;
 			handlerInfos = new ArrayList<HandlerInfo>();
 			en = it.next();
@@ -173,10 +175,6 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 				newClazz.setSuperclass(tempClazz);
 			//clone
 			newClazz.addInterface(clone);
-			//实现克隆
-//			CtMethod x=CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz)
-			newClazz.addMethod(CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz));
-
 			HandlerInfo handlerInfo;
 			for (ClassProcessingHandler<CtClass, Object, CtMember, CtClass, HandlerInfo> cph : handler) {
 				for (CtField f : ctFields) {//Field
@@ -201,12 +199,32 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 				}
 			}
 
+			//实现克隆
+			//			CtMethod x=CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz)
+			CtMethod ctClone = CtMethod.make("public Object clone() {return super.clone();}", newClazz);
+			cloneStr.append("{").append(newClazz.getName()).append(" o = null;");
+			cloneStr.append("try {");
+			cloneStr.append("o = (").append(newClazz.getName()).append(") super.clone();");
+			newClazz.addMethod(ctClone);
+			for (CtField f : newClazz.getDeclaredFields()) {
+				for (CtClass cc : f.getType().getInterfaces()) {
+					if (clone == cc)
+						cloneStr.append("o.").append(f.getName()).append(" = (").append(newClazz.getName()).append(")").append("o.").append(f.getName()).append(".clone();");
+				}
+				//					if (cloneClass == f.getType())
+				//						System.err.println(f.getType());
+			}
+			cloneStr.append("} catch (CloneNotSupportedException e) {e.printStackTrace();}return o;}");
+			//			System.out.println(cloneStr.toString());
+			ctClone.setBody(cloneStr.toString());
+
 			//Import
 			newClazz.getClassPool().importPackage("java.lang.Exception");
 			newClazz.getClassPool().importPackage("java.lang.reflect.Field");
 			newClazz.getClassPool().importPackage("java.lang.reflect.Method");
 			newClazz.getClassPool().importPackage("com.cheuks.bin.bean.application.BeanFactory");
 			newClazz.getClassPool().importPackage("com.cheuks.bin.bean.classprocessing.ClassInfo");
+
 			//			//建立构造、构造加载
 			//			CtConstructor tempC;
 			//			CtConstructor[] ctConstructors = tempClazz.getDeclaredConstructors();
@@ -267,5 +285,4 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 		//		return compileObject;
 		return result;
 	}
-
 }
