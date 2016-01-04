@@ -17,9 +17,7 @@ public class clientX {
 				public void run() {
 					try {
 						Date now = new Date();
-						System.out.println("#########################################");
 						ServiceHandlerTestI ser = ac.getBeans("ServiceHandlerTestI");
-						System.out.println("################" + null == ser + "#####################");
 						//						ServiceHandlerTest2 ser = ac.getBeans("ServiceHandlerTest2");
 						System.err.println("运行时间:" + (new Date().getTime() - now.getTime()) + "ms " + ser.a());
 						System.out.println(ser.mmx().getMethod());
@@ -33,15 +31,14 @@ public class clientX {
 					}
 				}
 			});
-			Thread.sleep(50);
+			Thread.sleep(1);
 		}
 	}
 
-//	static {
-//		com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL o = null;
-//		o = (com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL) super.clone();
-//		o.callMethod = (com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL) o.com.cheuks.bin.net.server.handler.CallMethod.clone();
-//		return o;
-//	}
-
+	//	static {
+	//		com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL o = null;
+	//		o = (com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL) super.clone();
+	//		o.callMethod = (com.cheuks.bin.net.server.handler.test.ServiceHandlerTest2$MC_IMPL) o.com.cheuks.bin.net.server.handler.CallMethod.clone();
+	//		return o;
+	//	}
 }
