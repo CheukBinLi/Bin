@@ -137,17 +137,6 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 
 		Iterator<Entry<String, CtClass>> it = classCache.get(REGISTER_CACHE).entrySet().iterator();
 
-		//		List<Map<String, CtClass>> compileObject = new ArrayList<Map<String, CtClass>>();
-		//		Set<CtField> additionalField = new HashSet<CtField>();//附加字段
-		//		Set<CtMethod> additionalMethod = new HashSet<CtMethod>();//附加方法
-
-		//		Map<String, CtClass> A1 = new HashMap<String, CtClass>();
-		//		Map<String, CtClass> A2 = new HashMap<String, CtClass>();
-		//		Map<String, CtClass> A3 = new HashMap<String, CtClass>();
-		//		compileObject.add(A1);
-		//		compileObject.add(A2);
-		//		compileObject.add(A3);
-
 		Entry<String, CtClass> en;
 		int level = 0;
 		List<HandlerInfo> handlerInfos = null;
@@ -161,20 +150,13 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 			CtClass tempClazz = en.getValue();
 			CtClass newClazz = tempClazz.getClassPool().makeClass(tempClazz.getName() + Impl);
 			newClazz.getClassPool().importPackage(en.getKey());
-			//搜索Feld
 			CtField[] ctFields = tempClazz.getDeclaredFields();
-			//搜索Method
-			//********************
 			CtMethod[] ctMethods = tempClazz.getDeclaredMethods();
-
 			if (isInterface = tempClazz.isInterface())
 				newClazz.addInterface(tempClazz);
 			else
 				newClazz.setSuperclass(tempClazz);
-			//clone
 			newClazz.addInterface(clone);
-			//实现克隆
-//			CtMethod x=CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz)
 			newClazz.addMethod(CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz));
 
 			HandlerInfo handlerInfo;
@@ -200,17 +182,11 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 					}
 				}
 			}
-
-			//Import
 			newClazz.getClassPool().importPackage("java.lang.Exception");
 			newClazz.getClassPool().importPackage("java.lang.reflect.Field");
 			newClazz.getClassPool().importPackage("java.lang.reflect.Method");
 			newClazz.getClassPool().importPackage("com.cheuks.bin.bean.application.BeanFactory");
 			newClazz.getClassPool().importPackage("com.cheuks.bin.bean.classprocessing.ClassInfo");
-			//			//建立构造、构造加载
-			//			CtConstructor tempC;
-			//			CtConstructor[] ctConstructors = tempClazz.getDeclaredConstructors();
-			//			CtConstructor defauleConstructor = CtNewConstructor.defaultConstructor(newClazz);
 			StringBuffer sb = new StringBuffer("{");
 			sb.append("super($$);");
 			appendTry = false;
@@ -225,23 +201,6 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 				sb.append("}catch(java.lang.Exception e){e.printStackTrace();}");
 			}
 			sb.append("}");
-			//			System.out.println(sb.toString());
-			//						defauleConstructor.setBody(sb.toString());
-
-			//			defauleConstructor.addCatch("", newClazz.getClassPool().get("java.lang.Exception"));
-			//			//################构造###################
-			//			newClazz.addConstructor(defauleConstructor);
-			//
-			//			try {
-			//				for (CtConstructor c : ctConstructors) {
-			//					tempC = CtNewConstructor.copy(c, newClazz, null);
-			//					tempC.setBody("{super($$);}");
-			//					newClazz.addConstructor(tempC);
-			//				}
-			//			} catch (DuplicateMemberException e) {
-			//				//				e.printStackTrace();
-			//			}
-			//Import
 			for (HandlerInfo h : handlerInfos) {
 				if (null != h.getImports())
 					for (String s : h.getImports()) {
@@ -254,17 +213,7 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 				result.addFirstQueue(new DefaultTempClass(tempClazz, newClazz));
 			else
 				result.addSecondQueue(new DefaultTempClass(tempClazz, newClazz, appendTry ? sb.toString() : null, null));
-			//				A2.put(en.getKey(), newClazz);
-
-			//反编查看
-			//			try {
-			//				tempClazz.writeFile("C:/Users/Ben/Desktop");
-			//			} catch (IOException e) {
-			//				e.printStackTrace();
-			//			}
 		}
-		//				anthingToClass(compileObject);
-		//		return compileObject;
 		return result;
 	}
 

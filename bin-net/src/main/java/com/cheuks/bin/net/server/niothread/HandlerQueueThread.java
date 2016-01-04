@@ -43,7 +43,6 @@ public class HandlerQueueThread extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		//System.out.println("HandlerQueue");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!this.shutdown.get()) {
@@ -53,18 +52,17 @@ public class HandlerQueueThread extends AbstractControlThread {
 						if (HANDLER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					executorService.shutdownNow();
-					// Logger.getDefault().error(this.getClass(), e);
 					break;
 				}
 			}
 		}
-		//System.out.println("HandlerQueueThread结束");
 	}
 
 	class Dispatcher extends AbstractControlThread {
@@ -80,11 +78,11 @@ public class HandlerQueueThread extends AbstractControlThread {
 							key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getHandleEvent().process(key, serializ, cache, cacheTag, SERVICE_HANDLER_MAP);
 							attachment = getAddition(key);
 							attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), attachment.getAttachment());
-						} else
+						}
+						else
 							attachment.unLockAndUpdateHeartBeat(key, SelectionKey.OP_WRITE, null);
 					}
 				} catch (InterruptedException e) {
-					// e.printStackTrace();
 					break;
 				} catch (ClosedChannelException e) {
 					e.printStackTrace();

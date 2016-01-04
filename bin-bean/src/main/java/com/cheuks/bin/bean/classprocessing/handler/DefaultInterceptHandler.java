@@ -8,7 +8,6 @@ import java.util.Set;
 import com.cheuks.bin.annotation.Intercept;
 import com.cheuks.bin.bean.classprocessing.ClassInfo;
 
-import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMember;
@@ -49,7 +48,6 @@ public class DefaultInterceptHandler extends AbstractClassProcessingHandler<CtCl
 			return null;
 		CtMethod ctMethod = CtNewMethod.copy((CtMethod) additional, newClazz, null);
 		boolean isReturn = !ctMethod.getReturnType().getName().equals("void");
-		//		private com.ben.mc.classprocessing.handler.Interception interception = new com.ben.mc.classprocessing.handler.DefaultInterception();
 		String imp = String.format("private com.cheuks.bin.bean.classprocessing.handler.Interception interception = new %s();", this.a.value());
 		try {
 			if (null == newClazz.getDeclaredField("interception"))
@@ -76,20 +74,8 @@ public class DefaultInterceptHandler extends AbstractClassProcessingHandler<CtCl
 		if (isReturn)
 			sb.append("return o;");
 		sb.append("}");
-		//		System.err.println(sb.toString());
 		ctMethod.setBody(sb.toString());
 		newClazz.addMethod(ctMethod);
 		return new HandlerInfo(null, newClazz, ctMethod);
-	}
-
-	public static void main(String[] args) throws NotFoundException {
-		ClassPool pool = ClassPool.getDefault();
-		CtClass c = pool.get("com.cheuks.bin.bean.classprocessing.handler.DefaultInterception");
-		CtMethod[] ms = c.getDeclaredMethods();
-		for (CtMethod m : ms) {
-			Object o = m.getReturnType();
-			//			if(m.getReturnType().getName().equals("void"))		
-		}
-		Object o = new Object[] {};
 	}
 }

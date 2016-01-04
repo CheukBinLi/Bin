@@ -54,15 +54,8 @@ public class WriterThreadMananger extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		//System.out.println("WriterThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
-		// try {
-		// Thread.sleep(5000);
-		// this.interrupt();
-		// } catch (InterruptedException e1) {
-		// e1.printStackTrace();
-		// }
 		while (!this.shutdown.get()) {
 			synchronized (syncObj) {
 				try {
@@ -70,13 +63,13 @@ public class WriterThreadMananger extends AbstractControlThread {
 						if (WRITER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					executorService.shutdownNow();
-					// Logger.getDefault().error(this.getClass(), e);
 					break;
 				}
 			}
@@ -97,7 +90,8 @@ public class WriterThreadMananger extends AbstractControlThread {
 								key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getWriteEvent().process(key, serializ);
 								if (!key.isValid())
 									continue;
-							} else {
+							}
+							else {
 								((SocketChannel) key.channel()).write(ByteBufferUtil.newInstance().createPackageByByteBuffer(null));
 								attachment.registerRead();
 							}
@@ -107,7 +101,6 @@ public class WriterThreadMananger extends AbstractControlThread {
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							//							e.printStackTrace();
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {
@@ -115,12 +108,10 @@ public class WriterThreadMananger extends AbstractControlThread {
 						}
 					}
 				} catch (InterruptedException e) {
-					// e.printStackTrace();
 					break;
 				}
 
 			}
-			//System.out.println("WriteQueue-Dispatcher结束");
 		}
 	}
 }

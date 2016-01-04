@@ -16,7 +16,6 @@ public class MessageWriteEvent implements WriteEvent {
 	public SelectionKey process(SelectionKey key, Serializ serializ) throws Throwable {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
-		// 注册读
 		channel.write(ByteBufferUtil.newInstance().createPackageByByteBuffer(attachment.getAttachment().getData()));
 		if (attachment.getAttachment().getConnectType() == DataPacket.CONNECT_TYPE_SHORT)
 			attachment.registerClose(key);

@@ -14,7 +14,6 @@ import java.util.Set;
 
 public class SelectorThread extends AbstractControlThread {
 
-	// Map<Integer, Boolean> portInfo;
 	ServerSocketChannel serverSocketChannel;
 	Selector selector;
 	List<Integer[]> port;
@@ -65,7 +64,6 @@ public class SelectorThread extends AbstractControlThread {
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-//		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
 		SERVER_LIST.add(serverSocketChannel);
 	}
 
@@ -87,7 +85,6 @@ public class SelectorThread extends AbstractControlThread {
 			try {
 				Thread.sleep(5);
 			} catch (InterruptedException e) {
-				// e.printStackTrace();
 				break;
 			}
 		}
@@ -109,7 +106,6 @@ public class SelectorThread extends AbstractControlThread {
 				}
 				attachment = createAttachment().updateHeartBeatAndSetActionTypeAndServiceCode(Attachment.AT_READING, key);
 				channel = ((ServerSocketChannel) key.channel()).accept();
-				//				System.out.println(attachment.getId());
 				channel.configureBlocking(false);
 				channel.finishConnect();
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);

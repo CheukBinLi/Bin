@@ -14,10 +14,10 @@ import com.cheuks.bin.cache.DefaultCachePoolFactory;
 public class BeanFactory {
 
 	private static CachePoolFactory cachePoolFactory = new DefaultCachePoolFactory();
+	//	private static CachePoolFactory lineCachePoolFactory = new DefaultLineCachePoolFactory();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> T getBean(String name, boolean cloneModel) throws InstantiationException, IllegalAccessException, CloneNotSupportedException {
-		//		System.out.println(name);
+	public final static <T> T getBean(String name, boolean cloneModel) throws InstantiationException, IllegalAccessException, CloneNotSupportedException {
 		Object A;
 		A = cachePoolFactory.get4Map(ClassProcessingFactory.FULL_NAME_BEAN, name);
 		if (null == A)

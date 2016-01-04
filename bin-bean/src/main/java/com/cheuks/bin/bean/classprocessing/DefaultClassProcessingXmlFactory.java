@@ -46,18 +46,8 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 		cache.put(ClassProcessingFactory.NICK_NAME_CACHE, nick);
 		cache.put(ClassProcessingFactory.SHORT_NAME_CACHE, shortName);
 		cache.put(ClassProcessingFactory.XML_CONFIG_CACHE, configMap);
-		//分组
-		//		List<Map<String, CtClass>> compileObject = new ArrayList<Map<String, CtClass>>();
-
-		//		Map<String, CtClass> A1 = new HashMap<String, CtClass>();
-		//		Map<String, CtClass> A2 = new HashMap<String, CtClass>();
-		//		Map<String, CtClass> A3 = new HashMap<String, CtClass>();
-		//		compileObject.add(A1);
-		//		compileObject.add(A2);
-		//		compileObject.add(A3);
 		configInfo.getBeans();
 		Iterator<Entry<String, Bean>> it = configInfo.getBeans().entrySet().iterator();
-		//添加注册
 		Entry<String, Bean> tempEn;
 		ClassPool pool = ClassPool.getDefault();
 		CtClass tempClazz;
@@ -70,24 +60,14 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 			complete.put(tempEn.getValue().getClassName(), tempClazz);
 			nick.put(tempEn.getKey(), tempEn.getValue().getClassName());
 			shortName.put(ShortNameUtil.makeShortName(tempEn.getValue().getClassName()), tempEn.getValue().getClassName());
-
-			//任务列表分组
-			//			if (beans.containsKey(tempEn.getValue().getClassName())) {
-			//				beans.get(tempEn.getValue().getClassName()).add(tempEn.getValue());
-			//			}
-			//			else
-			//				beans.put(tempEn.getValue().getClassName(), new LinkedList<DefaultConfigInfo.Bean>());
 			DefaultCachePoolFactory.newInstance().addNFloop4Map(false, tempEn.getValue(), beans, tempEn.getValue().getClassName(), tempEn.getValue().getType(), tempEn.getKey());
 		}
-
-		//搜索class
 		for (Entry<String, CtClass> en : complete.entrySet())
 			try {
 				BeanFactory.addClassInfo(scanClass(Class.forName(en.getKey()), true));
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		//			System.err.println(en.getKey());
 
 		DefaultAutoLoadXmlHandler autoLoadHandler = new DefaultAutoLoadXmlHandler();
 		DefaultInterceptXmlHandler interceptHandler = new DefaultInterceptXmlHandler();
@@ -120,7 +100,6 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 			ctFields = superClass.getDeclaredFields();
 			ctMethods = superClass.getDeclaredMethods();
 			interceptStr = configInfo.getIntercepts().get(superClass.getName());
-			//			System.err.println(superClass.getName());
 			allIntercept = false;
 			isIntercept = false;
 			if (null != interceptStr) {
@@ -134,7 +113,6 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 				}
 			}
 			Map<String, Bean> tempB = DefaultCachePoolFactory.newInstance().get4Map(beans, superClass.getName(), "field");
-			//注入
 			for (CtField f : ctFields)
 				for (Entry<String, Bean> en : tempB.entrySet()) {
 					if (f.getName().equals(en.getKey())) {
@@ -157,7 +135,6 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 					level++;
 				}
 			}
-			//Import
 			for (HandlerInfo h : handlerInfos) {
 				if (null != h.getImports())
 					for (String s : h.getImports()) {
@@ -169,10 +146,6 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 			newClass.getClassPool().importPackage("java.lang.reflect.Method");
 			newClass.getClassPool().importPackage("com.cheuks.bin.bean.application.BeanFactory");
 			newClass.getClassPool().importPackage("com.cheuks.bin.bean.classprocessing.ClassInfo");
-			//建立构造、构造加载
-			//			CtConstructor tempC;
-			//			CtConstructor[] ctConstructors = superClass.getDeclaredConstructors();
-			//			CtConstructor defauleConstructor = CtNewConstructor.defaultConstructor(newClass);
 			StringBuffer sb = new StringBuffer("{");
 			sb.append("super($$);");
 			if (handlerInfos.size() > 0) {
@@ -184,20 +157,6 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 				sb.append("}catch(java.lang.Exception e){e.printStackTrace();}");
 			}
 			sb.append("}");
-			//加添构内容（放到建立工厂里）
-			//			defauleConstructor.setBody(sb.toString());
-			//			//			defauleConstructor.addCatch("", newClass.getClassPool().get("java.lang.Exception"));
-			//			newClass.addConstructor(defauleConstructor);
-			//			try {
-			//				for (CtConstructor c : ctConstructors) {
-			//					tempC = CtNewConstructor.copy(c, newClass, null);
-			//					tempC.setBody("{super($$);}");
-			//					newClass.addConstructor(tempC);
-			//				}
-			//			} catch (DuplicateMemberException e) {
-			//				//				e.printStackTrace();
-			//			}
-
 			if (level == 0)
 				//				A1.put(tempCtEn.getKey(), newClass);
 				result.addFirstQueue(new DefaultTempClass(superClass, newClass));
@@ -205,11 +164,6 @@ public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFac
 				result.addSecondQueue(new DefaultTempClass(superClass, newClass, sb.toString(), null));
 
 		}
-
-		//		Object o2;
-		//		anthingToClass(compileObject);
-
-		//		return compileObject;
 		return result;
 	}
 }

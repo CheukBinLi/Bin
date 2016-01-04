@@ -52,8 +52,9 @@ public class CallMethod {
 			messageInfo.setPath(path).setMethod(methodName);
 			messageInfo.setParams(params);
 			sc = getConnection();
-			sc.write(ByteBufferUtil.newInstance().createPackageByByteBuffer(DataPacket.SERVICE_TYPE_RMI, DataPacket.CONNECT_TYPE_LONG, defaultSerializ.serializ(messageInfo)));
-			messageInfo = defaultSerializ.toObject(ByteBufferUtil.newInstance().getData(sc, false).getData());
+			System.out.println(sc.hashCode());
+			sc.write(ByteBufferUtil.createPackageByByteBuffer(DataPacket.SERVICE_TYPE_RMI, DataPacket.CONNECT_TYPE_LONG, defaultSerializ.serializ(messageInfo)));
+			messageInfo = defaultSerializ.toObject(ByteBufferUtil.getData(sc, false).getData());
 			if (null != messageInfo.getThrowable())
 				throw messageInfo.getThrowable();
 			return messageInfo.getResult();

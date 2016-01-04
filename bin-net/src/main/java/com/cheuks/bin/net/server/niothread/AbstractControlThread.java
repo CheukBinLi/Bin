@@ -34,11 +34,6 @@ public abstract class AbstractControlThread extends Thread {
 	protected volatile static Serializ serializ = new DefaultSerializImpl();
 	protected final int pollInterval = 2;
 
-	//	// 新
-	//	/***
-	//	 * @1:channel.hashCode @2:type
-	//	 */
-	//	protected final static ConcurrentHashMap<Integer, Integer> TYPE_LIST = new ConcurrentHashMap<Integer, Integer>();
 	/***
 	 * @1:type @2:处理接口
 	 */
@@ -68,7 +63,6 @@ public abstract class AbstractControlThread extends Thread {
 		SERVER_LIST.clear();
 		ATTACHMENT_LIST.clear();
 		EVENT_LIST.clear();
-		//		TYPE_LIST.clear();
 	}
 
 	protected static final int ACCEPT = 1, READER = 2, WRITER = 4, RELEASE = 8, HANDLER = 16;
@@ -101,10 +95,6 @@ public abstract class AbstractControlThread extends Thread {
 	}
 
 	public void addServiceHandler(ServiceHandler handler) throws Exception {
-		// if (null != (handler = SERVICE_HANDLER_MAP.put(handler.path(),
-		// handler))) {
-		// throw new Exception("重复的PATH:" + handler.path());
-		// }
 		HANDLER_LIST.offerLast(handler);
 	}
 

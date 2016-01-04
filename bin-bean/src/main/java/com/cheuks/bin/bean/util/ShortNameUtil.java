@@ -60,8 +60,4 @@ public class ShortNameUtil {
 		}
 		return true;
 	}
-
-	public static void main(String[] args) {
-		System.err.println(objectHumpNameEquals("menaaa", "menaaa"));
-	}
 }

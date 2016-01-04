@@ -15,7 +15,6 @@ public class MessageHandleEvent implements HandleEvent {
 
 	public SelectionKey process(SelectionKey key, Serializ serializ, final CachePoolFactory cache, final String cacheTag, final ConcurrentHashMap<String, ServiceHandler> SERVICE_HANDLER_MAP) throws Throwable {
 		Attachment attachment = (Attachment) key.attachment();
-
 		attachment.getAttachment().setData(("服务器返回结果：" + new String(attachment.getAttachment().getData())).getBytes());
 		attachment.registerWrite();
 		return key;

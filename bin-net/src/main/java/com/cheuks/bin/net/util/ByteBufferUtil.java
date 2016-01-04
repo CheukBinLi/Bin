@@ -29,15 +29,11 @@ public class ByteBufferUtil implements ConstantType {
 	 * 数据结构 SERVICE+CONNECT_TYPE+SERVICE_HANDLE_PATH_LEN+LENGTH_LEN
 	 */
 
-	// private static final String formatChar = "%0" + LENGTH_WAY + "d";
 	private static final int LENGTH_LEN = 8;
 	private static final int SERVICE_LEN = 2;// 服务类型
 	private static final int CONNECT_TYPE_LEN = 1;// 长短连接
-	//	private static final int SERVICE_HANDLE_ID_LEN = 8;// 服务类型
-	//	private static final int HEARDER_LEN = LENGTH_LEN + SERVICE_LEN + SERVICE_HANDLE_ID_LEN + CONNECT_TYPE_LEN;// 报头长度
 	private static final int HEARDER_LEN = LENGTH_LEN + SERVICE_LEN + CONNECT_TYPE_LEN;// 报头长度
 
-	//	private static final String HEADER = "%" + SERVICE_LEN + "d%" + CONNECT_TYPE_LEN + "d%" + SERVICE_HANDLE_ID_LEN + "d%" + LENGTH_LEN + "s";
 	private static final String HEADER = "%" + SERVICE_LEN + "d%" + CONNECT_TYPE_LEN + "d%" + LENGTH_LEN + "s";
 	private static final String LENGTH_FORMAT = "%" + LENGTH_LEN + "s";
 
@@ -46,13 +42,6 @@ public class ByteBufferUtil implements ConstantType {
 	public static ByteBufferUtil newInstance() {
 		return newInstance;
 	}
-
-	//	public int getLength(ScatteringByteChannel scatteringByteChannel, int size) throws IOException {
-	//		ByteBuffer len = ByteBuffer.allocate(size);
-	//		scatteringByteChannel.read(len);
-	//		len.flip();
-	//		return Integer.valueOf(new String(len.array()).trim());
-	//	}
 
 	private ByteBufferUtil() {
 		super();
@@ -68,30 +57,30 @@ public class ByteBufferUtil implements ConstantType {
 	 *            待插入数据
 	 * @return 主数据
 	 */
-	protected byte[] insertDate(byte[] data, int seek, byte[] b) {
+	protected static byte[] insertDate(byte[] data, int seek, byte[] b) {
 		for (int i = 0, len = b.length; i < len; i++, seek++)
 			data[seek] = b[i];
 		return data;
 	}
 
-	public ByteBuffer createPackageByByteBuffer(byte[] o) {
+	public static ByteBuffer createPackageByByteBuffer(byte[] o) {
 		if (null != o)
 			return ByteBuffer.wrap(createPackageByBytes(o));
 		return ByteBuffer.allocate(0);
 	}
 
-	public ByteBuffer createPackageByByteBuffer(int serviceType, int connectType/* , int serviceHandleIdType */, byte[] o) {
+	public static ByteBuffer createPackageByByteBuffer(int serviceType, int connectType/* , int serviceHandleIdType */, byte[] o) {
 		return ByteBuffer.wrap(createPackageByBytes(serviceType, connectType, o));
 	}
 
-	public byte[] createPackageByBytes(byte[] o) {
+	public static byte[] createPackageByBytes(byte[] o) {
 		byte[] data = new byte[LENGTH_LEN + o.length];
 		data = insertDate(data, 0, String.format(LENGTH_FORMAT, Integer.toHexString(o.length)).getBytes());
 		data = insertDate(data, LENGTH_LEN, o);
 		return data;
 	}
 
-	public byte[] createPackageByBytes(int serviceType, int connectType, /* int serviceHandleIdType, */byte[] o) {
+	public static byte[] createPackageByBytes(int serviceType, int connectType, /* int serviceHandleIdType, */byte[] o) {
 		byte[] data = new byte[HEARDER_LEN + o.length];
 		//		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, serviceHandleIdType, Integer.toHexString(o.length)).getBytes());
 		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, Integer.toHexString(o.length)).getBytes());
@@ -99,7 +88,7 @@ public class ByteBufferUtil implements ConstantType {
 		return data;
 	}
 
-	public DataPacket getData(ScatteringByteChannel scatteringByteChannel, boolean hasHeader) throws IOException {
+	public static DataPacket getData(ScatteringByteChannel scatteringByteChannel, boolean hasHeader) throws IOException {
 		ByteBuffer hearder = ByteBuffer.allocate(hasHeader ? HEARDER_LEN : LENGTH_LEN);
 		DataPacket dataPacket = new DataPacket();
 		//		byte[] temp = new byte[hasHeader ? HEARDER_LEN : LENGTH_LEN];
@@ -117,18 +106,10 @@ public class ByteBufferUtil implements ConstantType {
 			temp = new byte[LENGTH_LEN];
 			System.arraycopy(tempHeader, SERVICE_LEN + CONNECT_TYPE_LEN, temp, 0, LENGTH_LEN);
 			dataPacket.setDataLength(temp);
-			//			hearder.get(temp, 0, SERVICE_LEN);
-			//			dataPacket.setServiceType(temp);
-			//
-			//			hearder.get(temp, SERVICE_LEN, CONNECT_TYPE_LEN);
-			//			dataPacket.setConnectType(temp);
-			//
-			//			hearder.get(temp, SERVICE_LEN + CONNECT_TYPE_LEN, LENGTH_LEN);
-		} else {
+		}
+		else {
 			hearder.get(tempHeader, 0, LENGTH_LEN);
 			dataPacket.setDataLength(tempHeader);
-			//			hearder.get(temp, 0, LENGTH_LEN);
-			//			dataPacket.setDataLength(temp);
 		}
 
 		ByteBuffer data = ByteBuffer.allocate(dataPacket.getDataLength());
@@ -137,32 +118,30 @@ public class ByteBufferUtil implements ConstantType {
 		return dataPacket.setData(data.array());
 	}
 
-	public DataPacket getData(InputStream in, boolean hasHeader) throws IOException {
+	public static DataPacket getData(InputStream in, boolean hasHeader) throws IOException {
 		DataPacket dataPacket = new DataPacket();
 		if (hasHeader)
-			//			dataPacket.setServiceType(getByte(in, SERVICE_LEN)).setConnectType(getByte(in, CONNECT_TYPE_LEN)).setServiceHandleId(getByte(in, SERVICE_HANDLE_ID_LEN));
 			dataPacket.setServiceType(getByte(in, SERVICE_LEN)).setConnectType(getByte(in, CONNECT_TYPE_LEN));
 		dataPacket.setDataLength(getByte(in, LENGTH_LEN));
 		dataPacket.setData(getByte(in, dataPacket.getDataLength()));
 		return dataPacket;
 	}
 
-	protected byte[] getByte(InputStream in, int size) throws IOException {
+	protected static byte[] getByte(InputStream in, int size) throws IOException {
 		byte[] b = new byte[size];
 		in.read(b);
 		return b;
 	}
 
-	public byte[] createData(DataPacket dataPacket) {
-		//		return createPackageByBytes(dataPacket.getServiceType(), dataPacket.getConnectType(), dataPacket.getServiceHandleId(), dataPacket.getData());
+	public static byte[] createData(DataPacket dataPacket) {
 		return createPackageByBytes(dataPacket.getServiceType(), dataPacket.getConnectType(), dataPacket.getData());
 	}
 
-	public byte[] createData(int serviceType, int connectType/* , int serviceHandleIdType */, byte[] data) {
+	public static byte[] createData(int serviceType, int connectType/* , int serviceHandleIdType */, byte[] data) {
 		return createPackageByBytes(serviceType, connectType, data);
 	}
 
-	public byte[] createData(int serviceType, int connectType/* , int serviceHandleIdType */, String data) {
+	public static byte[] createData(int serviceType, int connectType/* , int serviceHandleIdType */, String data) {
 		return createPackageByBytes(serviceType, connectType, data.getBytes());
 	}
 
@@ -174,7 +153,6 @@ public class ByteBufferUtil implements ConstantType {
 
 		private int serviceType;
 		private int connectType;
-		//		private int serviceHandleId;
 		private int dataLength;
 		private byte[] data;
 
@@ -182,7 +160,6 @@ public class ByteBufferUtil implements ConstantType {
 			super();
 			this.serviceType = serviceType;
 			this.connectType = connectType;
-			//			this.serviceHandleId = serviceHandleId;
 			this.data = data;
 		}
 
@@ -214,25 +191,6 @@ public class ByteBufferUtil implements ConstantType {
 			return this;
 		}
 
-		//		public int getServiceHandleId() {
-		//			return serviceHandleId;
-		//		}
-		//
-		//		public DataPacket setServiceHandleId(int serviceHandleId) {
-		//			this.serviceHandleId = serviceHandleId;
-		//			return this;
-		//		}
-		//
-		//		public DataPacket setServiceHandleId(byte[] serviceHandleId, int length) {
-		//			this.serviceHandleId = Integer.valueOf(new String(serviceHandleId, 0, length));
-		//			return this;
-		//		}
-		//
-		//		public DataPacket setServiceHandleId(byte[] serviceHandleId) {
-		//			this.serviceHandleId = Integer.valueOf(new String(serviceHandleId));
-		//			return this;
-		//		}
-
 		public byte[] getData() {
 			return data;
 		}
@@ -256,11 +214,4 @@ public class ByteBufferUtil implements ConstantType {
 			return this;
 		}
 	}
-
-	public static void main(String[] args) {
-		ByteBufferUtil b = new ByteBufferUtil();
-		System.out.println(new String(b.createPackageByBytes(2, 3, "内容..hjkhkjhjk...   ...!".getBytes())));
-		System.out.println(new String(b.createPackageByBytes("内容..hjkhkjhjk...   ...!".getBytes())));
-	}
-
 }

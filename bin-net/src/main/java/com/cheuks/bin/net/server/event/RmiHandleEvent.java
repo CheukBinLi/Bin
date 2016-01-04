@@ -17,9 +17,7 @@ public class RmiHandleEvent implements HandleEvent {
 
 	public SelectionKey process(SelectionKey key, Serializ serializ, final CachePoolFactory cache, final String cacheTag, final ConcurrentHashMap<String, ServiceHandler> SERVICE_HANDLER_MAP) throws Throwable {
 		Attachment attachment = (Attachment) key.attachment();
-
 		MessageInfo messageInfo = serializ.toObject(attachment.getAttachment().getData());
-
 		Method m = cache.get4Map(cacheTag, messageInfo.getPath(), messageInfo.getMethod());
 		ServiceHandler serviceHandler = SERVICE_HANDLER_MAP.get(messageInfo.getPath());
 		Object result = null;

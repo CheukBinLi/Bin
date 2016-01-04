@@ -78,14 +78,4 @@ public class XmlHandler extends DefaultHandler {
 		}
 		super.startElement(uri, localName, qName, attributes);
 	}
-
-	public static void main(String[] args) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
-		DefaultConfigInfo defaultConfigInfo = (DefaultConfigInfo) new XmlHandler().read(XmlHandler.class.getClassLoader().getResourceAsStream("bean.xml"));
-		for (Entry<String, Bean> en : defaultConfigInfo.getBeans().entrySet())
-			System.err.println(en.getKey() + " : " + en.getValue().getClassName());
-		for (Entry<String, Intercept> en : defaultConfigInfo.getIntercepts().entrySet())
-			System.err.println(en.getKey() + " : " + en.getValue().getClassName() + " m:" + en.getValue().getMethods());
-		System.out.println(defaultConfigInfo.getCachePool().getClassName());
-	}
-
 }

@@ -16,6 +16,7 @@ import javassist.CtMethod;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
+@SuppressWarnings("rawtypes")
 public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtClass, RmiClient> {
 
 	public Class<RmiClient> handlerClass() {
@@ -26,7 +27,7 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		return new HashSet<Integer>(Arrays.asList(Type));
 	}
 
-	String imp = "private com.cheuks.bin.net.server.handler.CallMethod callMethod = new com.cheuks.bin.net.server.handler.CallMethod(\"%s\",%d,%b,%d);";
+	String imp = "protected  com.cheuks.bin.net.server.handler.CallMethod callMethod = new com.cheuks.bin.net.server.handler.CallMethod(\"%s\",%d,%b,%d);";
 
 	public HandlerInfo doProcessing(Map<String, Map> cache, CtClass newClazz, CtMember additional, Object config) throws Throwable {
 		try {
@@ -53,7 +54,6 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		else
 			sb.append(result);
 		sb.append("}");
-		//		System.out.println(sb.toString());
 		ctMethod.setBody(sb.toString());
 		newClazz.addMethod(ctMethod);
 		return new HandlerInfo(null, newClazz, ctMethod);

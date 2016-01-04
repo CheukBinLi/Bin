@@ -2,7 +2,6 @@ package com.cheuks.bin.net.server.niothread;
 
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,7 +53,6 @@ public class ReaderThreadMananger extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		//System.out.println("ReaderThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!Thread.interrupted()) {
@@ -64,13 +62,13 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					executorService.shutdownNow();
-					// Logger.getDefault().error(this.getClass(), e);
 					break;
 				}
 			}
@@ -85,19 +83,15 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					if (null != (key = READER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
 						try {
-							//							key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getReadEvent().process(key);
-							//							attachment = (Attachment) key.attachment();
 							attachment = (Attachment) key.attachment();
 							channel = (SocketChannel) key.channel();
 							DataPacket dataPacket = ByteBufferUtil.newInstance().getData(channel, true);
 							attachment.setAttachment(dataPacket);
 							tryDo(HANDLER, key);
 						} catch (NumberFormatException e) {
-							// e.printStackTrace();
 						} catch (ClosedChannelException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							// e.printStackTrace();
 						} catch (Throwable e) {
 							e.printStackTrace();
 						} finally {
@@ -105,11 +99,9 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						}
 					}
 				} catch (InterruptedException e) {
-					// e.printStackTrace();
 					break;
 				}
 			}
-			//System.out.println("ReaderQueue-Dispatcher结束");
 		}
 	}
 

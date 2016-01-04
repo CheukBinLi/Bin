@@ -1,6 +1,5 @@
 package com.cheuks.bin.net.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -24,154 +23,195 @@ import java.nio.channels.ScatteringByteChannel;
  * @see 块/字节转换工具
  *
  */
-public class ByteBufferUtil2 {
-
-	private static int LENGTH_WAY = 16;
-	private static String formatChar = "%0" + LENGTH_WAY + "d";
-	private int serverType;
-	private int connectionType;
-	private String handlerPath;
+public class ByteBufferUtil2 implements ConstantType {
 
 	/***
-	 * 设置长度
-	 * 
-	 * @param size
+	 * 数据结构 SERVICE+CONNECT_TYPE+SERVICE_HANDLE_PATH_LEN+LENGTH_LEN
 	 */
-	public static void setLENGTH_WAY(int size) {
-		LENGTH_WAY = size;
-		formatChar = "%0" + size + "d";
+
+	private static final int LENGTH_LEN = 8;
+	private static final int SERVICE_LEN = 2;// 服务类型
+	private static final int CONNECT_TYPE_LEN = 1;// 长短连接
+	private static final int HEARDER_LEN = LENGTH_LEN + SERVICE_LEN + CONNECT_TYPE_LEN;// 报头长度
+
+	private static final String HEADER = "%" + SERVICE_LEN + "d%" + CONNECT_TYPE_LEN + "d%" + LENGTH_LEN + "s";
+	private static final String LENGTH_FORMAT = "%" + LENGTH_LEN + "s";
+
+	private static ByteBufferUtil2 newInstance = new ByteBufferUtil2();
+
+	public static ByteBufferUtil2 newInstance() {
+		return newInstance;
 	}
 
-	private static final byte[] get(ScatteringByteChannel scatteringByteChannel, int size) throws IOException {
-		ByteBuffer buffer = ByteBuffer.allocate(size);
-		scatteringByteChannel.read(buffer);
-		buffer.flip();
-		return buffer.array();
+	private ByteBufferUtil2() {
+		super();
 	}
 
-	private static final Integer getIntegerLen(ScatteringByteChannel scatteringByteChannel, int size) {
-		try {
-			ByteBuffer buffer = ByteBuffer.allocate(size);
-			scatteringByteChannel.read(buffer);
-			buffer.flip();
-			return Integer.valueOf(new String(buffer.array()));
-		} catch (Exception e) {
-			return -1;
+	/***
+	 * 
+	 * @param data
+	 *            主数据
+	 * @param seek
+	 *            偏移
+	 * @param b
+	 *            待插入数据
+	 * @return 主数据
+	 */
+	protected byte[] insertDate(byte[] data, int seek, byte[] b) {
+		for (int i = 0, len = b.length; i < len; i++, seek++)
+			data[seek] = b[i];
+		return data;
+	}
+
+	public ByteBuffer createPackageByByteBuffer(byte[] o) {
+		if (null != o)
+			return ByteBuffer.wrap(createPackageByBytes(o));
+		return ByteBuffer.allocate(0);
+	}
+
+	public ByteBuffer createPackageByByteBuffer(int serviceType, int connectType/* , int serviceHandleIdType */, byte[] o) {
+		return ByteBuffer.wrap(createPackageByBytes(serviceType, connectType, o));
+	}
+
+	public byte[] createPackageByBytes(byte[] o) {
+		byte[] data = new byte[LENGTH_LEN + o.length];
+		data = insertDate(data, 0, String.format(LENGTH_FORMAT, Integer.toHexString(o.length)).getBytes());
+		data = insertDate(data, LENGTH_LEN, o);
+		return data;
+	}
+
+	public byte[] createPackageByBytes(int serviceType, int connectType, /* int serviceHandleIdType, */byte[] o) {
+		byte[] data = new byte[HEARDER_LEN + o.length];
+		//		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, serviceHandleIdType, Integer.toHexString(o.length)).getBytes());
+		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, Integer.toHexString(o.length)).getBytes());
+		data = insertDate(data, HEARDER_LEN, o);
+		return data;
+	}
+
+	public DataPacket getData(ScatteringByteChannel scatteringByteChannel, boolean hasHeader) throws IOException {
+		ByteBuffer hearder = ByteBuffer.allocate(hasHeader ? HEARDER_LEN : LENGTH_LEN);
+		DataPacket dataPacket = new DataPacket();
+		//		byte[] temp = new byte[hasHeader ? HEARDER_LEN : LENGTH_LEN];
+		byte[] tempHeader = hearder.array();
+		byte[] temp;
+		scatteringByteChannel.read(hearder);
+		hearder.flip();
+		if (hasHeader) {
+			temp = new byte[SERVICE_LEN];
+			System.arraycopy(tempHeader, 0, temp, 0, SERVICE_LEN);
+			dataPacket.setServiceType(temp);
+			temp = new byte[CONNECT_TYPE_LEN];
+			System.arraycopy(tempHeader, SERVICE_LEN, temp, 0, CONNECT_TYPE_LEN);
+			dataPacket.setConnectType(temp);
+			temp = new byte[LENGTH_LEN];
+			System.arraycopy(tempHeader, SERVICE_LEN + CONNECT_TYPE_LEN, temp, 0, LENGTH_LEN);
+			dataPacket.setDataLength(temp);
+		}
+		else {
+			hearder.get(tempHeader, 0, LENGTH_LEN);
+			dataPacket.setDataLength(tempHeader);
+		}
+
+		ByteBuffer data = ByteBuffer.allocate(dataPacket.getDataLength());
+		scatteringByteChannel.read(data);
+		data.flip();
+		return dataPacket.setData(data.array());
+	}
+
+	public DataPacket getData(InputStream in, boolean hasHeader) throws IOException {
+		DataPacket dataPacket = new DataPacket();
+		if (hasHeader)
+			dataPacket.setServiceType(getByte(in, SERVICE_LEN)).setConnectType(getByte(in, CONNECT_TYPE_LEN));
+		dataPacket.setDataLength(getByte(in, LENGTH_LEN));
+		dataPacket.setData(getByte(in, dataPacket.getDataLength()));
+		return dataPacket;
+	}
+
+	protected byte[] getByte(InputStream in, int size) throws IOException {
+		byte[] b = new byte[size];
+		in.read(b);
+		return b;
+	}
+
+	public byte[] createData(DataPacket dataPacket) {
+		return createPackageByBytes(dataPacket.getServiceType(), dataPacket.getConnectType(), dataPacket.getData());
+	}
+
+	public byte[] createData(int serviceType, int connectType/* , int serviceHandleIdType */, byte[] data) {
+		return createPackageByBytes(serviceType, connectType, data);
+	}
+
+	public byte[] createData(int serviceType, int connectType/* , int serviceHandleIdType */, String data) {
+		return createPackageByBytes(serviceType, connectType, data.getBytes());
+	}
+
+	public static class DataPacket implements ConstantType {
+
+		public DataPacket() {
+			super();
+		}
+
+		private int serviceType;
+		private int connectType;
+		private int dataLength;
+		private byte[] data;
+
+		public DataPacket(int serviceType, int connectType, int serviceHandleId, byte[] data) {
+			super();
+			this.serviceType = serviceType;
+			this.connectType = connectType;
+			this.data = data;
+		}
+
+		public int getServiceType() {
+			return serviceType;
+		}
+
+		public DataPacket setServiceType(int serviceType) {
+			this.serviceType = serviceType;
+			return this;
+		}
+
+		public DataPacket setServiceType(byte[] serviceType) {
+			this.serviceType = Integer.valueOf(new String(serviceType).trim());
+			return this;
+		}
+
+		public int getConnectType() {
+			return connectType;
+		}
+
+		public DataPacket setConnectType(int connectType) {
+			this.connectType = connectType;
+			return this;
+		}
+
+		public DataPacket setConnectType(byte[] connectType) {
+			this.connectType = Integer.valueOf(new String(connectType).trim());
+			return this;
+		}
+
+		public byte[] getData() {
+			return data;
+		}
+
+		public DataPacket setData(byte[] data) {
+			this.data = data;
+			return this;
+		}
+
+		public int getDataLength() {
+			return dataLength;
+		}
+
+		public DataPacket setDataLength(int dataLength) {
+			this.dataLength = dataLength;
+			return this;
+		}
+
+		public DataPacket setDataLength(byte[] dataLength) {
+			this.dataLength = Integer.parseInt(new String(dataLength).trim(), 16);
+			return this;
 		}
 	}
-
-	public static final ByteArrayOutputStream getByte(ScatteringByteChannel scatteringByteChannel) throws IOException {
-		ByteBuffer buffer = ByteBuffer.allocate(512);
-		ByteArrayOutputStream out = null;
-		int length = getIntegerLen(scatteringByteChannel, LENGTH_WAY);
-		if (length < 0)
-			return out;
-		out = new ByteArrayOutputStream(length);
-		int count = length / buffer.capacity();
-		int x = length % buffer.capacity();
-		for (int i = 0; i < count; i++) {
-			scatteringByteChannel.read(buffer);
-			buffer.flip();
-			out.write(buffer.array());
-			buffer.clear();
-		}
-		if (x > 0) {
-			out.write(get(scatteringByteChannel, x));
-		}
-		return out;
-	}
-
-	public static final ByteArrayOutputStream getByte(InputStream inputStream) throws IOException, NumberFormatException {
-		byte[] buffer = new byte[512];
-		byte[] lenByte = new byte[LENGTH_WAY];
-		inputStream.read(lenByte);
-		int length = Integer.valueOf(new String(lenByte));
-		ByteArrayOutputStream out = new ByteArrayOutputStream(length);
-		int count = length / buffer.length;
-		int x = length % buffer.length;
-		for (int i = 0; i < count; i++) {
-			inputStream.read(buffer);
-			out.write(buffer);
-		}
-		if (x > 0) {
-			byte[] temp = new byte[x];
-			inputStream.read(temp, 0, x);
-			out.write(temp);
-		}
-		return out;
-	}
-
-	public static final ByteBuffer getBuffer(InputStream in, int size) throws IOException, NumberFormatException {
-		ByteBuffer byteBuffer = ByteBuffer.allocate(size + LENGTH_WAY);
-		byte[] buff = new byte[512];
-		int len = -1;
-		byteBuffer.put(String.format(formatChar, size).getBytes());
-		while ((len = in.read(buff)) > 0) {
-			byteBuffer.put(buff, 0, len);
-		}
-		byteBuffer.flip();
-		return byteBuffer;
-	}
-
-	public static final ByteBuffer getBuffer(byte[] bytes) throws IOException, NumberFormatException {
-		ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
-		//		String formatChar = "%0" + LENGTH_WAY + "d";
-		byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		byteBuffer.flip();
-		//				 System.err.println(new String(byteBuffer.array()));
-		return byteBuffer;
-	}
-
-	public static final byte[] getBytes(String str) {
-		return getBytes(str.getBytes());
-	}
-
-	public static final byte[] getBytes(byte[] bytes) {
-		byte[] result = new byte[bytes.length + LENGTH_WAY];
-		byte[] length = String.format(formatChar, bytes.length).getBytes();
-		for (int i = 0, len = result.length, lenLength = 0, bytesLength = 0, LL = length.length; i < len; i++, lenLength++, bytesLength++) {
-			if (i == LL)
-				bytesLength = 0;
-			if (i < LL) {
-				result[i] = length[lenLength];
-			}
-			else {
-				result[i] = bytes[bytesLength];
-			}
-		}
-		return result;
-
-		//				ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length + LENGTH_WAY);
-		//				byteBuffer.put(String.format(formatChar, bytes.length).getBytes()).put(bytes);
-		//				byteBuffer.flip();
-		//				return byteBuffer.array();
-	}
-
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		System.out.println(113 / 6);
-		System.out.println(113 % 6);
-		System.out.println(113 % 6 == 0);
-		System.out.println(107 / 6);
-		System.out.println(10 % 3);
-		System.out.println(95 % 1024);
-		String formatChar = "%0" + LENGTH_WAY + "d";
-		String length = String.format(formatChar, 123);
-		System.err.println(length);
-		System.err.println(length.getBytes().length);
-		System.err.println(Integer.MAX_VALUE);
-		System.err.println(Long.MAX_VALUE);
-		byte[] x = getBytes("你好吗".getBytes());
-		System.err.println(new String(x));
-
-		System.err.println("com.cheuks.bin.net.server.event".getBytes().length);
-		String a = Integer.toHexString(99999);
-		System.err.println(a);
-		System.err.println(Integer.parseInt(a, 16));
-
-		String f = "%12s";
-		System.err.println(String.format(f, "xxxxx"));
-		System.err.println(String.format("%0#16x", 0x1869f));
-		System.err.println(Integer.parseInt("1869f".trim(), 16));
-	}
-
 }

@@ -49,9 +49,7 @@ public class DefaultAutoLoadXmlHandler extends AbstractClassProcessingHandler<Ct
 		String refName = null;
 		if (null != (refName = cache.get(ClassProcessingFactory.NICK_NAME_CACHE).get(bean.getRef()).toString()) || null != (refName = ((CtClass) cache.get(ClassProcessingFactory.REGISTER_CACHE).get(bean.getRef())).getName())) {
 			sb.append("java.lang.reflect.Field field = BeanFactory.getClassInfoField(\"").append(newClass.getName()).append("\",\"").append(o.getName()).append("\");");
-			//				sb.append("field.setAccessible(true);");
 			sb.append("field.set(this, new ").append(refName + DefaultClassProcessingXmlFactory.Impl).append("());");
-			//			sb.append("field.set(this, BeanFactory.getBean(\"").append(refName).append("\"));");
 		}
 		else
 			throw new Throwable(String.format("%s没有注册实例，请在Ban中配置相关参数。 ", bean.getRef()));
@@ -60,22 +58,11 @@ public class DefaultAutoLoadXmlHandler extends AbstractClassProcessingHandler<Ct
 	}
 
 	protected String makeField(CtField o, String implClassName) throws NotFoundException {
-		//		return String.format("%s %s %s=new %s%s();", Modifier.toSring(o.getModifiers()), o.getType().getName(), o.getName(), classImpl, ClassProcessingFactory.Impl);
 		return String.format(" %s=new %s%s();", o.getName(), implClassName, ClassProcessingFactory.Impl);
 	}
 
 	public Class<Object> handlerClass() {
 		return Object.class;
-	}
-
-	static {
-		//		super($$);
-		//		try {
-		//			field.set(this, new com.ben.mc.AnthingTest.mc.xml.XmlAutoLoadTestImpl$MC_IMPL());
-		//			field.set(this, BeanFactory.getBean("com.ben.mc.AnthingTest.mc.xml.XmlAutoLoadTestImpl"));
-		//		} catch (java.lang.Exception e) {
-		//			e.printStackTrace();
-		//		}
 	}
 
 }
