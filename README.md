@@ -1,3 +1,4 @@
+功能：IOC/AOP/RMI/网络消息等等
 @Maven打包
 
 							<module>bin-annotation</module>
