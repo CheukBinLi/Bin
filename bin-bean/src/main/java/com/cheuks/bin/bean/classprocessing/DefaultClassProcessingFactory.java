@@ -201,21 +201,20 @@ public class DefaultClassProcessingFactory extends AbstractClassProcessingFactor
 
 			//实现克隆
 			//			CtMethod x=CtMethod.make("public Object clone() throws CloneNotSupportedException {return super.clone();}", newClazz)
-			CtMethod ctClone = CtMethod.make("public Object clone() {return super.clone();}", newClazz);
+			CtMethod ctClone = CtMethod.make("public Object clone() throws CloneNotSupportedException{return null;}", newClazz);
 			cloneStr.append("{").append(newClazz.getName()).append(" o = null;");
-			cloneStr.append("try {");
 			cloneStr.append("o = (").append(newClazz.getName()).append(") super.clone();");
 			newClazz.addMethod(ctClone);
 			for (CtField f : newClazz.getDeclaredFields()) {
 				for (CtClass cc : f.getType().getInterfaces()) {
-					if (clone == cc)
-						cloneStr.append("o.").append(f.getName()).append(" = (").append(newClazz.getName()).append(")").append("o.").append(f.getName()).append(".clone();");
+					if (cloneClass == cc) {
+						cloneStr.append("o.").append(f.getName()).append(" = (").append(f.getType().getName()).append(")").append("o.").append(f.getName()).append(".clone();");
+					}
 				}
 				//					if (cloneClass == f.getType())
 				//						System.err.println(f.getType());
 			}
-			cloneStr.append("} catch (CloneNotSupportedException e) {e.printStackTrace();}return o;}");
-			//			System.out.println(cloneStr.toString());
+			cloneStr.append("return o;}");
 			ctClone.setBody(cloneStr.toString());
 
 			//Import
