@@ -152,7 +152,7 @@ public class ClassInfo {
 			return "null";
 		else if (c.getSimpleName().equals("char"))
 			return "0";
-		else if (c.getSimpleName().equals("Char"))
+		else if (c.getSimpleName().equals("Character"))
 			return "null";
 		else if (c.getSimpleName().equals("Double"))
 			return "null";
