@@ -17,11 +17,12 @@
 	<dependencies>
 	</dependencies>
 	<modules>
-		<module>bin-net</module>
 		<module>bin-annotation</module>
+		<module>bin-util</module>
 		<module>bin-cache</module>
 		<module>bin-bean</module>
+		<module>bin-net</module>
+		<module>bin-webtest</module>
 		<module>bin-anythingtest</module>
-    <module>bin-webtest</module>
-  </modules>
+	</modules>
 </project>
