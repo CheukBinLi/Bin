@@ -1,8 +1,11 @@
 package com.cheuks.bin.anythingtest.xml;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.cheuks.bin.anythingtest.xml.XmlEntity.B;
 
@@ -28,19 +31,20 @@ public class MakeXml {
 		return false;
 	}
 
-	public String sub(Object o) throws IllegalArgumentException, IllegalAccessException {
+	public String sub(Object o) throws IllegalArgumentException, IllegalAccessException, InstantiationException {
 		if (isGeneralType(o.getClass()))
 			return o.toString();
 		Field[] fields = o.getClass().getDeclaredFields();
+		Object tempO;
 		StringBuffer sb = new StringBuffer();
 		for (Field f : fields) {
 			f.setAccessible(true);
-			sb.append("<").append(f.getName()).append(">").append(sub(f.get(o))).append("</").append(f.getName()).append(">");
+			sb.append("<").append(f.getName()).append(">").append(sub(null == (tempO = f.get(o)) ? f.getType().newInstance() : tempO)).append("</").append(f.getName()).append(">");
 		}
 		return sb.toString();
 	}
 
-	public static void main(String[] args) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public static void main(String[] args) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InstantiationException {
 		MakeXml mx = new MakeXml();
 		//		Field f = MakeXml.class.getDeclaredField("oooo");
 		//		Object o = f.get(mx);
@@ -53,8 +57,12 @@ public class MakeXml {
 		//			if (c == List.class)
 		//				System.err.println(c.getName());
 		XmlEntity xe = new XmlEntity();
-		xe.setA("aaaaa").setB("bbbbb").setBclass(new B()).setA("A").setB("B");
+		xe.setA("aaaaa").setB("bbbbb").setBclass(new B()).getBclass().setA("A").setB("B");
 		System.err.println(mx.sub(xe));
+
+		Set<String> set = new HashSet<String>();
+		System.err.println(set.getClass().getGenericSuperclass().getTypeName());
+
 	}
 
 }
