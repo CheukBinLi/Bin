@@ -36,7 +36,7 @@ public class clientX {
 					}
 				}
 			});
-			Thread.sleep(50);
+			Thread.sleep(80);
 		}
 	}
 
