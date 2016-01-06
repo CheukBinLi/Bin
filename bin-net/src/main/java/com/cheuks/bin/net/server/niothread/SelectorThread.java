@@ -19,9 +19,9 @@ public class SelectorThread extends AbstractControlThread {
 	Selector selector;
 	List<Integer[]> port;
 	final Integer maxConnection;
-	final Long interval;
+	final Integer interval;
 
-	public SelectorThread(Long selectInterval, List<Integer[]> port) {
+	public SelectorThread(Integer selectInterval, List<Integer[]> port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
@@ -29,7 +29,7 @@ public class SelectorThread extends AbstractControlThread {
 		init();
 	}
 
-	public SelectorThread(Integer maxConnection, Long selectInterval, List<Integer[]> port) {
+	public SelectorThread(Integer maxConnection, Integer selectInterval, List<Integer[]> port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
@@ -65,7 +65,7 @@ public class SelectorThread extends AbstractControlThread {
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-//		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
+		//		TYPE_LIST.put(serverSocketChannel.hashCode(), serviceType);
 		SERVER_LIST.add(serverSocketChannel);
 	}
 
@@ -85,7 +85,7 @@ public class SelectorThread extends AbstractControlThread {
 				break;
 			}
 			try {
-				Thread.sleep(5);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				// e.printStackTrace();
 				break;

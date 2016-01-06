@@ -30,7 +30,7 @@ public class NioServer implements Server {
 	ArrayList<Integer[]> ports = new ArrayList<Integer[]>();
 	volatile SelectorThread selectorThread;
 
-	Long refreshInterval = 2L;
+	Integer refreshInterval = 100;
 	int attachmentQueue = 2;
 	int maxConnection = 2000;
 
