@@ -110,7 +110,11 @@ public class XmlReaderAll extends DefaultHandler {
 		Field f = null;
 		Object o = null;
 		try {
-			f = X.getClass().getDeclaredField(qName);
+			try {
+				f = X.getClass().getDeclaredField(qName);
+			} catch (Exception e) {
+				f = X.getClass().getSuperclass().getDeclaredField(qName);
+			}
 			f.setAccessible(true);
 			o = f.get(X);
 			if (null == o)
@@ -124,6 +128,8 @@ public class XmlReaderAll extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
+		if (!link.isEmpty() && null != link.getLast().getTagName() && link.getLast().getTagName().equals(qName))
+			link.removeLast();
 	}
 
 	@Override
@@ -132,7 +138,6 @@ public class XmlReaderAll extends DefaultHandler {
 		Node node = link.removeLast();
 		Object o = link.getLast().getObj();
 		Field f = node.getField();
-		// System.out.println(preTag);
 		try {
 			f.setAccessible(true);
 			f.set(o, new String(ch, start, length));
