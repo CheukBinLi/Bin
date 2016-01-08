@@ -75,9 +75,7 @@ public class ByteBufferUtil implements ConstantType {
 	}
 
 	public ByteBuffer createPackageByByteBuffer(byte[] o) {
-		if (null != o)
-			return ByteBuffer.wrap(createPackageByBytes(o));
-		return ByteBuffer.allocate(0);
+		return ByteBuffer.wrap(createPackageByBytes(o));
 	}
 
 	public ByteBuffer createPackageByByteBuffer(int serviceType, int connectType/* , int serviceHandleIdType */, byte[] o) {
@@ -85,6 +83,8 @@ public class ByteBufferUtil implements ConstantType {
 	}
 
 	public byte[] createPackageByBytes(byte[] o) {
+		if (null == o)
+			o = new byte[0];
 		byte[] data = new byte[LENGTH_LEN + o.length];
 		data = insertDate(data, 0, String.format(LENGTH_FORMAT, Integer.toHexString(o.length)).getBytes());
 		data = insertDate(data, LENGTH_LEN, o);
