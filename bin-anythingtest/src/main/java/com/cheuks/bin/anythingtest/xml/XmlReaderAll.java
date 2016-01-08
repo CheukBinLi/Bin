@@ -1,11 +1,8 @@
 package com.cheuks.bin.anythingtest.xml;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,30 +20,25 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Ben-Book
  *
  */
+@SuppressWarnings("unchecked")
 public class XmlReaderAll extends DefaultHandler {
 
-	static XmlReaderAll instance = new XmlReaderAll();
+	//	static XmlReaderAll instance = new XmlReaderAll();
 
 	private Object resultObject;
 
 	protected static XmlReaderAll NewInstance() {
-		return instance;
+		return new XmlReaderAll();
 	}
 
 	public static <T> T paddingModel(byte[] bytes, Class<T> obj) throws NoSuchFieldException, SecurityException, ParserConfigurationException, SAXException, IOException, InstantiationException, IllegalAccessException {
-		return instance.padding(bytes, obj);
+		return new XmlReaderAll().padding(bytes, obj);
 	}
 
-	/***
-	 * 节点标题
-	 */
-	private String preTag;
-
 	protected <T> T padding(byte[] bytes, Class<T> obj) throws ParserConfigurationException, SAXException, IOException, NoSuchFieldException, SecurityException, InstantiationException, IllegalAccessException {
+		link.clear();
 		this.resultObject = obj.newInstance();
-
 		link.addFirst(new Node(null, null, this.resultObject));
-
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser parser = factory.newSAXParser();
 		XmlReaderAll handler = this;
