@@ -124,7 +124,7 @@ xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Int
 			public static void main(String[] args) throws Throwable {
 				Server server = NioServer.newInstance();//实现例
 				server.start(2000, 10000);//运行并设置并发数，和心跳超时
-				server.addService(10088).addService(10087);//添加端口（多播服务）
+				server.addService(10088).addService(10087);//添加端口（多播服务） 
 				server.addHandler(new ServiceHandlerTest());//添加服务处理对象（现：主要为RMI服务用）
 				/***
 				*@addEventHandle
