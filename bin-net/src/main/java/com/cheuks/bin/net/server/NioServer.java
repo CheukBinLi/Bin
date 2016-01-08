@@ -67,8 +67,8 @@ public class NioServer implements Server {
 		return this;
 	}
 
-	public Server addService(Integer port, Integer serviceType) throws IOException {
-		selectorThread.addListener(port, serviceType);
+	public Server addService(Integer port) throws IOException {
+		selectorThread.addListener(port);
 		return this;
 	}
 
