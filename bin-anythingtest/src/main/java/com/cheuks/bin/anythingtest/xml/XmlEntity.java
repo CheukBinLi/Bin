@@ -6,6 +6,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.cheuks.bin.anythingtest.xml.TangDouCash.ACCT_INFO_CLASS;
+
 public class XmlEntity {
 
 	public static class B {
@@ -34,6 +36,7 @@ public class XmlEntity {
 
 	private String a;
 	private String b;
+	//	private Set<String> set;
 
 	private B bclass;
 
@@ -64,13 +67,21 @@ public class XmlEntity {
 		return this;
 	}
 
+	//	public Set<String> getSet() {
+	//		return set;
+	//	}
+	//
+	//	public XmlEntity setSet(Set<String> set) {
+	//		this.set = set;
+	//		return this;
+	//	}
+
 	public static void main(String[] args) throws NoSuchFieldException, SecurityException, InstantiationException, IllegalAccessException, ParserConfigurationException, SAXException, IOException {
 		String xml = "<?xml version='1.0' encoding='UTF-8'?><XmlEntity><a>a</a><b>b</b><bclass><a>1</a><b>2</b></bclass></XmlEntity>";
 		XmlReaderAll xra = new XmlReaderAll();
 		XmlEntity xe = new XmlEntity();
 		xe = xra.padding(xml.getBytes(), XmlEntity.class);
 		System.err.println(xe.getBclass().getB());
-
 	}
 
 }

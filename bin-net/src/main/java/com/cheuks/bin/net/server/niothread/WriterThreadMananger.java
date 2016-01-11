@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.net.server.handler.MessageInfo;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 
 public class WriterThreadMananger extends AbstractControlThread {
