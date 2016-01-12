@@ -37,12 +37,10 @@ public interface Server extends ConstantType {
 	 * 
 	 * @param port
 	 *            端口
-	 * @param serviceType
-	 *            对应服务类型
 	 * @return
 	 * @throws Throwable
 	 */
-	Server addService(Integer port, Integer serviceType) throws Throwable;
+	Server addService(Integer port) throws Throwable;
 
 	/***
 	 * 服务事件接口

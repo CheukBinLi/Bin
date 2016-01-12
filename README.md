@@ -127,9 +127,15 @@ xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Int
 			public static void main(String[] args) throws Throwable {
 				Server server = NioServer.newInstance();//实现例
 				server.start(2000, 10000);//运行并设置并发数，和心跳超时
-				server.addService(10088, Server.SERVICE_TYPE_RMI);//添加端口服务类型（多播服务）
-				server.addHandler(new ServiceHandlerTest());//添加服务处理对象
-				server.addEventHandle(new EventInfo(new RmiReadEvent(), new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);//添加服务类型对应的实现
+				server.addService(10088).addService(10087);//添加端口（多播服务） 
+				server.addHandler(new ServiceHandlerTest());//添加服务处理对象（现：主要为RMI服务用）
+				/***
+				*@addEventHandle
+				*增加扩展，只需要添加  EventHandle ，自定义的服务类型占两位(-9至99之间的整型数)
+				*@EventInfo 服务处理
+				*SERVICE_TYPE 服务类型 
+				*/
+				server.addEventHandle(new EventInfo(new RmiWriteEvent(), new RmiHandleEvent()), Server.SERVICE_TYPE_RMI);//添加服务类型对应的实现
 			}
 		}
    

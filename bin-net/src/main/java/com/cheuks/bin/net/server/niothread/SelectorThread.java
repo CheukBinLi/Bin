@@ -43,7 +43,7 @@ public class SelectorThread extends AbstractControlThread {
 				selector = Selector.open();
 				if (!this.port.isEmpty())
 					for (int i = 0; i < port.size(); i++) {
-						addListener(port.get(i)[0], port.get(i)[1]);
+						addListener(port.get(i)[0]);
 					}
 			} catch (SocketException e) {
 				e.printStackTrace();
@@ -55,7 +55,7 @@ public class SelectorThread extends AbstractControlThread {
 
 	}
 
-	public synchronized void addListener(Integer port, Integer serviceType) throws SocketException, ClosedChannelException, IOException {
+	public synchronized void addListener(Integer port) throws SocketException, ClosedChannelException, IOException {
 		serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 		serverSocketChannel.socket().setReuseAddress(true);
