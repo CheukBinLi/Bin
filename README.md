@@ -120,6 +120,9 @@ xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Int
 
 @服务端
 
+@工作流程
+![image](http://h.picphotos.baidu.com/album/s%3D1600%3Bq%3D90/sign=fd0029b7ee50352ab561210e6373c083/0824ab18972bd407f209f5fd7c899e510eb309e7.jpg)
+
 		   public class ServerX {
 			public static void main(String[] args) throws Throwable {
 				Server server = NioServer.newInstance();//实现例
