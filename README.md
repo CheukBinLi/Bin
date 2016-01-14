@@ -9,7 +9,7 @@
 							<module>bin-anythingtest</module>
 
 @工作流程
-![](https://github.com/fdisk123/Bin/tree/2.01/bin-anythingtest/2.png)
+![image](bin-anythingtest/2.png)
 
 @例子:
 
