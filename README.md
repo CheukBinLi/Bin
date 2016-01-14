@@ -79,18 +79,20 @@
          private void x2(){}
       }
 
+
 xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Intercept,ScanToPack 否则报错抛出)
-<?xml version="1.0" encoding="UTF-8"?>
-<!--指定 约束DTD路径 在mc-bean里有-->
-<!-- <!DOCTYPE Context SYSTEM "file:///E:/javaProject/Eclipse/MC/mc-util/src/main/java/Mc.dtd"> -->
-<!-- 或者放在同一目录-->
-<!DOCTYPE Context SYSTEM "Mc.dtd">
-<Context>
-	<CloneModel value="true" /><!-- 开启对象克隆模式-->
-	<InitSystemClassLoader value="true" />
-	<!-- 注入例子-->
-	<Bean name="bi" class="test.B" type="field" ref="xxxxxxxxxxx110" /><!-- test.B里面 bi的字段 要注入xxxxxxxxxxx110名字下的实例(test.BII)
-	<Bean name="xxxxxxxxxxx110" class="test.BII" type="class" /><!--自动扫描 test 关键字下的所有包-->注册一个对象 type="class"-->
+	
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!--指定 约束DTD路径 在mc-bean里有-->
+	<!-- <!DOCTYPE Context SYSTEM "file:///E:/javaProject/Eclipse/MC/mc-util/src/main/java/Mc.dtd"> -->
+	<!-- 或者放在同一目录-->
+	<!DOCTYPE Context SYSTEM "Mc.dtd">
+	<Context>
+		<CloneModel value="true" /><!-- 开启对象克隆模式-->
+		<InitSystemClassLoader value="true" />
+		<!-- 注入例子-->
+		<Bean name="bi" class="test.B" type="field" ref="xxxxxxxxxxx110" /><!-- test.B里面 bi的字段 要注入xxxxxxxxxxx110名字下的实例(test.BII)
+		<Bean name="xxxxxxxxxxx110" class="test.BII" type="class" /><!--自动扫描 test 关键字下的所有包-->注册一个对象 type="class"-->
 
 	<!-- 拦截器 methods="all" 默认 --><!-- 拦截 aaxx3 和 aaxx2 只方法 拦截实现 com.ben.mc.AnthingTest.mc.xml.DefaultInterceptionXml -->
 	<Intercept methods="aaxx3,aaxx2" class="com.ben.mc.AnthingTest.mc.xml.XmlIocTest1" name="intercept0083" ref="com.ben.mc.AnthingTest.mc.xml.DefaultInterceptionXml" />
