@@ -126,7 +126,7 @@ xml配置说明(xml配置顺序必需严格按照 InitSystemClassLoader,Bean,Int
 @服务端
 
 @工作流程
-![image](https://github.com/fdisk123/Bin/tree/2.01/bin-anythingtest/1.png)
+![image](bin-anythingtest/1.png)
 
 		   public class ServerX {
 			public static void main(String[] args) throws Throwable {
