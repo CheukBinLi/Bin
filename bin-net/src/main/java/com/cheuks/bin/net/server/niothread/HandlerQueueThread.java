@@ -69,13 +69,18 @@ public class HandlerQueueThread extends AbstractControlThread {
 		private SelectionKey key;
 
 		@Override
+		public void setSerializ(Class<?> serializ) {
+			super.setSerializ(serializ);
+		}
+
+		@Override
 		public void run() {
 			while (!Thread.interrupted()) {
 				try {
 					if (null != (key = HANDLER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = getAddition(key);
 						if (null != attachment.getAttachment()) {
-							key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getHandleEvent().process(key, serializ, cache, cacheTag, SERVICE_HANDLER_MAP);
+							key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getHandleEvent().process(key, serializClass, cache, cacheTag, SERVICE_HANDLER_MAP);
 							attachment = getAddition(key);
 							attachment.unLockAndUpdateHeartBeat(key, attachment.getRegister(), attachment.getAttachment());
 						}
@@ -88,8 +93,10 @@ public class HandlerQueueThread extends AbstractControlThread {
 					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
+					break;
 				} catch (Throwable e) {
 					e.printStackTrace();
+					break;
 				}
 			}
 		}

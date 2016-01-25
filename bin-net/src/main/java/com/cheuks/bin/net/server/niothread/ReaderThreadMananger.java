@@ -1,6 +1,5 @@
 package com.cheuks.bin.net.server.niothread;
 
-import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
@@ -89,16 +88,19 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							attachment.setAttachment(dataPacket);
 							tryDo(HANDLER, key);
 						} catch (NumberFormatException e) {
+							e.printStackTrace();
 						} catch (ClosedChannelException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-						} catch (Throwable e) {
-							e.printStackTrace();
 						} finally {
 							tryDo(RELEASE, key);
 						}
 					}
 				} catch (InterruptedException e) {
+					break;
+				} catch (Exception e) {
+					e.printStackTrace();
+					break;
+				} catch (Throwable e) {
+					e.printStackTrace();
 					break;
 				}
 			}

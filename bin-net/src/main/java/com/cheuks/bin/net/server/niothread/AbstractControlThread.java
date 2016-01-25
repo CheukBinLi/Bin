@@ -31,7 +31,8 @@ public abstract class AbstractControlThread extends Thread {
 
 	protected final static CachePoolFactory cache = DefaultCachePoolFactory.newInstance();
 	protected final static String cacheTag = "ServiceHandler";
-	protected volatile static Serializ serializ = new DefaultSerializImpl();
+	protected volatile Serializ serializClass = new DefaultSerializImpl();
+	//	protected Class<?> serializClass = DefaultSerializImpl.class;
 	protected final int pollInterval = 2;
 
 	/***
@@ -63,6 +64,7 @@ public abstract class AbstractControlThread extends Thread {
 		SERVER_LIST.clear();
 		ATTACHMENT_LIST.clear();
 		EVENT_LIST.clear();
+		//		TYPE_LIST.clear();
 	}
 
 	protected static final int ACCEPT = 1, READER = 2, WRITER = 4, RELEASE = 8, HANDLER = 16;
@@ -71,8 +73,12 @@ public abstract class AbstractControlThread extends Thread {
 	protected SocketChannel channel;
 	protected Attachment attachment;
 
-	public final void setSerializ(Serializ serializ) {
-		AbstractControlThread.serializ = serializ;
+	public void setSerializ(Class<?> serializ) {
+		try {
+			this.serializClass = (Serializ) serializ.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final Attachment getAddition(final SelectionKey key) {

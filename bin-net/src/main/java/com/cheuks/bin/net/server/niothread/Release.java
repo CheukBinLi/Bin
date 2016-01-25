@@ -27,6 +27,7 @@ public class Release {
 
 	public Release() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getId() {

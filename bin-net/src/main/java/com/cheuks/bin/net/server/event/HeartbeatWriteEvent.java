@@ -15,6 +15,7 @@ public class HeartbeatWriteEvent implements WriteEvent {
 	public SelectionKey process(SelectionKey key, Serializ serializ) throws Throwable {
 		attachment = (Attachment) key.attachment();
 		channel = (SocketChannel) key.channel();
+		// 注册读
 		channel.write(ByteBufferUtil.newInstance().createPackageByByteBuffer(attachment.getAttachment().getData()));
 		attachment.registerRead();
 		return key;

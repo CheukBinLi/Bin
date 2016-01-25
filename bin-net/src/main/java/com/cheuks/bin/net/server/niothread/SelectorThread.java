@@ -14,13 +14,14 @@ import java.util.Set;
 
 public class SelectorThread extends AbstractControlThread {
 
+	// Map<Integer, Boolean> portInfo;
 	ServerSocketChannel serverSocketChannel;
 	Selector selector;
 	List<Integer[]> port;
 	final Integer maxConnection;
-	final Long interval;
+	final Integer interval;
 
-	public SelectorThread(Long selectInterval, List<Integer[]> port) {
+	public SelectorThread(Integer selectInterval, List<Integer[]> port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
@@ -28,7 +29,7 @@ public class SelectorThread extends AbstractControlThread {
 		init();
 	}
 
-	public SelectorThread(Integer maxConnection, Long selectInterval, List<Integer[]> port) {
+	public SelectorThread(Integer maxConnection, Integer selectInterval, List<Integer[]> port) {
 		super();
 		this.port = port;
 		this.interval = selectInterval;
@@ -43,7 +44,7 @@ public class SelectorThread extends AbstractControlThread {
 				selector = Selector.open();
 				if (!this.port.isEmpty())
 					for (int i = 0; i < port.size(); i++) {
-						addListener(port.get(i)[0]);
+						addListener(port.get(i)[0], port.get(i)[1]);
 					}
 			} catch (SocketException e) {
 				e.printStackTrace();
@@ -55,7 +56,7 @@ public class SelectorThread extends AbstractControlThread {
 
 	}
 
-	public synchronized void addListener(Integer port) throws SocketException, ClosedChannelException, IOException {
+	public synchronized void addListener(Integer port, Integer serviceType) throws SocketException, ClosedChannelException, IOException {
 		serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 		serverSocketChannel.socket().setReuseAddress(true);
@@ -69,7 +70,6 @@ public class SelectorThread extends AbstractControlThread {
 
 	@Override
 	public void interrupt() {
-		// TODO Auto-generated method stub
 		super.interrupt();
 	}
 
@@ -83,7 +83,7 @@ public class SelectorThread extends AbstractControlThread {
 				break;
 			}
 			try {
-				Thread.sleep(5);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				break;
 			}

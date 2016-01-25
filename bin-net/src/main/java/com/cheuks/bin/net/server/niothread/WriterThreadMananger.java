@@ -1,6 +1,5 @@
 package com.cheuks.bin.net.server.niothread;
 
-import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
@@ -9,8 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cheuks.bin.net.server.handler.MessageInfo;
 import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.Serializ;
 
 public class WriterThreadMananger extends AbstractControlThread {
 
@@ -78,6 +77,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 
 	class Dispatcher extends AbstractControlThread {
 		private SelectionKey key;
+		private Serializ serializ;
 
 		@Override
 		public void run() {
@@ -99,15 +99,17 @@ public class WriterThreadMananger extends AbstractControlThread {
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (ClosedChannelException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-						} catch (Throwable e) {
-							e.printStackTrace();
 						} finally {
 							tryDo(RELEASE, key);
 						}
 					}
 				} catch (InterruptedException e) {
+					break;
+				} catch (Exception e) {
+					e.printStackTrace();
+					break;
+				} catch (Throwable e) {
+					e.printStackTrace();
 					break;
 				}
 
