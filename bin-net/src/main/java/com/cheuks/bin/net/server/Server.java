@@ -71,6 +71,6 @@ public interface Server extends ConstantType {
 	 * @param serializ
 	 * @return
 	 */
-	Server setSerializ(Serializ serializ);
+	Server setSerializ(Class<?> serializ);
 
 }

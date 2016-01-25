@@ -13,6 +13,7 @@ import org.xml.sax.SAXException;
 
 import com.cheuks.bin.anythingtest.xml.TangDouCash.ACCT_INFO_CLASS;
 import com.cheuks.bin.anythingtest.xml.XmlEntity.B;
+import com.cheuks.bin.util.XmlReaderAll;
 
 public class MakeXml {
 

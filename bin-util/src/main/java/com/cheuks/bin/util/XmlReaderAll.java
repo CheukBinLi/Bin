@@ -1,4 +1,4 @@
-package com.cheuks.bin.anythingtest.xml;
+package com.cheuks.bin.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class XmlReaderAll extends DefaultHandler {
 		return new XmlReaderAll().padding(bytes, obj);
 	}
 
-	protected <T> T padding(byte[] bytes, Class<T> obj) throws ParserConfigurationException, SAXException, IOException, NoSuchFieldException, SecurityException, InstantiationException, IllegalAccessException {
+	public <T> T padding(byte[] bytes, Class<T> obj) throws ParserConfigurationException, SAXException, IOException, NoSuchFieldException, SecurityException, InstantiationException, IllegalAccessException {
 		link.clear();
 		this.resultObject = obj.newInstance();
 		link.addFirst(new Node(null, null, this.resultObject));
@@ -127,6 +127,8 @@ public class XmlReaderAll extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		//		synchronized (link) {
+		if (link.size() == 1)
+			return;
 		Node node = link.removeLast();
 		Object o = link.getLast().getObj();
 		Field f = node.getField();

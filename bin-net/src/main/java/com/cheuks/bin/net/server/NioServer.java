@@ -29,6 +29,8 @@ public class NioServer implements Server {
 	ExecutorService executorService;
 	ArrayList<Integer[]> ports = new ArrayList<Integer[]>();
 	volatile SelectorThread selectorThread;
+	volatile WriterThreadMananger writerThreadMananger;
+	volatile HandlerQueueThread handlerQueueThread;
 
 	Integer refreshInterval = 50;
 	int attachmentQueue = 2;
@@ -52,9 +54,9 @@ public class NioServer implements Server {
 			executorService.submit(new AttachmentListThread(5));
 			executorService.submit(new ReleaseListThread());
 			executorService.submit(new ReaderThreadMananger());
-			executorService.submit(new WriterThreadMananger());
+			executorService.submit(writerThreadMananger = new WriterThreadMananger());
 			executorService.submit(new HandlerListThread());
-			executorService.submit(new HandlerQueueThread());
+			executorService.submit(handlerQueueThread = new HandlerQueueThread());
 			//初始化服务
 			try {
 				addEventHandle(new EventInfo(new RmiWriteEvent(), new RmiHandleEvent()), DataPacket.SERVICE_TYPE_RMI);
@@ -87,8 +89,11 @@ public class NioServer implements Server {
 		return this;
 	}
 
-	public Server setSerializ(Serializ serializ) {
-		selectorThread.setSerializ(serializ);
+	public Server setSerializ(Class<?> serializ) {
+		//		System.err.println(serializ.getSuperclass());
+		//				selectorThread.setSerializ(serializ);
+		handlerQueueThread.setSerializ(serializ);
+		writerThreadMananger.setSerializ(serializ);
 		return this;
 	}
 

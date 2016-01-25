@@ -6,7 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import com.cheuks.bin.anythingtest.xml.TangDouCash.ACCT_INFO_CLASS;
+import com.cheuks.bin.util.XmlReaderAll;
 
 public class XmlEntity {
 

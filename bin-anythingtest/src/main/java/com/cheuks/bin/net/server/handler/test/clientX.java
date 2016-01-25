@@ -13,7 +13,7 @@ public class clientX {
 		final ApplicationContext ac = new DefaultApplicationContext("com.cheuks.bin", false, false, true);
 		ExecutorService executorService = Executors.newCachedThreadPool();
 		for (int i = 100; i-- > 0;) {
-			Thread.sleep(0);
+			Thread.sleep(60);
 			executorService.submit(new Runnable() {
 				public void run() {
 					try {
@@ -36,7 +36,57 @@ public class clientX {
 					}
 				}
 			});
-			Thread.sleep(80);
+			Thread.sleep(10);
+			/*##########################################################*/
+			executorService.submit(new Runnable() {
+				public void run() {
+					try {
+						Date now = new Date();
+						ServiceHandlerTestI ser = ac.getBeans("ServiceHandlerTestI");
+						//						System.err.println("运行时间:" + (new Date().getTime() - now.getTime()) + "ms " + ser.a());
+						//						System.out.println(ser.mmx().getMethod());
+						//						System.err.println(ser.a("哈哈哈哈哈::"));
+						//						Thread.sleep(30000);
+						//						System.err.println(ser.a("哈佬::", 1));
+						ser.a();
+						ser.mmx().getMethod();
+						ser.a("哈哈哈哈哈::");
+						ser.a("哈佬::", 1);
+						System.err.println("运行时间:" + (new Date().getTime() - now.getTime()) + "ms ");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (Throwable e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			Thread.sleep(10);
+			/*##########################################################*/
+			executorService.submit(new Runnable() {
+				public void run() {
+					try {
+						Date now = new Date();
+						ServiceHandlerTestI ser = ac.getBeans("ServiceHandlerTestI");
+						//						System.err.println("运行时间:" + (new Date().getTime() - now.getTime()) + "ms " + ser.a());
+						//						System.out.println(ser.mmx().getMethod());
+						//						System.err.println(ser.a("哈哈哈哈哈::"));
+						//						Thread.sleep(30000);
+						//						System.err.println(ser.a("哈佬::", 1));
+						ser.a();
+						ser.mmx().getMethod();
+						ser.a("哈哈哈哈哈::");
+						ser.a("哈佬::", 1);
+						System.err.println("运行时间:" + (new Date().getTime() - now.getTime()) + "ms ");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (Throwable e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			Thread.sleep(10);
+			/*##########################################################*/
+			
 		}
 	}
 

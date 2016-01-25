@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.Serializ;
 
 public class WriterThreadMananger extends AbstractControlThread {
 
@@ -69,7 +70,8 @@ public class WriterThreadMananger extends AbstractControlThread {
 						if (WRITER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -84,6 +86,7 @@ public class WriterThreadMananger extends AbstractControlThread {
 
 	class Dispatcher extends AbstractControlThread {
 		private SelectionKey key;
+		private Serializ serializ;
 
 		@Override
 		public void run() {
@@ -96,7 +99,8 @@ public class WriterThreadMananger extends AbstractControlThread {
 								key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getWriteEvent().process(key, serializ);
 								if (!key.isValid())
 									continue;
-							} else {
+							}
+							else {
 								((SocketChannel) key.channel()).write(ByteBufferUtil.newInstance().createPackageByByteBuffer(null));
 								attachment.registerRead();
 							}
@@ -104,17 +108,19 @@ public class WriterThreadMananger extends AbstractControlThread {
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (ClosedChannelException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							//							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
+							//e.printStackTrace();
 						} finally {
 							tryDo(RELEASE, key);
 						}
 					}
 				} catch (InterruptedException e) {
 					// e.printStackTrace();
+					break;
+				} catch (Exception e) {
+					e.printStackTrace();
+					break;
+				} catch (Throwable e) {
+					e.printStackTrace();
 					break;
 				}
 

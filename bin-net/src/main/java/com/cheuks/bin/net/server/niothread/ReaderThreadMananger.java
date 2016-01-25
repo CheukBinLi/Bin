@@ -63,7 +63,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					} else {
+					}
+					else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -92,19 +93,21 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							attachment.setAttachment(dataPacket);
 							tryDo(HANDLER, key);
 						} catch (NumberFormatException e) {
-							// e.printStackTrace();
+							e.printStackTrace();
 						} catch (ClosedChannelException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							// e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
+							//e.printStackTrace();
 						} finally {
 							tryDo(RELEASE, key);
 						}
 					}
 				} catch (InterruptedException e) {
 					// e.printStackTrace();
+					break;
+				} catch (Exception e) {
+					e.printStackTrace();
+					break;
+				} catch (Throwable e) {
+					e.printStackTrace();
 					break;
 				}
 			}
