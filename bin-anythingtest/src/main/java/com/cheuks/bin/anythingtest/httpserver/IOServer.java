@@ -12,22 +12,29 @@ import java.util.concurrent.Executors;
 public class IOServer implements Runnable {
 
 	public static void main(String[] args) throws IOException {
+		StringBuffer sb = new StringBuffer();
+		sb.append((char) 10);
+		sb.append((char) 13);
+
 		new Thread(new IOServer(80)).start();
 	}
 
 	private volatile boolean stop = true;
-	private ExecutorService executorService = Executors.newFixedThreadPool(100);
+	private final ExecutorService executorService = Executors.newFixedThreadPool(100);
 	private ServerSocket ss = null;
 
 	public IOServer(int port) throws IOException {
 		super();
 		ss = new ServerSocket(port);
+
 	}
 
 	public void run() {
+		Socket s;
 		while (stop) {
 			try {
-				executorService.submit(new AcceptThread(ss.accept()));
+				s = ss.accept();
+				executorService.submit(new AcceptThread(s));
 			} catch (Exception e) {
 				e.printStackTrace();
 				stop = false;
@@ -53,18 +60,21 @@ public class IOServer implements Runnable {
 				byte[] buffer = new byte[512];
 				ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
 				int count = 0;
-				System.err.println(buffer.length);
-				//				while ((count = in.read(buffer)) != 0) {
-				//					out.write(buffer, 0, count);
-				//					if (count < buffer.length)
-				//						break;
-				//				}
+				int prv = 0;
 				while ((count = in.read()) != -1) {
 					System.out.print((char) count);
-					//					System.out.print(count);
+					if ('\n' == prv && '\r' == count) {
+						break;
+					}
+					prv = count;
 				}
+				out = socket.getOutputStream();
+				out.write(("HTTP/1.0200OK\n" + "Content-Type:text/html\n" + "Server:myserver\n" + "\n").getBytes());
+				out.write("<html><body>aaaaa</body></html>".getBytes());
 				System.out.println("结束");
 				System.out.println(new String(outBuffer.toByteArray()));
+				out.close();
+				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
