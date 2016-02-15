@@ -12,10 +12,6 @@ import java.util.concurrent.Executors;
 public class IOServer implements Runnable {
 
 	public static void main(String[] args) throws IOException {
-		StringBuffer sb = new StringBuffer();
-		sb.append((char) 10);
-		sb.append((char) 13);
-
 		new Thread(new IOServer(80)).start();
 	}
 
@@ -69,7 +65,7 @@ public class IOServer implements Runnable {
 					prv = count;
 				}
 				out = socket.getOutputStream();
-				out.write(("HTTP/1.0200OK\n" + "Content-Type:text/html\n" + "Server:myserver\n" + "\n").getBytes());
+				//				out.write(("HTTP/1.0200OK\n" + "Content-Type:text/html\n" + "Server:myserver\n" + "\n\r").getBytes());
 				out.write("<html><body>aaaaa</body></html>".getBytes());
 				System.out.println("结束");
 				System.out.println(new String(outBuffer.toByteArray()));
@@ -80,5 +76,4 @@ public class IOServer implements Runnable {
 			}
 		}
 	}
-
 }
