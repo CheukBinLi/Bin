@@ -1,6 +1,5 @@
 package com.cheuks.bin.net.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -24,25 +23,27 @@ import java.nio.channels.ScatteringByteChannel;
  * @see 块/字节转换工具
  *
  */
-public class ByteBufferUtil implements ConstantType {
+public class ByteBufferUtil3 implements ConstantType {
 
 	/***
-	 * 数据结构 SERVICE+CONNECT_TYPE+SERVICE_HANDLE_PATH_LEN
+	 * 数据结构 SERVICE+CONNECT_TYPE+SERVICE_HANDLE_PATH_LEN+LENGTH_LEN
 	 */
 
+	// private static final String formatChar = "%0" + LENGTH_WAY + "d";
+	private static final int LENGTH_LEN = 8;
 	private static final int SERVICE_LEN = 2;// 服务类型
 	private static final int CONNECT_TYPE_LEN = 1;// 长短连接
-	private static final byte[] END = new byte[] { 10, 13 };
-	private static final int LENGTH = SERVICE_LEN + CONNECT_TYPE_LEN + END.length;
-	private static final int HEADER_LENGTH = SERVICE_LEN + CONNECT_TYPE_LEN;
+	//	private static final int SERVICE_HANDLE_ID_LEN = 8;// 服务类型
+	//	private static final int HEARDER_LEN = LENGTH_LEN + SERVICE_LEN + SERVICE_HANDLE_ID_LEN + CONNECT_TYPE_LEN;// 报头长度
+	private static final int HEARDER_LEN = LENGTH_LEN + SERVICE_LEN + CONNECT_TYPE_LEN;// 报头长度
 
-	//	private static final byte[] EMPTY_HEADER = new byte[SERVICE_LEN + CONNECT_TYPE_LEN];
+	//	private static final String HEADER = "%" + SERVICE_LEN + "d%" + CONNECT_TYPE_LEN + "d%" + SERVICE_HANDLE_ID_LEN + "d%" + LENGTH_LEN + "s";
+	private static final String HEADER = "%" + SERVICE_LEN + "d%" + CONNECT_TYPE_LEN + "d%" + LENGTH_LEN + "s";
+	private static final String LENGTH_FORMAT = "%" + LENGTH_LEN + "s";
 
-	private static final String HEADER = "%" + SERVICE_LEN + "d%" + CONNECT_TYPE_LEN + "d";
+	private static ByteBufferUtil3 newInstance = new ByteBufferUtil3();
 
-	private static ByteBufferUtil newInstance = new ByteBufferUtil();
-
-	public static ByteBufferUtil newInstance() {
+	public static ByteBufferUtil3 newInstance() {
 		return newInstance;
 	}
 
@@ -53,7 +54,7 @@ public class ByteBufferUtil implements ConstantType {
 	//		return Integer.valueOf(new String(len.array()).trim());
 	//	}
 
-	private ByteBufferUtil() {
+	private ByteBufferUtil3() {
 		super();
 	}
 
@@ -84,97 +85,72 @@ public class ByteBufferUtil implements ConstantType {
 	public byte[] createPackageByBytes(byte[] o) {
 		if (null == o)
 			o = new byte[0];
-		byte[] data = new byte[END.length + o.length];
-		//		System.arraycopy(EMPTY_HEADER, 0, data, 0, EMPTY_HEADER.length);
-		System.arraycopy(o, 0, data, 0, o.length);
-		System.arraycopy(END, 0, data, data.length - 2, END.length);
+		byte[] data = new byte[LENGTH_LEN + o.length];
+		data = insertDate(data, 0, String.format(LENGTH_FORMAT, Integer.toHexString(o.length)).getBytes());
+		data = insertDate(data, LENGTH_LEN, o);
 		return data;
 	}
 
 	public byte[] createPackageByBytes(int serviceType, int connectType, /* int serviceHandleIdType, */byte[] o) {
-		byte[] data = new byte[LENGTH + o.length];
-		//		//		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, serviceHandleIdType, Integer.toHexString(o.length)).getBytes());
-		//		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, Integer.toHexString(o.length)).getBytes());
-		//		data = insertDate(data, HEARDER_LEN, o);
-		System.arraycopy(String.format(HEADER, serviceType, connectType).getBytes(), 0, data, 0, HEADER_LENGTH);
-		System.arraycopy(o, 0, data, HEADER_LENGTH, o.length);
-		System.arraycopy(END, 0, data, data.length - 2, END.length);
+		byte[] data = new byte[HEARDER_LEN + o.length];
+		//		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, serviceHandleIdType, Integer.toHexString(o.length)).getBytes());
+		data = insertDate(data, 0, String.format(HEADER, serviceType, connectType, Integer.toHexString(o.length)).getBytes());
+		data = insertDate(data, HEARDER_LEN, o);
 		return data;
 	}
 
 	public DataPacket getData(ScatteringByteChannel scatteringByteChannel, boolean hasHeader) throws IOException {
+		ByteBuffer hearder = ByteBuffer.allocate(hasHeader ? HEARDER_LEN : LENGTH_LEN);
 		DataPacket dataPacket = new DataPacket();
-		ByteBuffer buffer = ByteBuffer.allocate(1);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] header = null;
-		if (hasHeader)
-			header = new byte[HEADER_LENGTH];
-		int prv = -1, next, count = 0;
-		scatteringByteChannel.read(buffer);
-		buffer.flip();
-		while (prv != 10 && (next = buffer.array()[0]) != 13 && next != -1) {
-			if (prv != -1) {
-				out.write(prv);
-				if (hasHeader && count < HEADER_LENGTH)
-					header[count++] = (byte) prv;
-			}
-			prv = next;
-			scatteringByteChannel.read(buffer);
-			buffer.flip();
-		}
-		//
-		byte[] data = new byte[hasHeader ? (out.size() - HEADER_LENGTH) : out.size()];
-		//		scatteringByteChannel.read(hearder);
-		//		hearder.flip();
+		//		byte[] temp = new byte[hasHeader ? HEARDER_LEN : LENGTH_LEN];
+		byte[] tempHeader = hearder.array();
+		byte[] temp;
+		scatteringByteChannel.read(hearder);
+		hearder.flip();
 		if (hasHeader) {
-			byte[] tempHeader = header;
-			//			System.arraycopy(data, 0, tempHeader, 0, HEADER_LENGTH);
-			byte[] temp;
 			temp = new byte[SERVICE_LEN];
 			System.arraycopy(tempHeader, 0, temp, 0, SERVICE_LEN);
 			dataPacket.setServiceType(temp);
 			temp = new byte[CONNECT_TYPE_LEN];
 			System.arraycopy(tempHeader, SERVICE_LEN, temp, 0, CONNECT_TYPE_LEN);
 			dataPacket.setConnectType(temp);
+			temp = new byte[LENGTH_LEN];
+			System.arraycopy(tempHeader, SERVICE_LEN + CONNECT_TYPE_LEN, temp, 0, LENGTH_LEN);
+			dataPacket.setDataLength(temp);
+			//			hearder.get(temp, 0, SERVICE_LEN);
+			//			dataPacket.setServiceType(temp);
+			//
+			//			hearder.get(temp, SERVICE_LEN, CONNECT_TYPE_LEN);
+			//			dataPacket.setConnectType(temp);
+			//
+			//			hearder.get(temp, SERVICE_LEN + CONNECT_TYPE_LEN, LENGTH_LEN);
+		} else {
+			hearder.get(tempHeader, 0, LENGTH_LEN);
+			dataPacket.setDataLength(tempHeader);
+			//			hearder.get(temp, 0, LENGTH_LEN);
+			//			dataPacket.setDataLength(temp);
 		}
-		dataPacket.setDataLength(out.size() - HEADER_LENGTH);
-		//		System.arraycopy(data, 0, out.toByteArray(), hasHeader ? HEADER_LENGTH : 0, data.length);
-		System.arraycopy(out.toByteArray(), hasHeader ? HEADER_LENGTH : 0, data, 0, data.length);
-		return dataPacket.setData(data);
+
+		ByteBuffer data = ByteBuffer.allocate(dataPacket.getDataLength());
+		scatteringByteChannel.read(data);
+		data.flip();
+		return dataPacket.setData(data.array());
 	}
 
 	public DataPacket getData(InputStream in, boolean hasHeader) throws IOException {
 		DataPacket dataPacket = new DataPacket();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] header = null;
 		if (hasHeader)
-			header = new byte[HEADER_LENGTH];
-		int prv = -1, next, count = 0;
-		while (prv != 10 && (next = in.read()) != 13 && next != -1) {
-			if (prv != -1) {
-				out.write(prv);
-				if (hasHeader && count < HEADER_LENGTH)
-					header[count++] = (byte) prv;
-			}
-			prv = next;
-		}
-		//
-		byte[] data = new byte[hasHeader ? (out.size() - HEADER_LENGTH) : out.size()];
-		if (hasHeader) {
-			byte[] tempHeader = header;
-			//			System.arraycopy(data, 0, tempHeader, 0, HEADER_LENGTH);
-			byte[] temp;
-			temp = new byte[SERVICE_LEN];
-			System.arraycopy(tempHeader, 0, temp, 0, SERVICE_LEN);
-			dataPacket.setServiceType(temp);
-			temp = new byte[CONNECT_TYPE_LEN];
-			System.arraycopy(tempHeader, SERVICE_LEN, temp, 0, CONNECT_TYPE_LEN);
-			dataPacket.setConnectType(temp);
-		}
-		dataPacket.setDataLength(out.size() - HEADER_LENGTH);
-		//		System.arraycopy(data, 0, out.toByteArray(), hasHeader ? HEADER_LENGTH : 0, data.length);
-		System.arraycopy(out.toByteArray(), hasHeader ? HEADER_LENGTH : 0, data, 0, data.length);
-		return dataPacket.setData(data);
+			//			dataPacket.setServiceType(getByte(in, SERVICE_LEN)).setConnectType(getByte(in, CONNECT_TYPE_LEN)).setServiceHandleId(getByte(in, SERVICE_HANDLE_ID_LEN));
+			dataPacket.setServiceType(getByte(in, SERVICE_LEN)).setConnectType(getByte(in, CONNECT_TYPE_LEN));
+		dataPacket.setDataLength(getByte(in, LENGTH_LEN));
+		dataPacket.setData(getByte(in, dataPacket.getDataLength()));
+		return dataPacket;
+	}
+
+	protected byte[] getByte(InputStream in, int size) throws IOException {
+		byte[] b = new byte[size];
+		in.read(b);
+		return b;
 	}
 
 	public byte[] createData(DataPacket dataPacket) {
@@ -282,22 +258,9 @@ public class ByteBufferUtil implements ConstantType {
 	}
 
 	public static void main(String[] args) {
-		ByteBufferUtil b = new ByteBufferUtil();
+		ByteBufferUtil3 b = new ByteBufferUtil3();
 		System.out.println(new String(b.createPackageByBytes(2, 3, "内容..hjkhkjhjk...   ...!".getBytes())));
-		//		System.out.println(new String(b.createPackageByBytes("内容..hjkhkjhjk...   ...!".getBytes())));
-
 		System.out.println(new String(b.createPackageByBytes("内容..hjkhkjhjk...   ...!".getBytes())));
-
-		//		byte[] a = "你好吗？".getBytes();
-		//		byte[] x = "哇哈哈".getBytes();
-		//		System.out.println(x.length);
-		//		byte[] result = new byte[a.length + x.length];
-		//		System.arraycopy(x, 0, result, 0, x.length);
-		//		System.out.println(new String(result));
-		//		System.arraycopy(a, 0, result, x.length, a.length);
-		//		System.out.println(new String(result));
-		//		int a1 = '\n';
-		//		int a2 = '\r';
-		//		System.out.println(a1 + " " + a2);
 	}
+
 }
