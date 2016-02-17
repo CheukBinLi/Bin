@@ -13,7 +13,7 @@ import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 public class CallMethod implements Cloneable {
 
 	protected SocketChannel channel;
-	protected static Serializ defaultSerializ = new DefaultSerializImpl();
+	protected Serializ defaultSerializ = new DefaultSerializImpl();
 	protected Socket s;
 	SocketChannel sc;
 	private String ip;
@@ -22,12 +22,14 @@ public class CallMethod implements Cloneable {
 	private long connectionDateTime;
 	private long timeOut;
 
-	public CallMethod(String ip, int port, boolean shortConnect, int timeOut) {
+	public CallMethod(String ip, int port, boolean shortConnect, int timeOut, Serializ serializ) {
 		super();
 		this.ip = ip;
 		this.port = port;
 		this.shortConnect = shortConnect;
 		this.timeOut = timeOut;
+		if (null != serializ)
+			this.defaultSerializ = serializ;
 	}
 
 	private boolean timeOutChecked(long lastConnectionTime, long timeOut) {
@@ -36,8 +38,8 @@ public class CallMethod implements Cloneable {
 
 	public SocketChannel getConnection() throws IOException {
 		try {
-			if (null != sc && sc.isConnected() && sc.isOpen() && timeOutChecked(this.connectionDateTime, this.timeOut))
-				return sc;
+			//			if (null != sc && sc.isConnected() && sc.isOpen() && timeOutChecked(this.connectionDateTime, this.timeOut))
+			//				return sc;
 			sc = SocketChannel.open();
 			sc.connect(new InetSocketAddress(this.ip, this.port));
 			return sc;
@@ -53,13 +55,15 @@ public class CallMethod implements Cloneable {
 			messageInfo.setParams(params);
 			sc = getConnection();
 			sc.write(ByteBufferUtil.newInstance().createPackageByByteBuffer(DataPacket.SERVICE_TYPE_RMI, DataPacket.CONNECT_TYPE_LONG, defaultSerializ.serializ(messageInfo)));
-			messageInfo = defaultSerializ.toObject(ByteBufferUtil.newInstance().getData(sc, false).getData());
+			messageInfo = this.defaultSerializ.toObject(ByteBufferUtil.newInstance().getData(sc, false).getData());
+			//			messageInfo = MessageCenter.newInstance().working(ip, port, messageInfo, defaultSerializ);
 			if (null != messageInfo.getThrowable())
 				throw messageInfo.getThrowable();
 			return messageInfo.getResult();
 		} finally {
-			if (shortConnect && sc.isOpen())
-				sc.close();
+			if (shortConnect) {
+				sc = null;
+			}
 		}
 	}
 

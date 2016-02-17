@@ -27,4 +27,11 @@ public @interface RmiClient {
 
 	public long timeOut() default 10000L;
 
+	/***
+	 * 序列化实现
+	 * @return
+	 */
+	//	public String Serializ() default "";
+	public String Serializ() default "com.cheuks.bin.net.util.DefaultSerializImpl";
+
 }

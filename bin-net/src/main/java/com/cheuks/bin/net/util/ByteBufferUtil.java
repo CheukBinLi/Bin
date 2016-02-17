@@ -102,7 +102,7 @@ public class ByteBufferUtil implements ConstantType {
 		return data;
 	}
 
-	public DataPacket getData(ScatteringByteChannel scatteringByteChannel, boolean hasHeader) throws IOException {
+	public DataPacket getData(final ScatteringByteChannel scatteringByteChannel, boolean hasHeader) throws IOException {
 		DataPacket dataPacket = new DataPacket();
 		ByteBuffer buffer = ByteBuffer.allocate(1);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -143,7 +143,7 @@ public class ByteBufferUtil implements ConstantType {
 		return dataPacket.setData(data);
 	}
 
-	public DataPacket getData(InputStream in, boolean hasHeader) throws IOException {
+	public DataPacket getData(final InputStream in, boolean hasHeader) throws IOException {
 		DataPacket dataPacket = new DataPacket();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] header = null;

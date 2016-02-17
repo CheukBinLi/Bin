@@ -89,11 +89,11 @@ public class NioServer implements Server {
 		return this;
 	}
 
-	public Server setSerializ(Class<?> serializ) {
+	public Server setSerializ(Serializ serializ) {
 		//		System.err.println(serializ.getSuperclass());
 		//				selectorThread.setSerializ(serializ);
-		handlerQueueThread.setSerializ(serializ);
-		writerThreadMananger.setSerializ(serializ);
+		handlerQueueThread.setSerializ(serializ.getClass());
+		writerThreadMananger.setSerializ(serializ.getClass());
 		return this;
 	}
 

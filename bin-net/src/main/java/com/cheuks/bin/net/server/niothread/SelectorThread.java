@@ -114,14 +114,17 @@ public class SelectorThread extends AbstractControlThread {
 				channel.finishConnect();
 				key = channel.register(key.selector(), SelectionKey.OP_READ, attachment);
 				tryDo(RELEASE, key);
+				//				System.out.println("注册");
 				continue;
 			}
 			else if (!getAddition(key).isLock()) {
 				if (key.isReadable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_READING, Attachment.AT_WRITING)) {
 					tryDo(READER, key);
+					//					System.out.println("读");
 				}
 				else if (key.isWritable() && getAddition(key).lockSetActionTypeAnd(Attachment.AT_WRITING, Attachment.AT_READING)) {
 					tryDo(WRITER, key);
+					//					System.out.println("写");
 				}
 				continue;
 			}

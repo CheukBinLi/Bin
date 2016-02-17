@@ -94,8 +94,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 							tryDo(HANDLER, key);
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
-						} catch (ClosedChannelException e) {
-							//e.printStackTrace();
+						} catch (IOException e) {
+							//							e.printStackTrace();
 						} finally {
 							tryDo(RELEASE, key);
 						}
