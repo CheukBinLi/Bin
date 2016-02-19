@@ -28,6 +28,7 @@ public class ConnectionDemo {
 	static ShardedJedisPool shardedPool = new ShardedJedisPool(config, shardInfos);
 
 	public static void main(String[] args) {
+		System.err.println(Long.toString((2L << 30)));
 		// Jedis client = new Jedis("192.168.168.148", 6379);
 		Jedis client = pool.getResource();
 		client.set("hello", "你好吗？");
