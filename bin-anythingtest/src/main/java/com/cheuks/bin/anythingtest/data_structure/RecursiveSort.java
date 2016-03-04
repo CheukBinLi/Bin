@@ -18,10 +18,24 @@ public class RecursiveSort {
 		return o;
 	}
 
+	public int x(int current, int base, int x) {
+
+		if (current == 1)
+			return base;
+		return x(--current, base, x) + 2;
+		//		if (current == 1)
+		//			return 10;
+		//		return x(--current, x) + 2;
+
+	}
+
 	public static void main(String[] args) {
 		int[] a = { 3, 9, 10, 5, 2, 7, 4, 6 };
 		a = new RecursiveSort().sort(a, 0, 0, true);
 		System.out.println(Arrays.toString(a));
+
+		System.out.println(new RecursiveSort().x(8, 10, 2));
+		//		System.out.println(new RecursiveSort().x(8, 2));
 	}
 
 }
