@@ -1,6 +1,8 @@
 package com.cheuks.bin.net.server.handler.test;
 
 import com.cheuks.bin.net.server.handler.MessageInfo;
+import com.cheuks.bin.net.server.handler.ServiceHandler;
+import com.cheuks.bin.net.util.Serializ;
 
 /***
  * 远程实现
@@ -35,6 +37,10 @@ public class ServiceHandlerTest implements ServiceHandlerTestI {
 
 	public String a(String haha, int a) throws Throwable {
 		// TODO Auto-generated method stub
-		return haha+a;
+		return haha + a;
+	}
+
+	public ServiceHandler setSerializ(Serializ serializ) {
+		return null;
 	}
 }

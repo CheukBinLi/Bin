@@ -1,6 +1,7 @@
 package com.cheuks.bin.anythingtest.thrift;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;

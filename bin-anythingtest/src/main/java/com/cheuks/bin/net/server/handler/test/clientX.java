@@ -12,8 +12,8 @@ public class clientX {
 	public static void main(String[] args) throws Throwable {
 		final ApplicationContext ac = new DefaultApplicationContext("com.cheuks.bin", false, false, true);
 		ExecutorService executorService = Executors.newCachedThreadPool();
-		for (int i = 1; i-- > 0;) {
-			Thread.sleep(60);
+		for (int i = 10; i-- > 0;) {
+			Thread.sleep(5);
 			executorService.submit(new Runnable() {
 				public void run() {
 					try {
@@ -36,7 +36,7 @@ public class clientX {
 					}
 				}
 			});
-			Thread.sleep(20);
+			Thread.sleep(0);
 			/* ########################################################## */
 			executorService.submit(new Runnable() {
 				public void run() {
@@ -60,7 +60,7 @@ public class clientX {
 					}
 				}
 			});
-			Thread.sleep(20);
+			Thread.sleep(0);
 			/* ########################################################## */
 			executorService.submit(new Runnable() {
 				public void run() {
