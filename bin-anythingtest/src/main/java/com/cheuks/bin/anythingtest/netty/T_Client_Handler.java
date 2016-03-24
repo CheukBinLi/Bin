@@ -3,6 +3,7 @@ package com.cheuks.bin.anythingtest.netty;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 
 public class T_Client_Handler extends ChannelInboundHandlerAdapter {
 
@@ -21,7 +22,7 @@ public class T_Client_Handler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		methodName("channelActive");
-//		ctx.writeAndFlush("你好吗？");
+		//		ctx.writeAndFlush("你好吗？");
 		//		super.channelActive(ctx);
 	}
 
@@ -35,10 +36,11 @@ public class T_Client_Handler extends ChannelInboundHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		methodName("channelRead");
 		ByteBuf bb = (ByteBuf) msg;
-		byte[]b=new byte[bb.readableBytes()];
+		byte[] b = new byte[bb.readableBytes()];
 		bb.readBytes(b);
 		System.out.println(new String(b));
 		super.channelRead(ctx, msg);
+//		ReferenceCountUtil.release(msg);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 
 public class T_Server_Handler extends ChannelInboundHandlerAdapter {
 
@@ -27,7 +28,7 @@ public class T_Server_Handler extends ChannelInboundHandlerAdapter {
 		ByteBuf bb = Unpooled.buffer(b.length);
 		bb.writeBytes(b);
 		ctx.writeAndFlush(bb);
-//		ctx.close();
+		//		ctx.close();
 		//		super.channelActive(ctx);
 	}
 
@@ -41,6 +42,7 @@ public class T_Server_Handler extends ChannelInboundHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		methodName("channelRead");
 		super.channelRead(ctx, msg);
+		ReferenceCountUtil.release(msg);
 	}
 
 	@Override

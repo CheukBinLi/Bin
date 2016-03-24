@@ -1,0 +1,11 @@
+/*生成命令protoc.exe --java_out=./ Attachment.proto*/
+package protobuf;
+option java_package = "com.cheuks.bin.anythingtest.netty.privatestack";
+option java_outer_classname = "AttachmentProto";
+message attachment  { 
+  	message entity{
+	  	required string key = 1; 
+	  	required string value = 2;
+	}
+	repeated entity attachments=1;
+}
