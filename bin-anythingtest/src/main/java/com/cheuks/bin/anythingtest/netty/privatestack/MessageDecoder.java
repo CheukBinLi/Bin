@@ -17,6 +17,8 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
 		//		buf.writeInt(msg.getHeader().getType());
+		if (in.readInt() != Message.firstByte)
+			return null;
 		int type = in.readInt();
 		if (type == -1)
 			return null;

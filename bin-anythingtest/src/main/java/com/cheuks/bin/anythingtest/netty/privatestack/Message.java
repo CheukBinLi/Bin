@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class Message {
 
+	public static final int firstByte = 0xabcf;
 	private Header header;
 	private Object body;
 

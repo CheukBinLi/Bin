@@ -18,4 +18,10 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
 		ctx.writeAndFlush(new Message(h, null));
 	}
 
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		super.exceptionCaught(ctx, cause);
+		cause.printStackTrace();
+	}
+
 }

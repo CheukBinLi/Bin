@@ -9,6 +9,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf buf) throws Exception {
 
+		buf.writeInt(msg.firstByte);
 		buf.writeInt(msg.getHeader().getType());
 		buf.writeLong(msg.getHeader().getLength());
 		buf.writeLong(msg.getHeader().getSessionID());
@@ -19,7 +20,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 		//int way = buf.arrayOffset();
 		buf.writeLong(body.length);
 		buf.writeBytes(body);
-//		buf.setLong(way, body.length);
+		//		buf.setLong(way, body.length);
 
 	}
 
