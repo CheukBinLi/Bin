@@ -1,6 +1,8 @@
 package com.cheuks.bin.registercenter;
 
-public abstract class AbstractRegister<T> implements Register {
+import java.util.StringTokenizer;
+
+public abstract class AbstractRegister<T, CreateModel> implements Register<CreateModel> {
 
 	public abstract T newConnection(boolean setConnection, Object... o) throws Throwable;
 
@@ -9,4 +11,12 @@ public abstract class AbstractRegister<T> implements Register {
 		return null == o ? null : (V) o;
 	}
 
+	public final String[] paths(String path, String separator) {
+		StringTokenizer str = new StringTokenizer(path, separator);
+		String[] result = new String[str.countTokens()];
+		int i = 0;
+		while (str.hasMoreTokens())
+			result[i++] = str.nextToken();
+		return result;
+	}
 }
