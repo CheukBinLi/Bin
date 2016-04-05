@@ -1,8 +1,8 @@
 /*生成命令protoc.exe --java_out=./ Xprotobuf.proto*/
 package protobuf; 
-option java_package = "com.cheuks.bin.anythingtest.netty.protobuf"; 
-option java_outer_classname = "Xprotobuf"; 
-message XprotobufModel  { 
+option java_package = "com.cheuks.bin.anythingtest.netty.MessagePackageBuf"; 
+option java_outer_classname = "MessagePackageBuf"; 
+message MessagePackage  { 
   required int32 ID = 1; 
   required string Url = 2; 
 }

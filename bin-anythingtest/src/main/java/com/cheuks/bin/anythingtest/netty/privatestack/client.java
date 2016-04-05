@@ -26,6 +26,6 @@ public class client extends BaseClient {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		new client().connection(new InetSocketAddress("127.0.0.1", 1191));
+		new client().connection(new InetSocketAddress("192.168.168.43", 1191));
 	}
 }

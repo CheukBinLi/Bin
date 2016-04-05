@@ -17,7 +17,7 @@ public abstract class BaseClient {
 		Bootstrap client = new Bootstrap();
 		client.group(work).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true);
 		client = setting(client);
-		System.out.println("开始连接");
+		//		System.out.println("开始连接");
 		client.connect(address).sync().channel().closeFuture().sync();
 		System.out.println("连接结束");
 	}
