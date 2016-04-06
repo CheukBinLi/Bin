@@ -30,9 +30,4 @@ public class client extends BaseClient {
 		new client().connection(new InetSocketAddress("192.168.168.43", 1191));
 	}
 
-	@Override
-	public void connectionFinish(Channel channel) {
-		// TODO Auto-generated method stub
-
-	}
 }

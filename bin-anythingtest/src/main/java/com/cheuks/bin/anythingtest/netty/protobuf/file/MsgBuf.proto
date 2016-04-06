@@ -3,11 +3,12 @@ package protobuf;
 option java_package = "com.cheuks.bin.anythingtest.netty.packagemessage"; 
 option java_outer_classname = "MsgBuf"; 
 message MsgBody  { 
-  required string version = 1; 
-  required string uid = 2;/*类名*/
-  required string method = 3;/*操作名*/
-  optional bytes params=4;
-  optional int32 resultType=5;
-  optional bytes result=6;
-  optional bool exception=7;
+  optional string validation = 1; /*验证码*/
+  optional string version = 2; 
+  optional string uid = 3;/*类名*/
+  optional string method = 4;/*操作名*/
+  optional bytes params=5;
+  optional int32 resultType=6;
+  optional bytes result=7;
+  optional bool exception=8;
 }

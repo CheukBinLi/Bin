@@ -1,5 +1,6 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
+import com.cheuks.bin.anythingtest.netty.BaseClient;
 import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -7,19 +8,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 public class ClientHandler extends SimpleChannelInboundHandler<MessagePackage<MsgBody>> {
 
-	private ObjectCodec objectCodec = new DefaultObjectCoded();
-
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, MessagePackage<MsgBody> msg) throws Exception {
-
-		synchronized (client.class) {
-			notifyAll();
-		}
-		try {
-			System.out.println((String) objectCodec.encodeByByte(msg.getMessageBody().getResult().toByteArray()));
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		BaseClient client = ctx.attr(BaseClient.CLIENT).get();
+		client.setReceive(msg).walkup();
 	}
 
 	@Override
