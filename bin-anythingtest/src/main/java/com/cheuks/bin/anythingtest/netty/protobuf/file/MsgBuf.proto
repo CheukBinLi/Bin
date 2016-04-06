@@ -4,7 +4,7 @@ option java_package = "com.cheuks.bin.anythingtest.netty.packagemessage";
 option java_outer_classname = "MsgBuf"; 
 message MsgBody  { 
   required string version = 1; 
-  required string url = 2;/*类名*/
+  required string uid = 2;/*类名*/
   required string method = 3;/*操作名*/
   optional bytes params=4;
   optional int32 resultType=5;

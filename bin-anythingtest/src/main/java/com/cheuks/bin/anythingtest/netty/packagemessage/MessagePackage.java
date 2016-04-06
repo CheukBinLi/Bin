@@ -25,12 +25,10 @@ public class MessagePackage<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final int head = 0xabcf;
-	private final int end = 0xfcba;
-
+	public static final int head = 0xabcf;
 	private ServiceType serviceType;
-
 	private T messageBody;
+	public static final int end = 0xfcba;
 
 	public ServiceType getServiceType() {
 		return serviceType;
@@ -58,4 +56,18 @@ public class MessagePackage<T> implements Serializable {
 		return end;
 	}
 
+	public MessagePackage(ServiceType serviceType, T messageBody) {
+		super();
+		this.serviceType = serviceType;
+		this.messageBody = messageBody;
+	}
+
+	public MessagePackage(T messageBody) {
+		super();
+		this.messageBody = messageBody;
+	}
+
+	public MessagePackage() {
+		super();
+	}
 }

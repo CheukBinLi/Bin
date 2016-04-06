@@ -30,31 +30,31 @@ public final class MsgBuf {
 		com.google.protobuf.ByteString getVersionBytes();
 
 		/**
-		 * <code>required string url = 2;</code>
+		 * <code>required string uid = 2;</code>
 		 *
 		 * <pre>
 		 *类名
 		 * </pre>
 		 */
-		boolean hasUrl();
+		boolean hasUid();
 
 		/**
-		 * <code>required string url = 2;</code>
+		 * <code>required string uid = 2;</code>
 		 *
 		 * <pre>
 		 *类名
 		 * </pre>
 		 */
-		java.lang.String getUrl();
+		java.lang.String getUid();
 
 		/**
-		 * <code>required string url = 2;</code>
+		 * <code>required string uid = 2;</code>
 		 *
 		 * <pre>
 		 *类名
 		 * </pre>
 		 */
-		com.google.protobuf.ByteString getUrlBytes();
+		com.google.protobuf.ByteString getUidBytes();
 
 		/**
 		 * <code>required string method = 3;</code>
@@ -184,7 +184,7 @@ public final class MsgBuf {
 					case 18: {
 						com.google.protobuf.ByteString bs = input.readBytes();
 						bitField0_ |= 0x00000002;
-						url_ = bs;
+						uid_ = bs;
 						break;
 					}
 					case 26: {
@@ -288,29 +288,29 @@ public final class MsgBuf {
 			}
 		}
 
-		public static final int URL_FIELD_NUMBER = 2;
-		private java.lang.Object url_;
+		public static final int UID_FIELD_NUMBER = 2;
+		private java.lang.Object uid_;
 
 		/**
-		 * <code>required string url = 2;</code>
+		 * <code>required string uid = 2;</code>
 		 *
 		 * <pre>
 		 *类名
 		 * </pre>
 		 */
-		public boolean hasUrl() {
+		public boolean hasUid() {
 			return ((bitField0_ & 0x00000002) == 0x00000002);
 		}
 
 		/**
-		 * <code>required string url = 2;</code>
+		 * <code>required string uid = 2;</code>
 		 *
 		 * <pre>
 		 *类名
 		 * </pre>
 		 */
-		public java.lang.String getUrl() {
-			java.lang.Object ref = url_;
+		public java.lang.String getUid() {
+			java.lang.Object ref = uid_;
 			if (ref instanceof java.lang.String) {
 				return (java.lang.String) ref;
 			}
@@ -318,24 +318,24 @@ public final class MsgBuf {
 				com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
 				java.lang.String s = bs.toStringUtf8();
 				if (bs.isValidUtf8()) {
-					url_ = s;
+					uid_ = s;
 				}
 				return s;
 			}
 		}
 
 		/**
-		 * <code>required string url = 2;</code>
+		 * <code>required string uid = 2;</code>
 		 *
 		 * <pre>
 		 *类名
 		 * </pre>
 		 */
-		public com.google.protobuf.ByteString getUrlBytes() {
-			java.lang.Object ref = url_;
+		public com.google.protobuf.ByteString getUidBytes() {
+			java.lang.Object ref = uid_;
 			if (ref instanceof java.lang.String) {
 				com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
-				url_ = b;
+				uid_ = b;
 				return b;
 			}
 			else {
@@ -468,7 +468,7 @@ public final class MsgBuf {
 
 		private void initFields() {
 			version_ = "";
-			url_ = "";
+			uid_ = "";
 			method_ = "";
 			params_ = com.google.protobuf.ByteString.EMPTY;
 			resultType_ = 0;
@@ -489,7 +489,7 @@ public final class MsgBuf {
 				memoizedIsInitialized = 0;
 				return false;
 			}
-			if (!hasUrl()) {
+			if (!hasUid()) {
 				memoizedIsInitialized = 0;
 				return false;
 			}
@@ -507,7 +507,7 @@ public final class MsgBuf {
 				output.writeBytes(1, getVersionBytes());
 			}
 			if (((bitField0_ & 0x00000002) == 0x00000002)) {
-				output.writeBytes(2, getUrlBytes());
+				output.writeBytes(2, getUidBytes());
 			}
 			if (((bitField0_ & 0x00000004) == 0x00000004)) {
 				output.writeBytes(3, getMethodBytes());
@@ -539,7 +539,7 @@ public final class MsgBuf {
 				size += com.google.protobuf.CodedOutputStream.computeBytesSize(1, getVersionBytes());
 			}
 			if (((bitField0_ & 0x00000002) == 0x00000002)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getUrlBytes());
+				size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getUidBytes());
 			}
 			if (((bitField0_ & 0x00000004) == 0x00000004)) {
 				size += com.google.protobuf.CodedOutputStream.computeBytesSize(3, getMethodBytes());
@@ -667,7 +667,7 @@ public final class MsgBuf {
 				super.clear();
 				version_ = "";
 				bitField0_ = (bitField0_ & ~0x00000001);
-				url_ = "";
+				uid_ = "";
 				bitField0_ = (bitField0_ & ~0x00000002);
 				method_ = "";
 				bitField0_ = (bitField0_ & ~0x00000004);
@@ -713,7 +713,7 @@ public final class MsgBuf {
 				if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
 					to_bitField0_ |= 0x00000002;
 				}
-				result.url_ = url_;
+				result.uid_ = uid_;
 				if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
 					to_bitField0_ |= 0x00000004;
 				}
@@ -757,9 +757,9 @@ public final class MsgBuf {
 					version_ = other.version_;
 					onChanged();
 				}
-				if (other.hasUrl()) {
+				if (other.hasUid()) {
 					bitField0_ |= 0x00000002;
-					url_ = other.url_;
+					uid_ = other.uid_;
 					onChanged();
 				}
 				if (other.hasMethod()) {
@@ -788,7 +788,7 @@ public final class MsgBuf {
 
 					return false;
 				}
-				if (!hasUrl()) {
+				if (!hasUid()) {
 
 					return false;
 				}
@@ -894,33 +894,33 @@ public final class MsgBuf {
 				return this;
 			}
 
-			private java.lang.Object url_ = "";
+			private java.lang.Object uid_ = "";
 
 			/**
-			 * <code>required string url = 2;</code>
+			 * <code>required string uid = 2;</code>
 			 *
 			 * <pre>
 			 *类名
 			 * </pre>
 			 */
-			public boolean hasUrl() {
+			public boolean hasUid() {
 				return ((bitField0_ & 0x00000002) == 0x00000002);
 			}
 
 			/**
-			 * <code>required string url = 2;</code>
+			 * <code>required string uid = 2;</code>
 			 *
 			 * <pre>
 			 *类名
 			 * </pre>
 			 */
-			public java.lang.String getUrl() {
-				java.lang.Object ref = url_;
+			public java.lang.String getUid() {
+				java.lang.Object ref = uid_;
 				if (!(ref instanceof java.lang.String)) {
 					com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
 					java.lang.String s = bs.toStringUtf8();
 					if (bs.isValidUtf8()) {
-						url_ = s;
+						uid_ = s;
 					}
 					return s;
 				}
@@ -930,17 +930,17 @@ public final class MsgBuf {
 			}
 
 			/**
-			 * <code>required string url = 2;</code>
+			 * <code>required string uid = 2;</code>
 			 *
 			 * <pre>
 			 *类名
 			 * </pre>
 			 */
-			public com.google.protobuf.ByteString getUrlBytes() {
-				java.lang.Object ref = url_;
+			public com.google.protobuf.ByteString getUidBytes() {
+				java.lang.Object ref = uid_;
 				if (ref instanceof String) {
 					com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
-					url_ = b;
+					uid_ = b;
 					return b;
 				}
 				else {
@@ -949,49 +949,49 @@ public final class MsgBuf {
 			}
 
 			/**
-			 * <code>required string url = 2;</code>
+			 * <code>required string uid = 2;</code>
 			 *
 			 * <pre>
 			 *类名
 			 * </pre>
 			 */
-			public Builder setUrl(java.lang.String value) {
+			public Builder setUid(java.lang.String value) {
 				if (value == null) {
 					throw new NullPointerException();
 				}
 				bitField0_ |= 0x00000002;
-				url_ = value;
+				uid_ = value;
 				onChanged();
 				return this;
 			}
 
 			/**
-			 * <code>required string url = 2;</code>
+			 * <code>required string uid = 2;</code>
 			 *
 			 * <pre>
 			 *类名
 			 * </pre>
 			 */
-			public Builder clearUrl() {
+			public Builder clearUid() {
 				bitField0_ = (bitField0_ & ~0x00000002);
-				url_ = getDefaultInstance().getUrl();
+				uid_ = getDefaultInstance().getUid();
 				onChanged();
 				return this;
 			}
 
 			/**
-			 * <code>required string url = 2;</code>
+			 * <code>required string uid = 2;</code>
 			 *
 			 * <pre>
 			 *类名
 			 * </pre>
 			 */
-			public Builder setUrlBytes(com.google.protobuf.ByteString value) {
+			public Builder setUidBytes(com.google.protobuf.ByteString value) {
 				if (value == null) {
 					throw new NullPointerException();
 				}
 				bitField0_ |= 0x00000002;
-				url_ = value;
+				uid_ = value;
 				onChanged();
 				return this;
 			}
@@ -1269,7 +1269,7 @@ public final class MsgBuf {
 	private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
 
 	static {
-		java.lang.String[] descriptorData = { "\n\014MsgBuf.proto\022\010protobuf\"~\n\007MsgBody\022\017\n\007v" + "ersion\030\001 \002(\t\022\013\n\003url\030\002 \002(\t\022\016\n\006method\030\003 \002(" + "\t\022\016\n\006params\030\004 \001(\014\022\022\n\nresultType\030\005 \001(\005\022\016\n" + "\006result\030\006 \001(\014\022\021\n\texception\030\007 \001(\010B:\n0com." + "cheuks.bin.anythingtest.netty.packagemes" + "sageB\006MsgBuf" };
+		java.lang.String[] descriptorData = { "\n\014MsgBuf.proto\022\010protobuf\"~\n\007MsgBody\022\017\n\007v" + "ersion\030\001 \002(\t\022\013\n\003uid\030\002 \002(\t\022\016\n\006method\030\003 \002(" + "\t\022\016\n\006params\030\004 \001(\014\022\022\n\nresultType\030\005 \001(\005\022\016\n" + "\006result\030\006 \001(\014\022\021\n\texception\030\007 \001(\010B:\n0com." + "cheuks.bin.anythingtest.netty.packagemes" + "sageB\006MsgBuf" };
 		com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner = new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
 			public com.google.protobuf.ExtensionRegistry assignDescriptors(com.google.protobuf.Descriptors.FileDescriptor root) {
 				descriptor = root;
@@ -1278,7 +1278,7 @@ public final class MsgBuf {
 		};
 		com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {}, assigner);
 		internal_static_protobuf_MsgBody_descriptor = getDescriptor().getMessageTypes().get(0);
-		internal_static_protobuf_MsgBody_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(internal_static_protobuf_MsgBody_descriptor, new java.lang.String[] { "Version", "Url", "Method", "Params", "ResultType", "Result", "Exception", });
+		internal_static_protobuf_MsgBody_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(internal_static_protobuf_MsgBody_descriptor, new java.lang.String[] { "Version", "Uid", "Method", "Params", "ResultType", "Result", "Exception", });
 	}
 
 	// @@protoc_insertion_point(outer_class_scope)
