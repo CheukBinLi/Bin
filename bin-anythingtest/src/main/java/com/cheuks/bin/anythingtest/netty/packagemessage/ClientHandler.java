@@ -29,4 +29,5 @@ public class ClientHandler extends SimpleChannelInboundHandlerEX<MessagePackage<
 		super.exceptionCaught(ctx, cause);
 		cause.printStackTrace();
 	}
+
 }

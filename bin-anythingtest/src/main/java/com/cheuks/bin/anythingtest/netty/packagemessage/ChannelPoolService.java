@@ -29,7 +29,7 @@ public abstract class ChannelPoolService extends BaseClient {
 
 	private int max = 100;
 
-	private int keepLine = 5;
+	private int keepLine = 1;
 
 	private long heartbeatInterval = 5000;
 
@@ -90,19 +90,19 @@ public abstract class ChannelPoolService extends BaseClient {
 	/***
 	 * *
 	 * 
-	 * Copyright 2015    CHEUK.BIN.LI Individual All
-	 *  
+	 * Copyright 2015 CHEUK.BIN.LI Individual All
+	 * 
 	 * ALL RIGHT RESERVED
-	 *  
+	 * 
 	 * CREATE ON 2016年4月7日下午3:35:27
-	 *  
+	 * 
 	 * EMAIL:20796698@QQ.COM
-	 *  
+	 * 
 	 * GITHUB:https://github.com/fdisk123
 	 * 
 	 * @author CHEUK.BIN.LI
 	 * 
-	 * @see  调度器
+	 * @see 调度器
 	 *
 	 */
 	class Dispatcher implements Runnable {
@@ -117,13 +117,12 @@ public abstract class ChannelPoolService extends BaseClient {
 				}
 				if (pool.size() < 1 && current.get() < max) {
 					try {
-						for (int i = 0; i < 5; i++)
+						for (int i = 0; i < keepLine; i++)
 							pool.offerLast(connection(address));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-				}
-				else if (pool.size() > keepLine) {
+				} else if (pool.size() > keepLine) {
 					for (; pool.size() > keepLine;)
 						pool.removeLast().close();
 				}
@@ -146,19 +145,19 @@ public abstract class ChannelPoolService extends BaseClient {
 	/***
 	 * *
 	 * 
-	 * Copyright 2015    CHEUK.BIN.LI Individual All
-	 *  
+	 * Copyright 2015 CHEUK.BIN.LI Individual All
+	 * 
 	 * ALL RIGHT RESERVED
-	 *  
+	 * 
 	 * CREATE ON 2016年4月7日下午5:09:39
-	 *  
+	 * 
 	 * EMAIL:20796698@QQ.COM
-	 *  
+	 * 
 	 * GITHUB:https://github.com/fdisk123
 	 * 
 	 * @author CHEUK.BIN.LI
 	 * 
-	 * @see  线路状态管理
+	 * @see 线路状态管理
 	 *
 	 */
 	class LineChecker implements Runnable {
@@ -200,14 +199,14 @@ public abstract class ChannelPoolService extends BaseClient {
 	/***
 	 * *
 	 * 
-	 * Copyright 2015    CHEUK.BIN.LI Individual All
-	 *  
+	 * Copyright 2015 CHEUK.BIN.LI Individual All
+	 * 
 	 * ALL RIGHT RESERVED
-	 *  
+	 * 
 	 * CREATE ON 2016年4月7日下午5:08:54
-	 *  
+	 * 
 	 * EMAIL:20796698@QQ.COM
-	 *  
+	 * 
 	 * GITHUB:https://github.com/fdisk123
 	 * 
 	 * @author CHEUK.BIN.LI
@@ -224,9 +223,8 @@ public abstract class ChannelPoolService extends BaseClient {
 		public void run() {
 			try {
 				while (!interrupt) {
-					System.err.println("心跳");
+					channel.writeAndFlush(heatbatePackage).sync();
 					Thread.sleep(interval);
-					channel.writeAndFlush(heatbatePackage);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -274,11 +272,11 @@ public abstract class ChannelPoolService extends BaseClient {
 	@Override
 	public Channel connection(InetSocketAddress address) throws InterruptedException {
 		Channel channel = super.connection(address);
-		if (null != heartbeatPackage) {
-			Heartbeat h = new Heartbeat(this.heartbeatInterval, channel, this.heartbeatPackage);
-			executorService.execute(h);
-			heartbeat.put(channel, h);
-		}
+//		if (null != heartbeatPackage) {
+//			Heartbeat h = new Heartbeat(this.heartbeatInterval, channel, this.heartbeatPackage);
+//			executorService.execute(h);
+//			heartbeat.put(channel, h);
+//		}
 		return channel;
 	}
 
@@ -290,7 +288,7 @@ public abstract class ChannelPoolService extends BaseClient {
 		this.address = address;
 		this.heartbeatInterval = heartbeatInterval;
 		this.heartbeatPackage = heartbeatPackage;
-		for (; pool.size() < 5;)
+		for (; pool.size() < keepLine;)
 			try {
 				pool.offerLast(connection(address));
 			} catch (InterruptedException e) {

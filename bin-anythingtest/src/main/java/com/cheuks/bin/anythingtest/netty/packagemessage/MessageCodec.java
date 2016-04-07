@@ -13,12 +13,12 @@ public class MessageCodec extends ByteToMessageCodec<MessagePackage<MsgBody>> {
 	@Override
 	protected void encode(ChannelHandlerContext ctx, MessagePackage<MsgBody> msg, ByteBuf out) throws Exception {
 		// TODO Auto-generated method stub
-		byte[] body = msg.getMessageBody().toByteArray();
 		out.writeInt(msg.getHead());
 		out.writeInt(msg.getServiceType().getValue());
-		if (null != body)
+		if (null != msg.getMessageBody()) {
+			byte[] body = msg.getMessageBody().toByteArray();
 			out.writeInt(body.length).writeBytes(body);
-		else
+		} else
 			out.writeInt(0);
 		out.writeInt(msg.getEnd());
 	}
@@ -41,8 +41,11 @@ public class MessageCodec extends ByteToMessageCodec<MessagePackage<MsgBody>> {
 		//		in.resetReaderIndex();
 		MessagePackage<MsgBody> messagePackage = null;
 		if (in.readInt() == MessagePackage.head) {
-			if (ServiceType.SERVICE_TYPE_HEARTBEAT.getValue() == in.readInt())
+			if (ServiceType.SERVICE_TYPE_HEARTBEAT.getValue() == in.readInt()) {
+				System.err.println("心跳");
+				ctx.writeAndFlush(new MessagePackage<MsgBuf.MsgBody>(ServiceType.SERVICE_TYPE_HEARTBEAT, null));
 				return messagePackage;
+			}
 			byte[] data = new byte[in.readInt()];
 			in.readBytes(data);
 			messagePackage = new MessagePackage<MsgBuf.MsgBody>(MsgBody.parseFrom(data));

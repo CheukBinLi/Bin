@@ -17,7 +17,7 @@ public class ServerPM extends BaseServer {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ChannelPipeline pipeline = ch.pipeline();
-				pipeline.addLast(new IdleStateHandler(5, 5, 10));
+				pipeline.addLast(new IdleStateHandler(60, 55, 50));
 				pipeline.addLast(new MessageCodec());
 				pipeline.addLast(new ServerHandler());
 			}
