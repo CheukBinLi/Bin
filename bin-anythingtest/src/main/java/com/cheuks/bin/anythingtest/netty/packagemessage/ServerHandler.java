@@ -13,4 +13,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessagePackage<Ms
 		HandlerCenter.join(new people<ChannelHandlerContext>(msg.getMessageBody(), ctx));
 	}
 
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		super.userEventTriggered(ctx, evt);
+		System.err.println("超时");
+		ctx.channel().disconnect();
+		ctx.close();
+	}
+
 }

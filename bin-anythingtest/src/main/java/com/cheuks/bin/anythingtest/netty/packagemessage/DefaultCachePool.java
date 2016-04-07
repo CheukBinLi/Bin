@@ -4,17 +4,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unchecked")
-public abstract class DefaultCachePool implements CachePool {
+public abstract class DefaultCachePool implements CachePool<String> {
 
 	private final Map<String, Object> pool = new ConcurrentHashMap<String, Object>();
 
-	protected final static CachePool newInstance = new DefaultCachePool() {
+	protected final static CachePool<String> newInstance = new DefaultCachePool() {
 	};
 
 	protected DefaultCachePool() {
 	}
 
-	public static CachePool newInstance() {
+	public static CachePool<String> newInstance() {
 		return newInstance;
 	}
 

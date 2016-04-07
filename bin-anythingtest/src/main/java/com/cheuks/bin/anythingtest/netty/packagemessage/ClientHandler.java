@@ -4,14 +4,14 @@ import com.cheuks.bin.anythingtest.netty.BaseClient;
 import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 
-public class ClientHandler extends SimpleChannelInboundHandler<MessagePackage<MsgBody>> {
+public class ClientHandler extends SimpleChannelInboundHandlerEX<MessagePackage<MsgBody>> {
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, MessagePackage<MsgBody> msg) throws Exception {
-		BaseClient client = ctx.attr(BaseClient.CLIENT).get();
-		client.setReceive(msg).walkup();
+		Object o = ctx.channel().attr(BaseClient.CLIENT);
+		CachePoolAdapter.newInstance().putObject(ctx.channel(), msg);
+		ctx.channel().attr(BaseClient.CLIENT).get().walkup(ctx.channel());
 	}
 
 	@Override
@@ -29,13 +29,4 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessagePackage<Ms
 		super.exceptionCaught(ctx, cause);
 		cause.printStackTrace();
 	}
-
-	public static void main(String[] args) {
-		System.out.println("A".hashCode());
-		System.out.println("AAAAAAAAA".hashCode());
-		System.out.println("AAAAAAAAAA".hashCode());
-		System.out.println("AAAAAAAAAAA".hashCode());
-		System.out.println("AAAAAAAAAAAAA".hashCode());
-	}
-
 }

@@ -16,7 +16,10 @@ public class MessageCodec extends ByteToMessageCodec<MessagePackage<MsgBody>> {
 		byte[] body = msg.getMessageBody().toByteArray();
 		out.writeInt(msg.getHead());
 		out.writeInt(msg.getServiceType().getValue());
-		out.writeInt(body.length).writeBytes(body);
+		if (null != body)
+			out.writeInt(body.length).writeBytes(body);
+		else
+			out.writeInt(0);
 		out.writeInt(msg.getEnd());
 	}
 
