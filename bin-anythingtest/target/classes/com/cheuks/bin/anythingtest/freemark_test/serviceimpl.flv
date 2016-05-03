@@ -1,5 +1,3 @@
-package project.master.test.dbmanager.dao_service_controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -7,10 +5,10 @@ import project.master.dbmaamger.dao.BaseDao;
 import project.master.dbmaamger.service.AbstractService;
 
 @Component
-public class ${entityName}ServiceImpl extends AbstractService<${entityName}, Integer> implements UserService {
+public class ${entitySimpleName}ServiceImpl extends AbstractService<${entityName}, ${idType}> implements UserService {
 
 	@Autowired
-	private ${entityName}Dao ${entityName?uncap_first}Dao;
+	private ${entitySimpleName}Dao ${entitySimpleName?uncap_first}Dao;
 
 	@Override
 	public BaseDao<${entityName}, ${idType}> getService() {

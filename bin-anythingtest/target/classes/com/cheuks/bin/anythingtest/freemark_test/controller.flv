@@ -9,43 +9,55 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.portlet.ModelAndView;
 
 @Controller
 @Scope("prototype")
-@RequestMapping("/system/${entityName}/")
-public class ${entityName}Controller {
+@RequestMapping("/system/${entitySimpleName}/")
+public class ${entitySimpleName}Controller {
 
 	@Autowired
-	private ${entityName}Service ${entityName?uncap_first}Service;
+	private ${entitySimpleName}Service ${entitySimpleName?uncap_first}Service;
 
-	@RequestMapping(value = "${entityName?uncap_first}_{number}", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "${entitySimpleName?uncap_first}_{number}", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView getPage(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView(request.getPathInfo()).addAllObjects(request.getParameterMap());
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "post",method = RequestMethod.POST)
 	public ModelAndView post(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("post");
+		return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping(method = RequestMethod.POST)
+	public Object postJ(HttpServletRequest request, HttpServletResponse response) {
 		return null;
 	}
 
 	@RequestMapping(value = "doupdate", method = RequestMethod.POST)
 	public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("post");
 		return null;
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.PUT)
 	public Object put(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
 		return null;
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public ModelAndView get(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
+	public Object get(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
+		return null;
+	}
+	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)
+	public ModelAndView getj(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
 		return null;
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	public Object delete(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
 		return null;
