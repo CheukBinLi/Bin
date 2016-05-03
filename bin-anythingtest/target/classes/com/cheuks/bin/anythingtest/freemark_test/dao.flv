@@ -1,0 +1,6 @@
+package project.master.test.dbmanager.dao_service_controller;
+
+import ${entityPackage};
+
+public interface ${entityName}Dao extends BaseDao<${entityName}, ${idType}> {
+}
