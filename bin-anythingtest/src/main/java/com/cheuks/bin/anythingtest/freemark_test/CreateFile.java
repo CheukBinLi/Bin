@@ -3,16 +3,26 @@ package com.cheuks.bin.anythingtest.freemark_test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import project.freehelp.common.entity.Dictionary;
+import project.freehelp.common.entity.HouseInfo;
+import project.freehelp.common.entity.HouseSteward;
+import project.freehelp.common.entity.Order;
+import project.freehelp.common.entity.UserInfo;
 
 public class CreateFile {
 
-	public void create(Class<?> c, Class<?> idType, boolean SimpleName) throws IOException, TemplateException {
+	public static void create(Class<?> c, Class<?> idType, boolean SimpleName) throws IOException, TemplateException {
 
 		// dao
 		// daoImpl
@@ -21,17 +31,20 @@ public class CreateFile {
 		// controller
 
 		Configuration config = new Configuration(Configuration.VERSION_2_3_0);
-		String path = this.getClass().getClassLoader().getResource("").getPath() + "com/cheuks/bin/anythingtest/freemark_test/";
+		String path = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "com/cheuks/bin/anythingtest/freemark_test/";
 		System.err.println(path);
 		String gen = System.getProperty("user.dir") + "/gen";
 		FileTemplateLoader fileTemplateLoader = new FileTemplateLoader(new File(path));
 		config.setTemplateLoader(fileTemplateLoader);
 		String[] flvs = { "Dao", "DaoImpl", "Service", "ServiceImpl", "queue", "Controller" };
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("entityFullName", c.getName());
 		map.put("entitySimpleName", c.getSimpleName());
 		map.put("entityName", SimpleName ? c.getSimpleName() : c.getName());
 		map.put("idType", SimpleName ? idType.getSimpleName() : idType.getName());
+		map.put("idTypeSimpleName", idType.getSimpleName());
+		map.put("tag", "#");
+		map.put("params", getFieldWidthGetSetting(c));
 		FileWriter writer;
 		File genFile;
 		for (String str : flvs) {
@@ -49,8 +62,46 @@ public class CreateFile {
 		}
 	}
 
+	private static List<String> getFieldWidthGetSetting(Class<?> c) {
+		Field[] fields = c.getDeclaredFields();
+		Map<String, Field> map = new HashMap<String, Field>();
+		List<String> list = new ArrayList<String>();
+		for (Field f : fields) {
+			if (f.getModifiers() == Modifier.PRIVATE && f.getModifiers() != Modifier.STATIC && f.getModifiers() != Modifier.TRANSIENT) {
+				map.put(f.getName(), f);
+			}
+		}
+		Method[] methods = c.getDeclaredMethods();
+		String get;
+		for (Method m : methods) {
+			if (m.getModifiers() == Modifier.PUBLIC && m.getModifiers() != Modifier.STATIC && m.getName().startsWith("get")) {
+				get = toLowerCaseFirstOne(m.getName().substring(3));
+				if (map.containsKey(get)) {
+					list.add(get);
+				}
+			}
+		}
+		return list;
+	}
+
+	public static String toUpperCaseFirstOne(String name) {
+		char[] ch = name.toCharArray();
+		ch[0] = Character.toUpperCase(ch[0]);
+		return new String(ch);
+	}
+
+	public static String toLowerCaseFirstOne(String name) {
+		char[] ch = name.toCharArray();
+		ch[0] = Character.toLowerCase(ch[0]);
+		return new String(ch);
+	}
+
 	public static void main(String[] args) throws IOException, TemplateException {
-		new CreateFile().create(CreateFile.class, Integer.class, false);
+		CreateFile.create(Dictionary.class, Integer.class, true);
+		CreateFile.create(HouseInfo.class, String.class, true);
+		CreateFile.create(HouseSteward.class, String.class, true);
+		CreateFile.create(Order.class, String.class, true);
+		CreateFile.create(UserInfo.class, String.class, true);
 	}
 
 }
