@@ -1,4 +1,7 @@
-package project.master.test.dbmanager.dao_service_controller;
+package project.freehelp.webchat.controller;
+
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.portlet.ModelAndView;
 
+import project.freehelp.common.entity.${entitySimpleName};
+import project.freehelp.common.service.${entitySimpleName}Service;
+import project.master.fw.sh.common.AbstractController;
+
 @Controller
 @Scope("prototype")
-@RequestMapping("/system/${entitySimpleName}/")
-public class ${entitySimpleName}Controller {
+@RequestMapping("/system/${entitySimpleName?uncap_first}/")
+public class ${entitySimpleName}Controller extends AbstractController {
 
 	@Autowired
 	private ${entitySimpleName}Service ${entitySimpleName?uncap_first}Service;
@@ -25,42 +32,108 @@ public class ${entitySimpleName}Controller {
 		return new ModelAndView(request.getPathInfo()).addAllObjects(request.getParameterMap());
 	}
 
-	@RequestMapping(value = "post",method = RequestMethod.POST)
-	public ModelAndView post(HttpServletRequest request, HttpServletResponse response) {
-		return null;
+	@RequestMapping(value = "post/{next}", method = RequestMethod.POST)
+	public ModelAndView post(HttpServletRequest request, HttpServletResponse response, @PathVariable("next") String next) {
+		try {
+			${entitySimpleName} ${entitySimpleName?uncap_first} = fillObject(new ${entitySimpleName}(), request.getParameterMap());
+			${entitySimpleName?uncap_first}Service.save(${entitySimpleName?uncap_first});
+			return new ModelAndView("${entitySimpleName?uncap_first}_" + next).addObject("${entitySimpleName?uncap_first}", ${entitySimpleName?uncap_first});
+		} catch (Throwable e) {
+			return exceptionPage(e);
+		}
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST)
 	public Object postJ(HttpServletRequest request, HttpServletResponse response) {
-		return null;
+		try {
+			${entitySimpleName} ${entitySimpleName?uncap_first} = fillObject(new ${entitySimpleName}(), request.getParameterMap());
+			${entitySimpleName?uncap_first}Service.save(${entitySimpleName?uncap_first});
+			return success(${entitySimpleName?uncap_first});
+		} catch (Throwable e) {
+			return fail(e);
+		}
 	}
 
-	@RequestMapping(value = "doupdate", method = RequestMethod.POST)
-	public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
-		return null;
+	@RequestMapping(value = "put/{next}", method = RequestMethod.POST)
+	public ModelAndView update(HttpServletRequest request, HttpServletResponse response, @PathVariable("next") String next) {
+		try {
+			${entitySimpleName} ${entitySimpleName?uncap_first} = fillObject(new ${entitySimpleName}(), request.getParameterMap());
+			${entitySimpleName?uncap_first}Service.update(${entitySimpleName?uncap_first});
+			return new ModelAndView("${entitySimpleName?uncap_first}_" + next).addObject("${entitySimpleName?uncap_first}", ${entitySimpleName?uncap_first});
+		} catch (Throwable e) {
+			return exceptionPage(e);
+		}
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.PUT)
 	public Object put(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
-		return null;
+		try {
+			${entitySimpleName} ${entitySimpleName?uncap_first} = fillObject(new ${entitySimpleName}(), request.getParameterMap());
+			${entitySimpleName?uncap_first}Service.update(${entitySimpleName?uncap_first});
+			return success(${entitySimpleName?uncap_first});
+		} catch (Throwable e) {
+			return fail(e);
+		}
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public Object get(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
-		return null;
+	public Object get(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") ${idType} id) {
+		try {
+			${entitySimpleName} ${entitySimpleName?uncap_first} = ${entitySimpleName?uncap_first}Service.getByPk(id);
+			return success(${entitySimpleName?uncap_first});
+		} catch (Throwable e) {
+			return fail(e);
+		}
 	}
-	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)
-	public ModelAndView getj(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
-		return null;
+
+	@RequestMapping(value = "get/{id}/{next}", method = RequestMethod.GET)
+	public ModelAndView getj(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") ${idType} id, @PathVariable("next") String next) {
+		try {
+			${entitySimpleName} ${entitySimpleName?uncap_first} = ${entitySimpleName?uncap_first}Service.getByPk(id);
+			return new ModelAndView("${entitySimpleName?uncap_first}_" + next).addObject("${entitySimpleName?uncap_first}", ${entitySimpleName?uncap_first});
+		} catch (Throwable e) {
+			return exceptionPage(e);
+		}
+	}
+
+	@RequestMapping(value = "list/{next}")
+	public ModelAndView list(HttpServletRequest request, HttpServletResponse response, @PathVariable("next") String next) {
+		try {
+			Map<String, Object> map = getParams(request);
+			int page = map.containsKey("page") ? Integer.valueOf(map.remove("page").toString()) : -1;
+			int size = map.containsKey("size") ? Integer.valueOf(map.remove("size").toString()) : -1;
+			List<${entitySimpleName}> list = ${entitySimpleName?uncap_first}Service.getList(map, page, size);
+			return new ModelAndView("${entitySimpleName?uncap_first}_" + next).addObject("${entitySimpleName?uncap_first}List", list);
+		} catch (Throwable e) {
+			return exceptionPage(e);
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "listj")
+	public Object listj(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Map<String, Object> map = getParams(request);
+			int page = map.containsKey("page") ? Integer.valueOf(map.remove("page").toString()) : -1;
+			int size = map.containsKey("size") ? Integer.valueOf(map.remove("size").toString()) : -1;
+			List<${entitySimpleName}> list = ${entitySimpleName?uncap_first}Service.getList(map, page, size);
+			return success(list);
+		} catch (Throwable e) {
+			return fail(e);
+		}
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-	public Object delete(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
-		return null;
+	public Object delete(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") ${idType} id) {
+		try {
+			${entitySimpleName?uncap_first}Service.delete(new ${entitySimpleName}(id));
+			return success();
+		} catch (Throwable e) {
+			return fail(e);
+		}
 	}
-
 }

@@ -1,5 +1,8 @@
+package project.freehelp.common.service;
+
+import project.freehelp.common.entity.${entitySimpleName};
 import project.master.dbmaamger.service.BaseService;
 
-public interface ${entityName}Service extends BaseService<${entityName}, ${idType}> {
+public interface ${entitySimpleName}Service extends BaseService<${entitySimpleName}, ${idType}> {
 
 }
