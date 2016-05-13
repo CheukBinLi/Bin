@@ -17,8 +17,10 @@ import freemarker.template.TemplateException;
 import project.freehelp.common.entity.Dictionary;
 import project.freehelp.common.entity.HouseInfo;
 import project.freehelp.common.entity.HouseSteward;
+import project.freehelp.common.entity.Notice;
 import project.freehelp.common.entity.Order;
 import project.freehelp.common.entity.UserInfo;
+import project.master.user.User;
 
 public class CreateFile {
 
@@ -41,6 +43,8 @@ public class CreateFile {
 		map.put("entityFullName", c.getName());
 		map.put("entitySimpleName", c.getSimpleName());
 		map.put("entityName", SimpleName ? c.getSimpleName() : c.getName());
+
+		map.put("entityPackage", c.getPackage().getName().substring(0, c.getPackage().getName().lastIndexOf(".")));
 		map.put("idType", SimpleName ? idType.getSimpleName() : idType.getName());
 		map.put("idTypeSimpleName", idType.getSimpleName());
 		map.put("tag", "#");
@@ -97,11 +101,13 @@ public class CreateFile {
 	}
 
 	public static void main(String[] args) throws IOException, TemplateException {
-		CreateFile.create(Dictionary.class, Integer.class, true);
-		CreateFile.create(HouseInfo.class, String.class, true);
-		CreateFile.create(HouseSteward.class, String.class, true);
-		CreateFile.create(Order.class, String.class, true);
-		CreateFile.create(UserInfo.class, String.class, true);
+		// CreateFile.create(Dictionary.class, Integer.class, true);
+		// CreateFile.create(HouseInfo.class, String.class, true);
+		// CreateFile.create(HouseSteward.class, String.class, true);
+		// CreateFile.create(Order.class, String.class, true);
+		// CreateFile.create(UserInfo.class, String.class, true);
+		// CreateFile.create(Notice.class, String.class, true);
+		CreateFile.create(User.class, String.class, true);
 	}
 
 }
