@@ -1,4 +1,4 @@
-package project.freehelp.common.dao;
+package ${entityPackage}.dao;
 
 import project.freehelp.common.entity.${entitySimpleName};
 import project.master.dbmaamger.dao.BaseDao;

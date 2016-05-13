@@ -1,4 +1,4 @@
-package project.freehelp.common.dao.impl;
+package ${entityPackage}.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

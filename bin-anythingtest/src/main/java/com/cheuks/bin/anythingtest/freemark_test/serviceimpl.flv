@@ -1,4 +1,4 @@
-package project.freehelp.common.service.impl;
+package ${entityPackage}.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
