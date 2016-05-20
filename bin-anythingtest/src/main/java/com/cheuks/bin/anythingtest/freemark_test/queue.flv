@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE QueryList SYSTEM "Query.dtd">
-<QueryList package="${entityFullName}">
-	<Alias name="${entityFullName}" Alias="${entitySimpleName}" />
-</QueryList>
