@@ -6,10 +6,22 @@
 		<![CDATA[ 
 			FROM ${entitySimpleName} A 
 			WHERE 
-			1=1
+			1=1 
 		<#list params as item> 
 			<${tag}if ${item}??>
-				and A.${item}=:${item}
+				and A.${item}=:${item} 
+			</${tag}if>
+		</#list>
+		]]>
+	</Query>
+	<Query name="count" type="HQL" freemarkFormat="true" Alias="true">
+		<![CDATA[ 
+			SELECT COUNT(1) FROM ${entitySimpleName} A 
+			WHERE 
+			1=1 
+		<#list params as item> 
+			<${tag}if ${item}??>
+				and A.${item}=:${item} 
 			</${tag}if>
 		</#list>
 		]]>
