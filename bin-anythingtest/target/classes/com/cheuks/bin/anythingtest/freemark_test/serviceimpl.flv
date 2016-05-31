@@ -1,18 +1,23 @@
+package ${entityPackage}.service.impl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import project.freehelp.common.dao.${entitySimpleName}Dao;
+import project.freehelp.common.entity.${entitySimpleName};
+import project.freehelp.common.service.${entitySimpleName}Service;
 import project.master.dbmaamger.dao.BaseDao;
 import project.master.dbmaamger.service.AbstractService;
 
 @Component
-public class ${entitySimpleName}ServiceImpl extends AbstractService<${entityName}, ${idType}> implements UserService {
+public class ${entitySimpleName}ServiceImpl extends AbstractService<${entitySimpleName}, ${idType}> implements ${entitySimpleName}Service {
 
 	@Autowired
 	private ${entitySimpleName}Dao ${entitySimpleName?uncap_first}Dao;
 
 	@Override
-	public BaseDao<${entityName}, ${idType}> getService() {
-		return ${entityName}Dao;
+	public BaseDao<${entitySimpleName}, ${idType}> getService() {
+		return ${entitySimpleName?uncap_first}Dao;
 	}
 
 }

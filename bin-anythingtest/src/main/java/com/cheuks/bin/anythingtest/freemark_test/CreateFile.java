@@ -14,13 +14,6 @@ import java.util.Map;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import project.freehelp.common.entity.Dictionary;
-import project.freehelp.common.entity.HouseInfo;
-import project.freehelp.common.entity.HouseSteward;
-import project.freehelp.common.entity.Notice;
-import project.freehelp.common.entity.Order;
-import project.freehelp.common.entity.UserInfo;
-import project.master.user.User;
 
 public class CreateFile {
 
@@ -107,7 +100,7 @@ public class CreateFile {
 		// CreateFile.create(Order.class, String.class, true);
 		// CreateFile.create(UserInfo.class, String.class, true);
 		// CreateFile.create(Notice.class, String.class, true);
-		CreateFile.create(User.class, String.class, true);
+		// CreateFile.create(User.class, String.class, true);
 	}
 
 }

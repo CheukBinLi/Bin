@@ -7,6 +7,7 @@ import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
+import io.netty.handler.timeout.IdleStateEvent;
 
 public class MessageCodec extends ByteToMessageCodec<MessagePackage<MsgBody>> {
 
@@ -32,13 +33,13 @@ public class MessageCodec extends ByteToMessageCodec<MessagePackage<MsgBody>> {
 	}
 
 	protected MessagePackage<MsgBody> decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
-		//16
-		//		byte[] head = new byte[4];
-		//		for (int i = 0; i < head.length && in.isReadable(); i++) {
-		//			head[i] = in.readByte();
-		//		}
-		//		in.isReadable();
-		//		in.resetReaderIndex();
+		// 16
+		// byte[] head = new byte[4];
+		// for (int i = 0; i < head.length && in.isReadable(); i++) {
+		// head[i] = in.readByte();
+		// }
+		// in.isReadable();
+		// in.resetReaderIndex();
 		MessagePackage<MsgBody> messagePackage = null;
 		if (in.readInt() == MessagePackage.head) {
 			if (ServiceType.SERVICE_TYPE_HEARTBEAT.getValue() == in.readInt()) {
@@ -52,6 +53,25 @@ public class MessageCodec extends ByteToMessageCodec<MessagePackage<MsgBody>> {
 			in.readInt();
 		}
 		return messagePackage;
+	}
+
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		IdleStateEvent e = (IdleStateEvent) evt;
+		switch (e.state()) {
+		case WRITER_IDLE:
+			ctx.writeAndFlush(new MessagePackage<MsgBuf.MsgBody>(ServiceType.SERVICE_TYPE_HEARTBEAT, null));
+			break;
+		case READER_IDLE:
+			ctx.writeAndFlush(new MessagePackage<MsgBuf.MsgBody>(ServiceType.SERVICE_TYPE_HEARTBEAT, null));
+			break;
+		case ALL_IDLE:
+			ctx.writeAndFlush(new MessagePackage<MsgBuf.MsgBody>(ServiceType.SERVICE_TYPE_HEARTBEAT, null));
+			break;
+		default:
+			break;
+		}
+		super.userEventTriggered(ctx, evt);
 	}
 
 }
