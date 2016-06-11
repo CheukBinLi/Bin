@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Bin.iml" filepath="$PROJECT_DIR$/Bin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-annotation.iml" filepath="$PROJECT_DIR$/bin-annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-anythingtest.iml" filepath="$PROJECT_DIR$/bin-anythingtest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-bean.iml" filepath="$PROJECT_DIR$/bin-bean.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-cache.iml" filepath="$PROJECT_DIR$/bin-cache.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-net.iml" filepath="$PROJECT_DIR$/bin-net.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-register-center/bin-register-center.iml" filepath="$PROJECT_DIR$/bin-register-center/bin-register-center.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-shiro-test.iml" filepath="$PROJECT_DIR$/bin-shiro-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bin-util.iml" filepath="$PROJECT_DIR$/bin-util.iml" />
+    </modules>
+  </component>
+</project>

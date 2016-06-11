@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryList SYSTEM "Query.dtd">
+<QueryList package="project.freehelp.common.entity.Order">
+	<Alias name="project.freehelp.common.entity.Order" Alias="Order" />
+	<Query name="list" type="HQL" freemarkFormat="true" Alias="true">
+		<![CDATA[ 
+			FROM Order A 
+			WHERE 
+			1=1
+			<#if id??>
+				<#if like??>
+					and A.id=%:id%
+				#else>
+					and A.id=:id
+				</#if>
+			</#if>
+			<#if total??>
+				<#if like??>
+					and A.total=%:total%
+				#else>
+					and A.total=:total
+				</#if>
+			</#if>
+			<#if remark??>
+				<#if like??>
+					and A.remark=%:remark%
+				#else>
+					and A.remark=:remark
+				</#if>
+			</#if>
+			<#if status??>
+				<#if like??>
+					and A.status=%:status%
+				#else>
+					and A.status=:status
+				</#if>
+			</#if>
+			<#if service??>
+				<#if like??>
+					and A.service=%:service%
+				#else>
+					and A.service=:service
+				</#if>
+			</#if>
+			<#if master??>
+				<#if like??>
+					and A.master=%:master%
+				#else>
+					and A.master=:master
+				</#if>
+			</#if>
+			<#if steward??>
+				<#if like??>
+					and A.steward=%:steward%
+				#else>
+					and A.steward=:steward
+				</#if>
+			</#if>
+			<#if house??>
+				<#if like??>
+					and A.house=%:house%
+				#else>
+					and A.house=:house
+				</#if>
+			</#if>
+		]]>
+	</Query>
+</QueryList>

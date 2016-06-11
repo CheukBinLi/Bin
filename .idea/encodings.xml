@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-annotation" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-anythingtest" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-bean" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-cache" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-net" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-register-center" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-shiro-test" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-util" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bin-webtest" charset="UTF-8" />
+  </component>
+</project>

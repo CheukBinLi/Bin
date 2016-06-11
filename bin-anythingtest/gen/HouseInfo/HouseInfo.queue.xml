@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryList SYSTEM "Query.dtd">
+<QueryList package="project.freehelp.common.entity.HouseInfo">
+	<Alias name="project.freehelp.common.entity.HouseInfo" Alias="HouseInfo" />
+	<Query name="list" type="HQL" freemarkFormat="true" Alias="true">
+		<![CDATA[ 
+			FROM HouseInfo A 
+			WHERE 
+			1=1
+			<#if address??>
+				<#if like??>
+					and A.address=%:address%
+				#else>
+					and A.address=:address
+				</#if>
+			</#if>
+			<#if id??>
+				<#if like??>
+					and A.id=%:id%
+				#else>
+					and A.id=:id
+				</#if>
+			</#if>
+			<#if remark??>
+				<#if like??>
+					and A.remark=%:remark%
+				#else>
+					and A.remark=:remark
+				</#if>
+			</#if>
+			<#if status??>
+				<#if like??>
+					and A.status=%:status%
+				#else>
+					and A.status=:status
+				</#if>
+			</#if>
+			<#if master??>
+				<#if like??>
+					and A.master=%:master%
+				#else>
+					and A.master=:master
+				</#if>
+			</#if>
+			<#if title??>
+				<#if like??>
+					and A.title=%:title%
+				#else>
+					and A.title=:title
+				</#if>
+			</#if>
+			<#if price??>
+				<#if like??>
+					and A.price=%:price%
+				#else>
+					and A.price=:price
+				</#if>
+			</#if>
+			<#if facility??>
+				<#if like??>
+					and A.facility=%:facility%
+				#else>
+					and A.facility=:facility
+				</#if>
+			</#if>
+			<#if traffic??>
+				<#if like??>
+					and A.traffic=%:traffic%
+				#else>
+					and A.traffic=:traffic
+				</#if>
+			</#if>
+			<#if image??>
+				<#if like??>
+					and A.image=%:image%
+				#else>
+					and A.image=:image
+				</#if>
+			</#if>
+			<#if area??>
+				<#if like??>
+					and A.area=%:area%
+				#else>
+					and A.area=:area
+				</#if>
+			</#if>
+			<#if latitude??>
+				<#if like??>
+					and A.latitude=%:latitude%
+				#else>
+					and A.latitude=:latitude
+				</#if>
+			</#if>
+			<#if longitude??>
+				<#if like??>
+					and A.longitude=%:longitude%
+				#else>
+					and A.longitude=:longitude
+				</#if>
+			</#if>
+			<#if count??>
+				<#if like??>
+					and A.count=%:count%
+				#else>
+					and A.count=:count
+				</#if>
+			</#if>
+			<#if bed??>
+				<#if like??>
+					and A.bed=%:bed%
+				#else>
+					and A.bed=:bed
+				</#if>
+			</#if>
+			<#if pledge??>
+				<#if like??>
+					and A.pledge=%:pledge%
+				#else>
+					and A.pledge=:pledge
+				</#if>
+			</#if>
+		]]>
+	</Query>
+</QueryList>

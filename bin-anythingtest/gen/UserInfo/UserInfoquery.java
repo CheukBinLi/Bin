@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryList SYSTEM "Query.dtd">
+<QueryList package="project.freehelp.common.entity.UserInfo">
+	<Alias name="project.freehelp.common.entity.UserInfo" Alias="UserInfo" />
+	<Query name="list" type="HQL" freemarkFormat="true" Alias="true">
+		<![CDATA[ 
+			FROM UserInfo A 
+			WHERE 
+			1=1
+			<#if id??>
+				<#if like??>
+					and A.id like '%:id%'
+				<#else>
+					and A.id=:id
+				</#if>
+			</#if>
+			<#if authority??>
+				<#if like??>
+					and A.authority like '%:authority%'
+				<#else>
+					and A.authority=:authority
+				</#if>
+			</#if>
+			<#if status??>
+				<#if like??>
+					and A.status like '%:status%'
+				<#else>
+					and A.status=:status
+				</#if>
+			</#if>
+			<#if reallyName??>
+				<#if like??>
+					and A.reallyName like '%:reallyName%'
+				<#else>
+					and A.reallyName=:reallyName
+				</#if>
+			</#if>
+			<#if idCardImage??>
+				<#if like??>
+					and A.idCardImage like '%:idCardImage%'
+				<#else>
+					and A.idCardImage=:idCardImage
+				</#if>
+			</#if>
+			<#if openid??>
+				<#if like??>
+					and A.openid like '%:openid%'
+				<#else>
+					and A.openid=:openid
+				</#if>
+			</#if>
+			<#if idCard??>
+				<#if like??>
+					and A.idCard like '%:idCard%'
+				<#else>
+					and A.idCard=:idCard
+				</#if>
+			</#if>
+		]]>
+	</Query>
+</QueryList>

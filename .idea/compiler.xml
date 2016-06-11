@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="bin-annotation" />
+        <module name="bin-anythingtest" />
+        <module name="bin-bean" />
+        <module name="bin-cache" />
+        <module name="bin-net" />
+        <module name="bin-register-center" />
+        <module name="bin-shiro-test" />
+        <module name="bin-util" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Bin" target="1.5" />
+      <module name="bin-annotation" target="1.5" />
+      <module name="bin-anythingtest" target="1.5" />
+      <module name="bin-bean" target="1.5" />
+      <module name="bin-cache" target="1.5" />
+      <module name="bin-net" target="1.5" />
+      <module name="bin-register-center" target="1.5" />
+      <module name="bin-shiro-test" target="1.5" />
+      <module name="bin-util" target="1.5" />
+      <module name="bin-webtest" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
