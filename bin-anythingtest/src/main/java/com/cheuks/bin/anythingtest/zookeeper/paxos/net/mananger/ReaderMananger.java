@@ -1,13 +1,13 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
-
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
-import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class ReaderMananger extends AbstractMananger {
 

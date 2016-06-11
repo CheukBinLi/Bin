@@ -1,11 +1,11 @@
 package com.cheuks.bin.anythingtest.zookeeper.watch;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.client.HostProvider;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
 
 @SuppressWarnings("rawtypes")
 public class ZooKeeperEX extends ZooKeeper {

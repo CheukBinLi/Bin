@@ -1,8 +1,8 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
-import java.nio.ByteBuffer;
-
 import io.netty.buffer.ByteBuf;
+
+import java.nio.ByteBuffer;
 
 /***
  * *

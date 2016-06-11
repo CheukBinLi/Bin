@@ -1,16 +1,5 @@
 package com.cheuks.bin.bean.classprocessing;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.cheuks.bin.bean.application.BeanFactory;
 import com.cheuks.bin.bean.classprocessing.handler.DefaultAutoLoadXmlHandler;
 import com.cheuks.bin.bean.classprocessing.handler.DefaultInterceptXmlHandler;
@@ -21,11 +10,14 @@ import com.cheuks.bin.bean.xml.DefaultConfigInfo.Bean;
 import com.cheuks.bin.bean.xml.DefaultConfigInfo.Intercept;
 import com.cheuks.bin.bean.xml.XmlType;
 import com.cheuks.bin.cache.DefaultCachePoolFactory;
-
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMethod;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings({ "rawtypes", "unused" })
 public class DefaultClassProcessingXmlFactory extends AbstractClassProcessingFactory<CreateClassInfo> {

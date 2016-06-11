@@ -1,9 +1,6 @@
 package com.cheuks.bin.anythingtest.netty;
 
-import java.net.InetSocketAddress;
-
 import com.cheuks.bin.anythingtest.netty.packagemessage.CachePoolAdapter;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -13,6 +10,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+
+import java.net.InetSocketAddress;
 
 @SuppressWarnings("unchecked")
 public abstract class BaseClient {

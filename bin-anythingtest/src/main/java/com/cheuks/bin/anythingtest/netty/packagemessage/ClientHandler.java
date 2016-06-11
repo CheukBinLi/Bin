@@ -2,7 +2,6 @@ package com.cheuks.bin.anythingtest.netty.packagemessage;
 
 import com.cheuks.bin.anythingtest.netty.BaseClient;
 import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
-
 import io.netty.channel.ChannelHandlerContext;
 
 public class ClientHandler extends SimpleChannelInboundHandlerEX<MessagePackage<MsgBody>> {

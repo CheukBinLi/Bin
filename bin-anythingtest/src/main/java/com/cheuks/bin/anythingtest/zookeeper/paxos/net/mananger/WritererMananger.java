@@ -1,13 +1,13 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
+
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
-import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class WritererMananger extends AbstractMananger {
 	private static AtomicInteger a = new AtomicInteger(0);

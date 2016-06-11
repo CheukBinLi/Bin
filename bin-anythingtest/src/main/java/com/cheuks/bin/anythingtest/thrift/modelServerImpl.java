@@ -1,10 +1,9 @@
 package com.cheuks.bin.anythingtest.thrift;
 
+import org.apache.thrift.TException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import org.apache.thrift.TException;
 
 public class modelServerImpl implements modelServer.Iface {
 

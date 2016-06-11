@@ -1,5 +1,7 @@
 package com.cheuks.bin.anythingtest.nio;
 
+import com.cheuks.bin.net.util.ByteBufferUtil2;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,8 +12,6 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executors;
-
-import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class Server_v1 implements Runnable {
 

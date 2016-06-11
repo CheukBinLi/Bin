@@ -1,10 +1,7 @@
 package com.cheuks.bin.anythingtest.xml;
 
-import java.beans.Transient;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /***
  * 报头对象

@@ -1,8 +1,5 @@
 package com.cheuks.bin.bean.application;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import com.cheuks.bin.bean.classprocessing.ClassInfo;
 import com.cheuks.bin.bean.classprocessing.ClassProcessingFactory;
 import com.cheuks.bin.bean.classprocessing.CloneAdapter;
@@ -10,6 +7,9 @@ import com.cheuks.bin.bean.classprocessing.DefaultClassProcessingFactory;
 import com.cheuks.bin.bean.util.ShortNameUtil;
 import com.cheuks.bin.cache.CachePoolFactory;
 import com.cheuks.bin.cache.DefaultCachePoolFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class BeanFactory {
 

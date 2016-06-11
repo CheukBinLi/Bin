@@ -1,7 +1,6 @@
 package com.cheuks.bin.anythingtest.netty.privatestack;
 
 import com.cheuks.bin.anythingtest.netty.privatestack.Message.Header;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

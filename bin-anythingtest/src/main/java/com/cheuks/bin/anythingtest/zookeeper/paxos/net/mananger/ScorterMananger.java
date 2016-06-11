@@ -1,11 +1,8 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
-import java.nio.channels.SelectionKey;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.TimeUnit;
-
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
+
+import java.util.concurrent.TimeUnit;
 
 /***
  * *

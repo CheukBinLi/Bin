@@ -1,5 +1,8 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
+
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -8,11 +11,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.zookeeper.server.FinalRequestProcessor;
-
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
 
 public class SelectorMananger extends AbstractMananger {
 	protected Selector selector;

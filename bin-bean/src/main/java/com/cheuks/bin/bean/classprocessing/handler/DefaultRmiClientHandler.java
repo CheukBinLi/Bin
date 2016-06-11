@@ -1,20 +1,14 @@
 package com.cheuks.bin.bean.classprocessing.handler;
 
+import com.cheuks.bin.annotation.RmiClient;
+import com.cheuks.bin.bean.classprocessing.ClassInfo;
+import com.cheuks.bin.util.ReflectionUtil;
+import javassist.*;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.cheuks.bin.annotation.RmiClient;
-import com.cheuks.bin.bean.classprocessing.ClassInfo;
-import com.cheuks.bin.util.ReflectionUtil;
-
-import javassist.CtClass;
-import javassist.CtField;
-import javassist.CtMember;
-import javassist.CtMethod;
-import javassist.CtNewMethod;
-import javassist.NotFoundException;
 
 public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtClass, RmiClient> {
 

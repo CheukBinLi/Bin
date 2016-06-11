@@ -1,8 +1,8 @@
 package com.cheuks.bin.anythingtest.bean.mc.xml;
 
-import java.lang.reflect.Method;
-
 import com.cheuks.bin.bean.classprocessing.handler.Interception;
+
+import java.lang.reflect.Method;
 
 public class DefaultInterceptionXml implements Interception {
 

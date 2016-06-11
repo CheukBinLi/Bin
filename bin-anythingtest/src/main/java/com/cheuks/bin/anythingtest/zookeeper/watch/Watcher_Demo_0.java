@@ -1,16 +1,16 @@
 package com.cheuks.bin.anythingtest.zookeeper.watch;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class Watcher_Demo_0 {
 

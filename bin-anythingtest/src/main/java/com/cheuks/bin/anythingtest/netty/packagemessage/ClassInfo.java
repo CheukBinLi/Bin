@@ -1,10 +1,10 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
+import com.cheuks.bin.anythingtest.netty.packagemessage.i.X1;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.cheuks.bin.anythingtest.netty.packagemessage.i.X1;
 
 public class ClassInfo<T> {
 

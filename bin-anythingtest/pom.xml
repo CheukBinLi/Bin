@@ -46,12 +46,12 @@
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 			<groupId>com.cheuks</groupId>
 			<artifactId>bin-webtest</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>com.cheuks</groupId>
 			<artifactId>bin-util</artifactId>
@@ -143,6 +143,16 @@
 			<artifactId>freemarker</artifactId>
 			<version>${freemarker.version}</version>
 		</dependency>
+
+
+
+		<!-- http://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+
 
 	</dependencies>
 </project>

@@ -1,15 +1,14 @@
 package com.cheuks.bin.net.server.niothread;
 
+import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
+
 import java.io.IOException;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.cheuks.bin.net.util.ByteBufferUtil;
-import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class ReaderThreadMananger extends AbstractControlThread {
 

@@ -1,12 +1,12 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
-import java.io.IOException;
-import java.nio.channels.SelectionKey;
-import java.util.Iterator;
-
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
 import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Release;
+
+import java.io.IOException;
+import java.nio.channels.SelectionKey;
+import java.util.Iterator;
 
 public class ReleaseMananger extends AbstractMananger implements Runnable {
 

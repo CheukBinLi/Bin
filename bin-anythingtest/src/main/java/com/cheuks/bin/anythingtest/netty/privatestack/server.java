@@ -1,21 +1,18 @@
 
 package com.cheuks.bin.anythingtest.netty.privatestack;
 
-import java.security.cert.CertificateException;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.net.ssl.SSLException;
-
 import com.cheuks.bin.anythingtest.netty.BaseServer;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
-import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
+
+import javax.net.ssl.SSLException;
+import java.security.cert.CertificateException;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class server extends BaseServer {
 

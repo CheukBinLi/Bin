@@ -1,12 +1,12 @@
 package com.cheuks.bin.net.server.handler.test;
 
-import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
-
 import com.cheuks.bin.net.server.event.WriteEvent;
 import com.cheuks.bin.net.server.niothread.Attachment;
 import com.cheuks.bin.net.util.ByteBufferUtil;
 import com.cheuks.bin.net.util.Serializ;
+
+import java.nio.channels.SelectionKey;
+import java.nio.channels.SocketChannel;
 
 public class LogWriteEvent implements WriteEvent {
 

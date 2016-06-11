@@ -1,15 +1,9 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net;
 
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.*;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.AbstractMananger;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.AcceptMananger;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.ReaderMananger;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.ReleaseMananger;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.ScorterMananger;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.SelectorMananger;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger.WritererMananger;
 
 public class Server_v1_2 extends AbstractMananger {
 

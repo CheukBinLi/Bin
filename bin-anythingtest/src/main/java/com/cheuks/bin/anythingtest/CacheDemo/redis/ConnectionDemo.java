@@ -1,14 +1,9 @@
 package com.cheuks.bin.anythingtest.CacheDemo.redis;
 
+import redis.clients.jedis.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisShardInfo;
-import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
 
 public class ConnectionDemo {
 
@@ -23,6 +18,7 @@ public class ConnectionDemo {
 		shardInfos.add(new JedisShardInfo("121.42.27.147", 6379));
 	}
 
+	//单连
 	static JedisPool pool = new JedisPool(config, "121.42.27.147", 6379);
 	// 分布式连接池
 	static ShardedJedisPool shardedPool = new ShardedJedisPool(config, shardInfos);
@@ -30,11 +26,13 @@ public class ConnectionDemo {
 	public static void main(String[] args) {
 		System.err.println(Long.toString((2L << 30)));
 		// Jedis client = new Jedis("192.168.168.148", 6379);
+		//单连
 		Jedis client = pool.getResource();
 		client.set("hello", "你好吗？");
 		System.out.println(client.get("hello"));
 		client.close();
 		pool.destroy();
+		//分布式连接池
 		ShardedJedis shardClient = shardedPool.getResource();
 		shardClient.set("hihi", "hello this shardedJedis");
 		System.out.println(client.get("hihi"));

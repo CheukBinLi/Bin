@@ -1,9 +1,7 @@
 package com.cheuks.bin.anythingtest.thrift;
 
 import org.apache.thrift.TMultiplexedProcessor;
-import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;

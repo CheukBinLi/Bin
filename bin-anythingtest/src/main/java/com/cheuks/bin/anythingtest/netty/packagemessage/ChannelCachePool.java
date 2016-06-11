@@ -1,9 +1,9 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
+import io.netty.channel.Channel;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import io.netty.channel.Channel;
 
 @SuppressWarnings("unchecked")
 public class ChannelCachePool implements CachePool<Channel> {

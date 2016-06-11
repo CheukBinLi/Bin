@@ -1,20 +1,16 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net;
 
+import com.cheuks.bin.net.util.ByteBufferUtil2;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class Server extends Thread {
 

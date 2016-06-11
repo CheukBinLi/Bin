@@ -1,14 +1,9 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.ByteBuffer;
-
 import io.netty.buffer.ByteBuf;
+
+import java.io.*;
+import java.nio.ByteBuffer;
 
 public class DefaultObjectCoded implements ObjectCodec {
 

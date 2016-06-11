@@ -1,10 +1,10 @@
 package com.cheuks.bin.bean.xml;
 
+import org.xml.sax.Attributes;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.xml.sax.Attributes;
 
 public class DefaultConfigInfo implements Serializable, XmlType, ConfigInfo {
 

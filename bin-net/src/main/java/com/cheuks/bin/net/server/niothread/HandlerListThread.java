@@ -1,9 +1,9 @@
 package com.cheuks.bin.net.server.niothread;
 
-import java.lang.reflect.Method;
-
 import com.cheuks.bin.net.server.handler.ServiceHandler;
 import com.cheuks.bin.util.ReflectionUtil;
+
+import java.lang.reflect.Method;
 
 public class HandlerListThread extends AbstractControlThread {
 

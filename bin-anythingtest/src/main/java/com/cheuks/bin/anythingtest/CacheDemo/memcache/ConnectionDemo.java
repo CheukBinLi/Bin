@@ -1,14 +1,14 @@
 package com.cheuks.bin.anythingtest.CacheDemo.memcache;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.concurrent.TimeoutException;
-
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.MemcachedClientBuilder;
 import net.rubyeye.xmemcached.XMemcachedClientBuilder;
 import net.rubyeye.xmemcached.exception.MemcachedException;
 import net.rubyeye.xmemcached.utils.AddrUtil;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.concurrent.TimeoutException;
 
 public class ConnectionDemo {
 

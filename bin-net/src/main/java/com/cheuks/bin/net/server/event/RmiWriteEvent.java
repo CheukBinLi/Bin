@@ -1,14 +1,12 @@
 package com.cheuks.bin.net.server.event;
 
-import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
-
-import com.cheuks.bin.net.server.handler.MessageInfo;
 import com.cheuks.bin.net.server.niothread.Attachment;
 import com.cheuks.bin.net.util.ByteBufferUtil;
-import com.cheuks.bin.net.util.DefaultSerializImpl;
-import com.cheuks.bin.net.util.Serializ;
 import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
+import com.cheuks.bin.net.util.Serializ;
+
+import java.nio.channels.SelectionKey;
+import java.nio.channels.SocketChannel;
 
 public class RmiWriteEvent implements WriteEvent {
 

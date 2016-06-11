@@ -1,12 +1,11 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
-import java.util.List;
-
 import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
+
+import java.util.List;
 
 public class MessageCodec extends ByteToMessageCodec<MessagePackage<MsgBody>> {
 

@@ -1,22 +1,20 @@
 package com.cheuks.bin.anythingtest.bean.code_test.xml;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Map.Entry;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import com.cheuks.bin.anythingtest.bean.code_test.xml.DefaultConfigInfo.Bean;
+import com.cheuks.bin.anythingtest.bean.code_test.xml.DefaultConfigInfo.CachePool;
+import com.cheuks.bin.anythingtest.bean.code_test.xml.DefaultConfigInfo.Intercept;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.cheuks.bin.anythingtest.bean.code_test.xml.DefaultConfigInfo.Bean;
-import com.cheuks.bin.anythingtest.bean.code_test.xml.DefaultConfigInfo.CachePool;
-import com.cheuks.bin.anythingtest.bean.code_test.xml.DefaultConfigInfo.Intercept;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Map.Entry;
 
 public class XmlHandler extends DefaultHandler {
 

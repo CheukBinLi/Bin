@@ -1,14 +1,11 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
-import java.net.InetSocketAddress;
-
 import com.cheuks.bin.anythingtest.netty.BaseClient;
-import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
-
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+
+import java.net.InetSocketAddress;
 
 public class client extends BaseClient {
 

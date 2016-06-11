@@ -1,13 +1,13 @@
 package com.cheuks.bin.net.server.handler.test;
 
+import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
-import com.cheuks.bin.net.util.ByteBufferUtil;
-import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class log {
 

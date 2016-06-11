@@ -1,7 +1,5 @@
 package com.cheuks.bin.anythingtest.zookeeper.watch;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -9,6 +7,8 @@ import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
 
 public class WatcthDemo implements Watch {
 

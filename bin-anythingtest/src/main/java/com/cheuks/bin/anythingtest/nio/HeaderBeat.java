@@ -1,12 +1,12 @@
 package com.cheuks.bin.anythingtest.nio;
 
+import com.cheuks.bin.net.util.ByteBufferUtil2;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
-import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class HeaderBeat {
 	private static Socket s;

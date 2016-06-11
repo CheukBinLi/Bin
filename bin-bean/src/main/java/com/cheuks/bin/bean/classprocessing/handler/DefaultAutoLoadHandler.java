@@ -1,22 +1,17 @@
 package com.cheuks.bin.bean.classprocessing.handler;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.cheuks.bin.annotation.AutoLoad;
 import com.cheuks.bin.bean.application.BeanFactory;
 import com.cheuks.bin.bean.classprocessing.ClassProcessingFactory;
 import com.cheuks.bin.bean.classprocessing.DefaultClassProcessingFactory;
 import com.cheuks.bin.bean.util.ShortNameUtil;
-
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMember;
 import javassist.NotFoundException;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /***
  * 

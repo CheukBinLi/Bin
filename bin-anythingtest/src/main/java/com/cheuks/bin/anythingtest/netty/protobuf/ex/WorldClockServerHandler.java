@@ -15,27 +15,14 @@
  */
 package com.cheuks.bin.anythingtest.netty.protobuf.ex;
 
-import static java.util.Calendar.DAY_OF_MONTH;
-import static java.util.Calendar.DAY_OF_WEEK;
-import static java.util.Calendar.HOUR_OF_DAY;
-import static java.util.Calendar.MINUTE;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.SECOND;
-import static java.util.Calendar.YEAR;
-import static java.util.Calendar.getInstance;
+import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.*;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.Continent;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.DayOfWeek;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.LocalTime;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.LocalTimes;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.Location;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.Locations;
-
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import static java.util.Calendar.*;
 
 public class WorldClockServerHandler extends SimpleChannelInboundHandler<Locations> {
 

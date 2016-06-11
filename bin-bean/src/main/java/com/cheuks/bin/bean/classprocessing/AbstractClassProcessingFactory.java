@@ -1,5 +1,10 @@
 package com.cheuks.bin.bean.classprocessing;
 
+import com.cheuks.bin.bean.application.BeanFactory;
+import com.cheuks.bin.bean.util.ShortNameUtil;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -7,12 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.cheuks.bin.bean.application.BeanFactory;
-import com.cheuks.bin.bean.util.ShortNameUtil;
-
-import javassist.CannotCompileException;
-import javassist.CtClass;
 
 @SuppressWarnings("rawtypes")
 public abstract class AbstractClassProcessingFactory<C> implements ClassProcessingFactory<C> {

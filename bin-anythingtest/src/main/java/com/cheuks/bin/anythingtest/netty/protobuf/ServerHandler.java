@@ -1,7 +1,6 @@
 package com.cheuks.bin.anythingtest.netty.protobuf;
 
 import com.cheuks.bin.anythingtest.netty.protobuf.Xprotobuf.XprotobufModel;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

@@ -2,8 +2,6 @@ package com.cheuks.bin.anythingtest.netty.packagemessage;
 
 import com.cheuks.bin.anythingtest.netty.packagemessage.HandlerCenter.people;
 import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
-
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;

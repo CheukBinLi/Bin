@@ -1,17 +1,16 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Release;
+
 import java.io.IOException;
-import java.net.SocketOption;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
-
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Release;
 
 public class AbstractMananger extends Thread {
 

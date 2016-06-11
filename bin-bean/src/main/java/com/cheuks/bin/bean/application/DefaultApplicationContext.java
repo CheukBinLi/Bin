@@ -1,21 +1,16 @@
 package com.cheuks.bin.bean.application;
 
+import com.cheuks.bin.bean.classprocessing.*;
+import com.cheuks.bin.bean.scan.Scan;
+import com.cheuks.bin.bean.xml.DefaultConfigInfo;
+import com.cheuks.bin.bean.xml.XmlHandler;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.cheuks.bin.bean.classprocessing.AbstractClassProcessingFactory;
-import com.cheuks.bin.bean.classprocessing.CreateClassFactory;
-import com.cheuks.bin.bean.classprocessing.CreateClassInfo;
-import com.cheuks.bin.bean.classprocessing.DefaultClassProcessingFactory;
-import com.cheuks.bin.bean.classprocessing.DefaultClassProcessingXmlFactory;
-import com.cheuks.bin.bean.scan.Scan;
-import com.cheuks.bin.bean.xml.DefaultConfigInfo;
-import com.cheuks.bin.bean.xml.XmlHandler;
-
-import javassist.ClassClassPath;
-import javassist.ClassPool;
 
 public class DefaultApplicationContext extends BeanFactory implements ApplicationContext {
 

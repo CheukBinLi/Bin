@@ -1,12 +1,12 @@
 package com.cheuks.bin.anythingtest.bean.code_test;
 
-import java.util.Date;
-
 import com.cheuks.bin.anythingtest.bean.mc.scan.IocTest1;
 import com.cheuks.bin.anythingtest.bean.mc.scan.IocTest2;
 import com.cheuks.bin.anythingtest.bean.mc.xml.XmlIocTest1;
 import com.cheuks.bin.bean.application.BeanFactory;
 import com.cheuks.bin.bean.application.DefaultApplicationContext;
+
+import java.util.Date;
 
 public class Xml_Classprocessing {
 	public static void main(String[] args) throws Throwable {

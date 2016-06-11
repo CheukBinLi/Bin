@@ -1,9 +1,9 @@
 package com.cheuks.bin.anythingtest.bean;
 
+import com.cheuks.bin.anythingtest.bean.mc.scan.AutoLoadTestI;
+
 import java.lang.reflect.Method;
 import java.util.Arrays;
-
-import com.cheuks.bin.anythingtest.bean.mc.scan.AutoLoadTestI;
 
 public class A {
 

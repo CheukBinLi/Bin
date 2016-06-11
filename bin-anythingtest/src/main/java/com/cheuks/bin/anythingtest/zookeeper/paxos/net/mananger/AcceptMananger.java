@@ -1,11 +1,11 @@
 package com.cheuks.bin.anythingtest.zookeeper.paxos.net.mananger;
 
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
+
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.TimeUnit;
-
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.ConnectionMsg;
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
 
 public class AcceptMananger extends AbstractMananger {
 

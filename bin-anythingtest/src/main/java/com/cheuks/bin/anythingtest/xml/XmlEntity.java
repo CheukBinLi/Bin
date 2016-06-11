@@ -1,12 +1,10 @@
 package com.cheuks.bin.anythingtest.xml;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.cheuks.bin.util.XmlReaderAll;
 import org.xml.sax.SAXException;
 
-import com.cheuks.bin.util.XmlReaderAll;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 public class XmlEntity {
 

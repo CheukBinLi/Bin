@@ -1,25 +1,19 @@
 package com.cheuks.bin.bean.xml;
 
+import com.cheuks.bin.bean.xml.DefaultConfigInfo.Bean;
+import com.cheuks.bin.bean.xml.DefaultConfigInfo.CachePool;
+import com.cheuks.bin.bean.xml.DefaultConfigInfo.Intercept;
+import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Map.Entry;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-
-import com.cheuks.bin.bean.xml.DefaultConfigInfo.Bean;
-import com.cheuks.bin.bean.xml.DefaultConfigInfo.CachePool;
-import com.cheuks.bin.bean.xml.DefaultConfigInfo.Intercept;
 
 public class XmlHandler extends DefaultHandler {
 

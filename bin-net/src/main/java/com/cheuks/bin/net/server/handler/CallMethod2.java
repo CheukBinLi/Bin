@@ -1,15 +1,15 @@
 package com.cheuks.bin.net.server.handler;
 
+import com.cheuks.bin.net.util.ByteBufferUtil;
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
+import com.cheuks.bin.net.util.DefaultSerializImpl;
+import com.cheuks.bin.net.util.Serializ;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
-import com.cheuks.bin.net.util.ByteBufferUtil;
-import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
-import com.cheuks.bin.net.util.DefaultSerializImpl;
-import com.cheuks.bin.net.util.Serializ;
 
 public class CallMethod2 implements Cloneable {
 

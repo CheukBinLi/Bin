@@ -1,13 +1,13 @@
 package com.cheuks.bin.net.server.niothread;
 
+import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
+
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import com.cheuks.bin.net.util.ByteBufferUtil.DataPacket;
 
 public class Attachment {
 

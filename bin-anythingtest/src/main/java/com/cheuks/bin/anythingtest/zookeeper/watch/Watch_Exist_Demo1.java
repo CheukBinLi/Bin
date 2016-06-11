@@ -1,12 +1,12 @@
 package com.cheuks.bin.anythingtest.zookeeper.watch;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 
 public class Watch_Exist_Demo1 implements Watch {
 

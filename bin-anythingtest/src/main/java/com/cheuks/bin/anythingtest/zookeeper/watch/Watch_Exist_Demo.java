@@ -1,12 +1,12 @@
 package com.cheuks.bin.anythingtest.zookeeper.watch;
 
-import java.lang.reflect.Field;
-import java.util.concurrent.Executors;
-
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
+
+import java.lang.reflect.Field;
+import java.util.concurrent.Executors;
 
 public class Watch_Exist_Demo implements Watch {
 

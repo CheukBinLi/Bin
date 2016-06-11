@@ -1,12 +1,11 @@
 package com.cheuks.bin.anythingtest.netty.privatestack;
 
-import java.util.Map;
-
 import com.cheuks.bin.anythingtest.netty.privatestack.Message.Header;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+
+import java.util.Map;
 
 public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 

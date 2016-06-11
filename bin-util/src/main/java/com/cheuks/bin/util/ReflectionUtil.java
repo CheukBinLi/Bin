@@ -1,12 +1,12 @@
 package com.cheuks.bin.util;
 
-import java.lang.reflect.Method;
-
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import javassist.expr.Handler;
+
+import java.lang.reflect.Method;
 
 public class ReflectionUtil {
 	private ReflectionUtil() {

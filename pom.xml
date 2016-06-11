@@ -25,5 +25,6 @@
 		<module>bin-webtest</module>
 		<module>bin-util</module>
     <module>bin-register-center</module>
+    <module>bin-shiro-test</module>
   </modules>
 </project>

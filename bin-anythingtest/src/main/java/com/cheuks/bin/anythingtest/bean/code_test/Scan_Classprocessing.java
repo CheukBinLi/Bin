@@ -1,14 +1,14 @@
 package com.cheuks.bin.anythingtest.bean.code_test;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
 import com.cheuks.bin.anythingtest.bean.mc.scan.IocTest1;
 import com.cheuks.bin.bean.application.BeanFactory;
 import com.cheuks.bin.bean.classprocessing.ClassProcessingFactory;
 import com.cheuks.bin.bean.classprocessing.CreateClassInfo;
 import com.cheuks.bin.bean.classprocessing.DefaultClassProcessingFactory;
 import com.cheuks.bin.bean.scan.Scan;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class Scan_Classprocessing {
 

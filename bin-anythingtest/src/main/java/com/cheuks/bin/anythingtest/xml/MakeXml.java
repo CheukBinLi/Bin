@@ -1,19 +1,17 @@
 package com.cheuks.bin.anythingtest.xml;
 
+import com.cheuks.bin.anythingtest.xml.TangDouCash.ACCT_INFO_CLASS;
+import com.cheuks.bin.anythingtest.xml.XmlEntity.B;
+import com.cheuks.bin.util.XmlReaderAll;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
-import com.cheuks.bin.anythingtest.xml.TangDouCash.ACCT_INFO_CLASS;
-import com.cheuks.bin.anythingtest.xml.XmlEntity.B;
-import com.cheuks.bin.util.XmlReaderAll;
 
 public class MakeXml {
 

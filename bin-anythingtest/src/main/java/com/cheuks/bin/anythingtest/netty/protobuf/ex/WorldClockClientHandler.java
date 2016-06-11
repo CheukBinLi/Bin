@@ -15,6 +15,11 @@
  */
 package com.cheuks.bin.anythingtest.netty.protobuf.ex;
 
+import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
@@ -22,16 +27,6 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Pattern;
-
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.Continent;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.LocalTime;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.LocalTimes;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.Location;
-import com.cheuks.bin.anythingtest.netty.protobuf.ex.WorldClockProtocol.Locations;
-
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 
 public class WorldClockClientHandler extends SimpleChannelInboundHandler<LocalTimes> {
 

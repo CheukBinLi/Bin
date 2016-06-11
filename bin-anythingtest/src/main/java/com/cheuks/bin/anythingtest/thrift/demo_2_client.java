@@ -1,13 +1,12 @@
 package com.cheuks.bin.anythingtest.thrift;
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+
+import java.util.List;
 
 public class demo_2_client {
 

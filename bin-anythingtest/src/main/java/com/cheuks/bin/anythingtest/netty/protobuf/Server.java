@@ -1,7 +1,5 @@
 package com.cheuks.bin.anythingtest.netty.protobuf;
 
-import com.cheuks.bin.anythingtest.netty.protobuf.Xprotobuf.XprotobufModel;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;

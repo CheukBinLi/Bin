@@ -3,7 +3,6 @@ package com.cheuks.bin.anythingtest.netty.privatestack;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.AttributeKey;
 
 public class ServerHandler extends SimpleChannelInboundHandler<Message> {
 

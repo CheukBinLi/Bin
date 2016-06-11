@@ -1,5 +1,8 @@
 package com.cheuks.bin.anythingtest.nio;
 
+import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
+import com.cheuks.bin.net.util.ByteBufferUtil2;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,9 +13,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.cheuks.bin.anythingtest.zookeeper.paxos.net.Logger;
-import com.cheuks.bin.net.util.ByteBufferUtil2;
 
 public class Client_v1 {
 

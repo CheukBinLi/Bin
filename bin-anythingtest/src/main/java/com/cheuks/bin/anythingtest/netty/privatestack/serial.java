@@ -1,12 +1,8 @@
 package com.cheuks.bin.anythingtest.netty.privatestack;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import io.netty.buffer.ByteBuf;
+
+import java.io.*;
 
 public class serial {
 

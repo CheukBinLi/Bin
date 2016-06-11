@@ -1,14 +1,13 @@
 package com.cheuks.bin.bean.classprocessing;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RecursiveAction;
-
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtNewConstructor;
 import javassist.bytecode.DuplicateMemberException;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class CreateClassFactory {
 

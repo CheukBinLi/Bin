@@ -2,7 +2,6 @@ package com.cheuks.bin.anythingtest.netty.packagemessage;
 
 import com.cheuks.bin.anythingtest.netty.BaseServer;
 import com.cheuks.bin.anythingtest.netty.packagemessage.i.X1;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

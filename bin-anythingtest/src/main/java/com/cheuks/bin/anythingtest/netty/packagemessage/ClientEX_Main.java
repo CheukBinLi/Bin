@@ -1,13 +1,11 @@
 package com.cheuks.bin.anythingtest.netty.packagemessage;
 
-import java.net.InetSocketAddress;
-
 import com.cheuks.bin.anythingtest.netty.packagemessage.MsgBuf.MsgBody;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
+
+import java.net.InetSocketAddress;
 
 public class ClientEX_Main {
 
