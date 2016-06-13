@@ -2,10 +2,10 @@ package X;
 
 public interface ShiroSerializable {
 
-	byte[] encode(Object o);
+	byte[] encode(Object o) throws Throwable;
 
-	Object decode(byte[] o);
+	Object decode(byte[] o) throws Throwable;
 
-	<T> T decodeT(byte[] o);
+	<T> T decodeT(byte[] o) throws Throwable;
 
 }

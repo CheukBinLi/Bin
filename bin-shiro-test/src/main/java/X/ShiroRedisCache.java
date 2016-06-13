@@ -2,11 +2,16 @@ package X;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
@@ -27,6 +32,8 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 		try {
 			Object o = serializable.decode(jedis.get(serializable.encode(key)));
 			return null != o ? (V) o : null;
+		} catch (Throwable e) {
+			throw new CacheException(e);
 		} finally {
 			if (null != jedis)
 				jedis.close();
@@ -37,8 +44,9 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 		ShardedJedis jedis = pool.getResource();
 		String result = null;
 		try {
-			//			Object o = serializable.decode(jedis.get(serializable.encode(key)));
 			result = jedis.set(serializable.encode(key), serializable.encode(value));
+		} catch (Throwable e) {
+			throw new CacheException(e);
 		} finally {
 			if (null != jedis)
 				jedis.close();
@@ -50,31 +58,30 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 
 	public V remove(K key) throws CacheException {
 		ShardedJedis jedis = pool.getResource();
-		Long result = -1L;
-		Object o = null;
+		Object result = null;
 		try {
 			result = jedis.del(serializable.encode(key));
+		} catch (Throwable e) {
+			throw new CacheException(e);
 		} finally {
 			if (null != jedis)
 				jedis.close();
 		}
-		if (result == -1L)
-			throw new CacheException("remove [" + key + "] fial!");
-		return null;
+		return null != result ? (V) result : null;
 	}
 
 	public void clear() throws CacheException {
 		ShardedJedis jedis = pool.getResource();
-		Long result = -1L;
-		Object o = null;
 		try {
-			result = jedis
+			synchronized (pool) {
+				Iterator<Jedis> it = jedis.getAllShards().iterator();
+				while (it.hasNext())
+					it.next().flushDB();
+			}
 		} finally {
 			if (null != jedis)
 				jedis.close();
 		}
-		if (result == -1L)
-			throw new CacheException("remove [" + key + "] fial!");
 	}
 
 	public int size() {
@@ -82,10 +89,41 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 	}
 
 	public Set<K> keys() {
-		return null;
+		ShardedJedis jedis = pool.getResource();
+		Set<String> set = new HashSet();
+		try {
+			synchronized (pool) {
+				Iterator<Jedis> it = jedis.getAllShards().iterator();
+				while (it.hasNext())
+					set.addAll(it.next().keys("*"));
+			}
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return (Set<K>) set;
 	}
 
 	public Collection<V> values() {
+		//		ShardedJedis jedis = pool.getResource();
+		//		Set<String> set = new HashSet();
+		//		List<Entry<K, V>>list;
+		//		try {
+		//			synchronized (pool) {
+		//				Iterator<Jedis> it = jedis.getAllShards().iterator();
+		//				Iterator<String> keys;
+		//				while (it.hasNext()) {
+		//					keys = it.next().keys("*").iterator();
+		//					while (keys.hasNext())
+		//						jedis.get(keys.next());
+		//
+		//				}
+		//			}
+		//		} finally {
+		//			if (null != jedis)
+		//				jedis.close();
+		//		}
+		//		return (Set<K>) set;
 		return null;
 	}
 
