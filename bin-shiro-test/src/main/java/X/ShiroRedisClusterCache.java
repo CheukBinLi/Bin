@@ -15,13 +15,13 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
-public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
+public class ShiroRedisClusterCache<K, V extends Serializable> implements Cache<K, V> {
 
 	private ShardedJedisPool pool;
 
 	private ShiroSerializable serializable;
 
-	public ShiroRedisCache(ShardedJedisPool pool, ShiroSerializable serializable) {
+	public ShiroRedisClusterCache(ShardedJedisPool pool, ShiroSerializable serializable) {
 		super();
 		this.pool = pool;
 		this.serializable = serializable;
@@ -35,8 +35,9 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 		} catch (Throwable e) {
 			throw new CacheException(e);
 		} finally {
-			if (null != jedis)
-				jedis.close();
+			pool.returnResource(jedis);
+			//			if (null != jedis)
+			//				jedis.close();
 		}
 	}
 
@@ -48,8 +49,9 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 		} catch (Throwable e) {
 			throw new CacheException(e);
 		} finally {
-			if (null != jedis)
-				jedis.close();
+			pool.returnResource(jedis);
+			//			if (null != jedis)
+			//				jedis.close();
 		}
 		if (null == result)
 			throw new CacheException("setting [" + key + "] fial!");
@@ -64,8 +66,9 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 		} catch (Throwable e) {
 			throw new CacheException(e);
 		} finally {
-			if (null != jedis)
-				jedis.close();
+			pool.returnResource(jedis);
+			//			if (null != jedis)
+			//				jedis.close();
 		}
 		return null != result ? (V) result : null;
 	}
@@ -79,13 +82,14 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 					it.next().flushDB();
 			}
 		} finally {
-			if (null != jedis)
-				jedis.close();
+			pool.returnResource(jedis);
+			//			if (null != jedis)
+			//				jedis.close();
 		}
 	}
 
 	public int size() {
-		return 0;
+		return -1;
 	}
 
 	public Set<K> keys() {
@@ -98,8 +102,9 @@ public class ShiroRedisCache<K, V extends Serializable> implements Cache<K, V> {
 					set.addAll(it.next().keys("*"));
 			}
 		} finally {
-			if (null != jedis)
-				jedis.close();
+			pool.returnResource(jedis);
+			//			if (null != jedis)
+			//				jedis.close();
 		}
 		return (Set<K>) set;
 	}

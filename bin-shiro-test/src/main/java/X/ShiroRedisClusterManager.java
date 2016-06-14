@@ -19,9 +19,9 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedisPool;
 
-public class ShiroRedisManager implements CacheManager, Initializable {
+public class ShiroRedisClusterManager implements CacheManager, Initializable {
 
-	private final transient Logger log = LoggerFactory.getLogger(ShiroRedisManager.class);
+	private final transient Logger log = LoggerFactory.getLogger(ShiroRedisClusterManager.class);
 
 	private int maxIdle = 10;
 	private int maxTotal = 300;
@@ -36,17 +36,17 @@ public class ShiroRedisManager implements CacheManager, Initializable {
 	private List<JedisShardInfo> shardInfos;
 	private ShiroSerializable serializable;
 
-	private Map<String, ShiroRedisCache<Object, ? extends Serializable>> cache = new ConcurrentHashMap<String, ShiroRedisCache<Object, ? extends Serializable>>();
+	private Map<String, ShiroRedisClusterCache<Object, ? extends Serializable>> cache = new ConcurrentHashMap<String, ShiroRedisClusterCache<Object, ? extends Serializable>>();
 
-	public ShiroRedisCache<?, ? extends Serializable> getX() {
+	public ShiroRedisClusterCache<?, ? extends Serializable> getX() {
 		if (null == serializable)
 			serializable = new SX();
-		return new ShiroRedisCache<Object, Serializable>(pool, serializable);
+		return new ShiroRedisClusterCache<Object, Serializable>(pool, serializable);
 
 	}
 
 	public <K, V> Cache<K, V> getCache(String name) throws CacheException {
-		ShiroRedisCache<?, ?> tempCache = cache.get(name);
+		ShiroRedisClusterCache<?, ?> tempCache = cache.get(name);
 		if (null == tempCache) {
 
 		}
@@ -54,7 +54,7 @@ public class ShiroRedisManager implements CacheManager, Initializable {
 		return null;
 	}
 
-	public ShiroRedisManager() {
+	public ShiroRedisClusterManager() {
 		super();
 		init();
 	}
@@ -90,8 +90,8 @@ public class ShiroRedisManager implements CacheManager, Initializable {
 	}
 
 	public static void main(String[] args) {
-		ShiroRedisManager srm = new ShiroRedisManager();
-		ShiroRedisCache cache = srm.getX();
+		ShiroRedisClusterManager srm = new ShiroRedisClusterManager();
+		ShiroRedisClusterCache cache = srm.getX();
 		//		cache.put("AAAA", "叼嗱星");
 		System.out.println(cache.get("AAAA"));
 		cache.clear();
