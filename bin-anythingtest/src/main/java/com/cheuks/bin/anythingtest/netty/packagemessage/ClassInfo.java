@@ -20,7 +20,7 @@ public class ClassInfo<T> {
 	}
 
 	private void initClass(Class<T> t) throws InstantiationException, IllegalAccessException {
-		Point p = t.getDeclaredAnnotation(Point.class);
+		Point p = t.getAnnotation(Point.class);
 		if (null == p)
 			return;
 		this.uid = String.format("%s:%s", p.UID(), p.VERSION());
