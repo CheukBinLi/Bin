@@ -179,6 +179,12 @@
 			<version>6.0.1</version>
 		</dependency>
 
+		<!-- http://mvnrepository.com/artifact/org.apache.lucene/lucene-highlighter -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-highlighter</artifactId>
+			<version>6.0.1</version>
+		</dependency>
 
 
 		<!-- <dependency> <groupId>project</groupId> <artifactId>freehelp-common</artifactId> <version>0.0.1-SNAPSHOT</version> </dependency> <dependency> <groupId>project</groupId> <artifactId>master-user</artifactId> <version>0.0.1-SNAPSHOT</version> </dependency> -->
