@@ -85,6 +85,7 @@
 	<import resource="db-manager.xml" />
 	<import resource="HibernateDBAdapter.xml" />
 	<import resource="resource.xml"></import>
+	<import resource="shiro.xml"></import>
 	<!-- <import resource="other.xml" /> -->
 	<!-- <import resource="interceptors.xml" /> -->
 </beans>

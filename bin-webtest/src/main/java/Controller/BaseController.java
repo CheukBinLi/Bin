@@ -1,5 +1,8 @@
 package Controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,28 +17,51 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping({"/*", "/*/**", "/", ""})
+@RequestMapping({ "/*", "/*/**", "/", "" })
 @Scope("prototype")
 public class BaseController {
 
-    @RequestMapping("{path}")
-    public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
-        String url = request.getParameter("url");
-        if ("proxy".equals(path)) {
-            return new ModelAndView("proxy", getParams(request)).addObject("data", JspProxy.getProxy(url));
-        }
-        return new ModelAndView(path, getParams(request));
-    }
+	@RequestMapping("{path}")
+	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("path") String path) throws IOException {
+		String url = request.getParameter("url");
+		if ("proxy".equals(path)) {
+			return new ModelAndView("proxy", getParams(request)).addObject("data", JspProxy.getProxy(url));
+		}
+		return new ModelAndView(path, getParams(request));
+	}
 
-    protected final Map<String, Object> getParams(HttpServletRequest request) {
-        Enumeration<String> en = request.getParameterNames();
-        Map<String, Object> map = new HashMap<String, Object>();
-        String name;
-        while (en.hasMoreElements()) {
-            name = en.nextElement();
-            map.put(name, request.getParameter(name));
-        }
-        return map;
-    }
+//	@RequestMapping({ "**/**", "/**" })
+//	public ModelAndView getXPage(HttpServletRequest request, HttpServletResponse response) {
+//		System.out.println("*******************");
+//		System.out.println(request.getServletPath());
+//		System.out.println(request.getServerName());
+//		System.out.println(request.getContextPath());
+//		return new ModelAndView(request.getServletPath());
+//	}
+
+	@RequestMapping({ "/login" })
+	public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
+		Subject user = SecurityUtils.getSubject();
+		String username = request.getParameter("name");
+		System.err.println(username);
+		if (null == username)
+			return new ModelAndView(request.getServletPath());
+		String password = request.getParameter("password");
+		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		user.login(token);
+		return new ModelAndView("/main");
+	}
+
+	protected final Map<String, Object> getParams(HttpServletRequest request) {
+		Enumeration<String> en = request.getParameterNames();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String name;
+		while (en.hasMoreElements()) {
+			name = en.nextElement();
+			map.put(name, request.getParameter(name));
+		}
+		return map;
+	}
 
 }

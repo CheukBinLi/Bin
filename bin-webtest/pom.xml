@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.cheuks</groupId>
@@ -16,6 +18,7 @@
 	<properties>
 		<jaxbversion>2.1</jaxbversion>
 		<jaxwsversion>2.2.3</jaxwsversion>
+		<shiro.version>1.2.1</shiro.version>
 	</properties>
 	<dependencies>
 		<!-- Hibernate 依赖�? -->
@@ -109,7 +112,10 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-web</artifactId> <version>4.0.4.RELEASE</version> </dependency> <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-config</artifactId> <version>4.0.4.RELEASE</version> </dependency> -->
+		<!-- <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-web</artifactId> 
+			<version>4.0.4.RELEASE</version> </dependency> <dependency> <groupId>org.springframework.security</groupId> 
+			<artifactId>spring-security-config</artifactId> <version>4.0.4.RELEASE</version> 
+			</dependency> -->
 
 
 		<dependency>
@@ -279,7 +285,8 @@
 			<artifactId>jaxws-tools</artifactId>
 			<version>${jaxwsversion}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.jvnet.staxex</groupId> <artifactId>stax-ex</artifactId> <version>1.7.7</version> </dependency> -->
+		<!-- <dependency> <groupId>org.jvnet.staxex</groupId> <artifactId>stax-ex</artifactId> 
+			<version>1.7.7</version> </dependency> -->
 		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax-api</artifactId>
@@ -321,6 +328,28 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-ehcache</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.cheuks</groupId>
 			<artifactId>bin-db-manager</artifactId>
