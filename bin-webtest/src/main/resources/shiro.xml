@@ -43,16 +43,18 @@
 
 	<!-- 項目自定义的Realm -->
 	<bean id="shiroDbRealm" class="Controller.shiro.Realm"></bean>
+	
+	<bean id="shiroEhcacheManager" class="Controller.shiro.cache.ShiroRedisClusterManager">
+	</bean>
 
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="shiroDbRealm" />
 		<property name="cacheManager" ref="shiroEhcacheManager" />
 	</bean>
 
-	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<!-- <property name="cacheManagerConfigFile" value="/WEB-INF/ehcache-shiro.xml" 
-			/> -->
-	</bean>
+	<!-- <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> 
+		<property name="cacheManagerConfigFile" value="/WEB-INF/ehcache-shiro.xml" 
+		/> </bean> -->
 
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">

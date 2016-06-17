@@ -351,6 +351,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.7.3</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>com.cheuks</groupId>
 			<artifactId>bin-db-manager</artifactId>
 			<version>${project.version}</version>
