@@ -11,7 +11,17 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
+		<bin.version>1.0</bin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<freehelp.version>0.0.1-SNAPSHOT</freehelp.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<hibernate.version>5.1.0.Final</hibernate.version>
+		<hibernate-common.annotation.version>5.0.1.Final</hibernate-common.annotation.version>
+		<spring.version>4.2.5.RELEASE</spring.version>
+		<freemarker.version>2.3.23</freemarker.version>
+		<gson.version>2.6.2</gson.version>
+		<junit.version>4.12</junit.version>
+		<aspectj.version>1.8.9</aspectj.version>
 	</properties>
 
 	<dependencies>
@@ -24,7 +34,8 @@
 		<module>bin-anythingtest</module>
 		<module>bin-webtest</module>
 		<module>bin-util</module>
-    <module>bin-register-center</module>
-    <module>bin-shiro-test</module>
-  </modules>
+		<module>bin-register-center</module>
+		<module>bin-shiro-test</module>
+		<module>bin-db-manager</module>
+	</modules>
 </project>

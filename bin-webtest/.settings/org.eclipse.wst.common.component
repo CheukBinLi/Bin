@@ -4,7 +4,9 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module archiveName="bin-db-manager-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/bin-db-manager/bin-db-manager">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="bin-webtest"/>
         <property name="java-output-path" value="/bin-webtest/target/classes"/>
     </wb-module>
