@@ -2,36 +2,29 @@ package com.cheuks.bin.anythingtest.lucene;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopFieldDocs;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.search.highlight.QueryScorer;
@@ -39,12 +32,6 @@ import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.IOContext;
-import org.apache.lucene.store.IndexInput;
-import org.apache.lucene.store.IndexOutput;
-import org.apache.lucene.store.Lock;
-
-import freemarker.template.SimpleScalar;
 
 public class L1Demo {
 
@@ -127,8 +114,9 @@ public class L1Demo {
 		IndexSearcher indexSearcher = new IndexSearcher(reader);
 		QueryParser parser = new QueryParser("content", new StandardAnalyzer());
 		Query query = parser.parse(str);
+		// 条目
 		TopDocs topDocs = indexSearcher.search(query, 10000);
-
+		// 高亮
 		SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter("<span style=\"color:red\">", "</span>");
 		Highlighter highlighter = new Highlighter(htmlFormatter, new QueryScorer(query));
 
@@ -140,7 +128,7 @@ public class L1Demo {
 			content = document.get("content");
 			System.err.println(document.get("path"));
 			highlighter.setTextFragmenter(new SimpleFragmenter(content.length()));
-
+			// 高亮
 			System.err.println(highlighter.getBestFragment(new SimpleAnalyzer(), "content", content));
 
 			// System.err.println(document.get("content"));

@@ -17,9 +17,9 @@ public class ShiroRedisClusterCache<K, V extends Serializable> implements Cache<
 
 	private ShardedJedisPool pool;
 
-	private ShiroSerializable serializable;
+	private Serialize serializable;
 
-	public ShiroRedisClusterCache(ShardedJedisPool pool, ShiroSerializable serializable) {
+	public ShiroRedisClusterCache(ShardedJedisPool pool, Serialize serializable) {
 		super();
 		this.pool = pool;
 		this.serializable = serializable;

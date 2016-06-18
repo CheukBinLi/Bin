@@ -1,6 +1,6 @@
 package Controller.shiro.cache;
 
-public interface ShiroSerializable {
+public interface Serialize {
 
 	byte[] encode(Object o) throws Throwable;
 
