@@ -14,9 +14,11 @@ import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
-public class ClusterRedisCacheManager extends AbstractRedisCacheManager<ShardedJedis> {
+public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<ShardedJedis, V> {
 
 	private final transient Logger log = LoggerFactory.getLogger(ShiroRedisClusterManager.class);
+
+	ShardedJedis tempJedis;
 
 	private int maxIdle = 10;
 	private int maxTotal = 300;
@@ -37,15 +39,15 @@ public class ClusterRedisCacheManager extends AbstractRedisCacheManager<ShardedJ
 
 	@Override
 	void init() {
-		if (log.isInfoEnabled())
-			log.info("shiro-redis-cache:init");
+		// if (log.isInfoEnabled())
+		// log.info("shiro-redis-cache:init");
 		if (null != pool)
 			return;
 		config = new JedisPoolConfig();
-		config.setMaxIdle(maxIdle);// 空闲
-		config.setMaxTotal(maxTotal);
-		config.setMaxWaitMillis(maxWaitMillis);
-		if (null == serverList)
+		config.setMaxIdle(this.maxIdle);// 空闲
+		config.setMaxTotal(this.maxTotal);
+		config.setMaxWaitMillis(this.maxWaitMillis);
+		if (null == this.serverList)
 			return;
 		shardInfos = new ArrayList<JedisShardInfo>();
 		StringTokenizer ip = new StringTokenizer(serverList, ",");
@@ -62,8 +64,8 @@ public class ClusterRedisCacheManager extends AbstractRedisCacheManager<ShardedJ
 			shardInfos.add(info);
 		}
 		pool = new ShardedJedisPool(config, shardInfos);
-		if (log.isInfoEnabled())
-			log.info("shiro-redis-cache:complete");
+		// if (log.isInfoEnabled())
+		// log.info("shiro-redis-cache:complete");
 	}
 
 	@Override
@@ -71,8 +73,43 @@ public class ClusterRedisCacheManager extends AbstractRedisCacheManager<ShardedJ
 		pool.returnResourceObject(jedis);
 	}
 
+	public void update(Cache<String, V> cache) throws Throwable {
+		(tempJedis = getResource()).set(getSerialize().encode(cache.getKey()), getSerialize().encode(cache.getValue()));
+		destory(tempJedis);
+	}
+
+	public void delete(String k) throws Throwable {
+		(tempJedis = getResource()).del(k.getBytes());
+		destory(tempJedis);
+	}
+
+	public void create(Cache<String, V> cache) throws Throwable {
+		update(cache);
+	}
+
+	public V getAndSet(Cache<String, V> cache) throws Throwable {
+		try {
+			return (V) (tempJedis = getResource()).getSet(getSerialize().encode(cache.getKey()), getSerialize().encode(cache.getValue()));
+		} finally {
+			destory(tempJedis);
+		}
+	}
+
+	public V get(String k) throws Throwable {
+		try {
+			Object o = getSerialize().decode(getResource().get(getSerialize().encode(k)));
+			return null == o ? null : (V) o;
+		} finally {
+			destory(tempJedis);
+		}
+	}
+
 	public Collection<Serializable> getcollection() throws Throwable {
 		return null;
+	}
+
+	public ClusterRedisCacheManager() {
+		init();
 	}
 
 }

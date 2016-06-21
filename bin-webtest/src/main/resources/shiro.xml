@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context
@@ -15,15 +18,19 @@
 	">
 
 	<!-- 开启Shiro注解的Spring配置方式的beans。在lifecycleBeanPostProcessor之后运行 -->
-	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
-	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<property name="securityManager" ref="securityManager" />
 	</bean>
 
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
 	<!-- shiro为集成spring -->
-	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
 				<prop key="org.apache.shiro.authz.UnauthorizedException">/system/error</prop>
@@ -43,19 +50,29 @@
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="shiroDbRealm" />
 		<property name="cacheManager" ref="shiroEhcacheManager" />
-		<!-- <property name="sessionManager" ref="DefaultWebSessionManager" /> -->
+		<property name="sessionManager" ref="DefaultWebSessionManager" />
 	</bean>
 
-	<bean id="DefaultWebSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-		<property name="sessionDao" ref="redisSessionDao" />
-	</bean>
-	<bean id="redisSessionDao" class="Controller.shiro.cache.ClusterRedisCacheManager">
-		<property name="serialize" ref="Controller.shiro.cache.DefaultSerialize"></property>
-	</bean>
-	<bean id="Serialize" class="Controller.shiro.cache.ClusterRedisCacheManager">
+
+	<bean id="redisSessionDao" class="Controller.shiro.cache.RedisSessionDao">
+		<!-- <property name="serialize" ref="Serialize"></property> -->
+		<property name="cacheManager" ref="cacheManager"></property>
 	</bean>
 
-	<!-- <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> <property name="cacheManagerConfigFile" value="/WEB-INF/ehcache-shiro.xml" /> </bean> -->
+	<bean id="Serialize" class="Controller.shiro.cache.DefaultSerialize" />
+
+	<bean id="cacheManager" class="Controller.shiro.cache.ClusterRedisCacheManager">
+		<property name="Serialize" ref="Serialize" />
+	</bean>
+
+	<bean id="DefaultWebSessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionDAO" ref="redisSessionDao" />
+	</bean>
+
+	<!-- <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> 
+		<property name="cacheManagerConfigFile" value="/WEB-INF/ehcache-shiro.xml" 
+		/> </bean> -->
 
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
