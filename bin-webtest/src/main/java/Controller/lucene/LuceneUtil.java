@@ -10,8 +10,16 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -45,7 +53,15 @@ public class LuceneUtil {
 		writer.close();
 	}
 
-	public List<LuceneRss> getSeach() {
+	public List<LuceneRss> getSeach(String search, String path) throws IOException, ParseException {
+
+		Directory directory = FSDirectory.open(Paths.get(path));
+		IndexReader reader = DirectoryReader.open(directory);
+		IndexSearcher searcher = new IndexSearcher(reader);
+		// QueryParser parser=new QueryParser(, new SimpleAnalyzer());
+		QueryParser parser = new MultiFieldQueryParser(new String[] { "" }, new SimpleAnalyzer());
+		Query query = parser.parse(search);
+		TopDocs topDocs = searcher.search(query, 1000);
 
 		return null;
 	}
