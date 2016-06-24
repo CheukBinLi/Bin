@@ -68,6 +68,14 @@ public final class IKTokenizer extends Tokenizer {
 		_IKImplement = new IKSegmenter(input, useSmart);
 	}
 
+	public IKTokenizer(boolean useSmart) {
+		// setReader(in);
+		offsetAtt = addAttribute(OffsetAttribute.class);
+		termAtt = addAttribute(CharTermAttribute.class);
+		typeAtt = addAttribute(TypeAttribute.class);
+		_IKImplement = new IKSegmenter(input, useSmart);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

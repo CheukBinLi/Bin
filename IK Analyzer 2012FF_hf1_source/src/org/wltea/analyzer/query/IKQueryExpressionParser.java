@@ -474,17 +474,17 @@ public class IKQueryExpressionParser {
 
 		Query q2 = this.querys.pop();
 		Query q1 = this.querys.pop();
+		System.err.println("###############顶#################");
 		if ('&' == op.type) {
 			if (q1 != null) {
 				if (q1 instanceof BooleanQuery) {
-					Map
-					BooleanClause[] clauses = ((BooleanQuery) q1).getClauses();
+					BooleanClause[] clauses = (BooleanClause[]) ((BooleanQuery) q1).clauses().toArray();
 					if (clauses.length > 0 && clauses[0].getOccur() == Occur.MUST) {
 						for (BooleanClause c : clauses) {
-							resultQuery.add(c);
+							resultQuery.clauses().add(c);
 						}
 					} else {
-						resultQuery.add(q1, Occur.MUST);
+						resultQuery.clauses().add(new BooleanClause(q1, Occur.MUST));
 					}
 
 				} else {
@@ -492,19 +492,19 @@ public class IKQueryExpressionParser {
 					// q1 instanceof TermRangeQuery
 					// q1 instanceof PhraseQuery
 					// others
-					resultQuery.add(q1, Occur.MUST);
+					resultQuery.clauses().add(new BooleanClause(q1, Occur.MUST));
 				}
 			}
 
 			if (q2 != null) {
 				if (q2 instanceof BooleanQuery) {
-					BooleanClause[] clauses = ((BooleanQuery) q2).getClauses();
+					BooleanClause[] clauses = (BooleanClause[]) ((BooleanQuery) q2).clauses().toArray();
 					if (clauses.length > 0 && clauses[0].getOccur() == Occur.MUST) {
 						for (BooleanClause c : clauses) {
-							resultQuery.add(c);
+							resultQuery.clauses().add(c);
 						}
 					} else {
-						resultQuery.add(q2, Occur.MUST);
+						resultQuery.clauses().add(new BooleanClause(q2, Occur.MUST));
 					}
 
 				} else {
@@ -512,20 +512,20 @@ public class IKQueryExpressionParser {
 					// q1 instanceof TermRangeQuery
 					// q1 instanceof PhraseQuery
 					// others
-					resultQuery.add(q2, Occur.MUST);
+					resultQuery.clauses().add(new BooleanClause(q2, Occur.MUST));
 				}
 			}
 
 		} else if ('|' == op.type) {
 			if (q1 != null) {
 				if (q1 instanceof BooleanQuery) {
-					BooleanClause[] clauses = ((BooleanQuery) q1).getClauses();
+					BooleanClause[] clauses = (BooleanClause[]) ((BooleanQuery) q1).clauses().toArray();
 					if (clauses.length > 0 && clauses[0].getOccur() == Occur.SHOULD) {
 						for (BooleanClause c : clauses) {
-							resultQuery.add(c);
+							resultQuery.clauses().add(c);
 						}
 					} else {
-						resultQuery.add(q1, Occur.SHOULD);
+						resultQuery.clauses().add(new BooleanClause(q1, Occur.SHOULD));
 					}
 
 				} else {
@@ -533,27 +533,28 @@ public class IKQueryExpressionParser {
 					// q1 instanceof TermRangeQuery
 					// q1 instanceof PhraseQuery
 					// others
-					resultQuery.add(q1, Occur.SHOULD);
+					// resultQuery.add(q1, Occur.SHOULD);
+					resultQuery.clauses().add(new BooleanClause(q1, Occur.SHOULD));
 				}
 			}
 
 			if (q2 != null) {
 				if (q2 instanceof BooleanQuery) {
-					BooleanClause[] clauses = ((BooleanQuery) q2).getClauses();
+					BooleanClause[] clauses = (BooleanClause[]) ((BooleanQuery) q2).clauses().toArray();
 					if (clauses.length > 0 && clauses[0].getOccur() == Occur.SHOULD) {
 						for (BooleanClause c : clauses) {
-							resultQuery.add(c);
+							resultQuery.clauses().add(c);
 						}
 					} else {
-						resultQuery.add(q2, Occur.SHOULD);
+						resultQuery.clauses().add(new BooleanClause(q2, Occur.SHOULD));
 					}
 				} else {
 					// q2 instanceof TermQuery
 					// q2 instanceof TermRangeQuery
 					// q2 instanceof PhraseQuery
 					// others
-					resultQuery.add(q2, Occur.SHOULD);
-
+					// resultQuery.add(q2, Occur.SHOULD);
+					resultQuery.clauses().add(new BooleanClause(q2, Occur.SHOULD));
 				}
 			}
 
@@ -563,13 +564,13 @@ public class IKQueryExpressionParser {
 			}
 
 			if (q1 instanceof BooleanQuery) {
-				BooleanClause[] clauses = ((BooleanQuery) q1).getClauses();
+				BooleanClause[] clauses = (BooleanClause[]) ((BooleanQuery) q1).clauses().toArray();
 				if (clauses.length > 0) {
 					for (BooleanClause c : clauses) {
-						resultQuery.add(c);
+						resultQuery.clauses().add(c);
 					}
 				} else {
-					resultQuery.add(q1, Occur.MUST);
+					resultQuery.clauses().add(new BooleanClause(q1, Occur.MUST));
 				}
 
 			} else {
@@ -577,10 +578,10 @@ public class IKQueryExpressionParser {
 				// q1 instanceof TermRangeQuery
 				// q1 instanceof PhraseQuery
 				// others
-				resultQuery.add(q1, Occur.MUST);
+				resultQuery.clauses().add(new BooleanClause(q1, Occur.MUST));
 			}
 
-			resultQuery.add(q2, Occur.MUST_NOT);
+			resultQuery.clauses().add(new BooleanClause(q1, Occur.MUST_NOT));
 		}
 		return resultQuery;
 	}

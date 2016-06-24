@@ -3,11 +3,15 @@ package Controller;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import Controller.entity.service.LuceneRssServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +26,7 @@ import java.util.Map;
 public class BaseController {
 
 	@RequestMapping("{path}")
-	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("path") String path) throws IOException {
+	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
 		String url = request.getParameter("url");
 		if ("proxy".equals(path)) {
 			return new ModelAndView("proxy", getParams(request)).addObject("data", JspProxy.getProxy(url));
@@ -31,17 +34,21 @@ public class BaseController {
 		return new ModelAndView(path, getParams(request));
 	}
 
-//	@RequestMapping({ "**/**", "/**" })
-//	public ModelAndView getXPage(HttpServletRequest request, HttpServletResponse response) {
-//		System.out.println("*******************");
-//		System.out.println(request.getServletPath());
-//		System.out.println(request.getServerName());
-//		System.out.println(request.getContextPath());
-//		return new ModelAndView(request.getServletPath());
-//	}
+	// @RequestMapping({ "**/**", "/**" })
+	// public ModelAndView getXPage(HttpServletRequest request, HttpServletResponse response) {
+	// System.out.println("*******************");
+	// System.out.println(request.getServletPath());
+	// System.out.println(request.getServerName());
+	// System.out.println(request.getContextPath());
+	// return new ModelAndView(request.getServletPath());
+	// }
 
 	@RequestMapping({ "/login" })
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
+		// ApplicationContext ac = new ClassPathXmlApplicationContext("application-config.xml");
+		// Object o = ac.getBean("luceneRssService");
+		// LuceneRssService s=(LuceneRssService) o;
+		// System.err.println(o);
 		Subject user = SecurityUtils.getSubject();
 		String username = request.getParameter("name");
 		System.err.println(username);

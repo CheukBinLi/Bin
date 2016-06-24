@@ -9,8 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
@@ -32,11 +32,14 @@ import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 public class L1Demo {
 
 	private String indexSearch = "D:/javaProject/Bin/bin-anythingtest/indexSearch";
 	private String indexDocument = "D:/javaProject/Bin/bin-anythingtest/indexDocument";
+
+	private Analyzer analyzer = new IKAnalyzer(true);
 
 	public void createSearch() throws IOException {
 
@@ -45,7 +48,8 @@ public class L1Demo {
 
 		Directory directory = FSDirectory.open(Paths.get(indexSearch));
 
-		IndexWriterConfig conf = new IndexWriterConfig(new StandardAnalyzer());
+		// IndexWriterConfig conf = new IndexWriterConfig(new StandardAnalyzer());
+		IndexWriterConfig conf = new IndexWriterConfig(analyzer);
 
 		IndexWriter writer = new IndexWriter(directory, conf);
 		// // 文档
@@ -112,7 +116,7 @@ public class L1Demo {
 		// IndexSearcher indexSearcher = new IndexSearcher(DirectoryReader.open(FSDirectory.open(Paths.get(indexSearch))));
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexSearch)));
 		IndexSearcher indexSearcher = new IndexSearcher(reader);
-		QueryParser parser = new QueryParser("content", new StandardAnalyzer());
+		QueryParser parser = new QueryParser("content", analyzer);
 		Query query = parser.parse(str);
 		// 条目
 		TopDocs topDocs = indexSearcher.search(query, 10000);
@@ -137,7 +141,8 @@ public class L1Demo {
 
 	public static void main(String[] args) throws IOException, ParseException, InvalidTokenOffsetsException {
 		new L1Demo().createSearch();
-		new L1Demo().scarch("import");
+//		new L1Demo().scarch("import");
+		new L1Demo().scarch("文档文档索引");
 	}
 
 }

@@ -42,17 +42,17 @@ public class DefaultConfig implements Configuration{
 	/*
 	 * 分词器默认字典路径 
 	 */
-	private static final String PATH_DIC_MAIN = "org/wltea/analyzer/dic/main2012.dic";
-	private static final String PATH_DIC_QUANTIFIER = "org/wltea/analyzer/dic/quantifier.dic";
+	private static final String PATH_DIC_MAIN = Messages.getString("DefaultConfig.0"); //$NON-NLS-1$
+	private static final String PATH_DIC_QUANTIFIER = Messages.getString("DefaultConfig.1"); //$NON-NLS-1$
 
 	/*
 	 * 分词器配置文件路径
 	 */	
-	private static final String FILE_NAME = "IKAnalyzer.cfg.xml";
+	private static final String FILE_NAME = Messages.getString("DefaultConfig.2"); //$NON-NLS-1$
 	//配置属性——扩展字典
-	private static final String EXT_DICT = "ext_dict";
+	private static final String EXT_DICT = Messages.getString("DefaultConfig.3"); //$NON-NLS-1$
 	//配置属性——扩展停止词典
-	private static final String EXT_STOP = "ext_stopwords";
+	private static final String EXT_STOP = Messages.getString("DefaultConfig.4"); //$NON-NLS-1$
 	
 	private Properties props;
 	/*
@@ -131,10 +131,10 @@ public class DefaultConfig implements Configuration{
 		String extDictCfg = props.getProperty(EXT_DICT);
 		if(extDictCfg != null){
 			//使用;分割多个扩展字典配置
-			String[] filePaths = extDictCfg.split(";");
+			String[] filePaths = extDictCfg.split(Messages.getString("DefaultConfig.5")); //$NON-NLS-1$
 			if(filePaths != null){
 				for(String filePath : filePaths){
-					if(filePath != null && !"".equals(filePath.trim())){
+					if(filePath != null && !Messages.getString("DefaultConfig.6").equals(filePath.trim())){ //$NON-NLS-1$
 						extDictFiles.add(filePath.trim());
 					}
 				}
@@ -153,10 +153,10 @@ public class DefaultConfig implements Configuration{
 		String extStopWordDictCfg = props.getProperty(EXT_STOP);
 		if(extStopWordDictCfg != null){
 			//使用;分割多个扩展字典配置
-			String[] filePaths = extStopWordDictCfg.split(";");
+			String[] filePaths = extStopWordDictCfg.split(Messages.getString("DefaultConfig.7")); //$NON-NLS-1$
 			if(filePaths != null){
 				for(String filePath : filePaths){
-					if(filePath != null && !"".equals(filePath.trim())){
+					if(filePath != null && !Messages.getString("DefaultConfig.8").equals(filePath.trim())){ //$NON-NLS-1$
 						extStopWordDictFiles.add(filePath.trim());
 					}
 				}

@@ -27,7 +27,17 @@ package org.wltea.analyzer.lucene;
 import java.io.Reader;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.Analyzer.TokenStreamComponents;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
+import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.standard.ClassicAnalyzer;
+import org.apache.lucene.analysis.standard.ClassicFilter;
+import org.apache.lucene.analysis.standard.ClassicTokenizer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
 
 /**
  * IK分词器，Lucene Analyzer接口实现 兼容Lucene 4.0版本
@@ -67,14 +77,13 @@ public final class IKAnalyzer extends Analyzer {
 	/**
 	 * 重载Analyzer接口，构造分词组件
 	 */
-	protected TokenStreamComponents createComponents(String fieldName, final Reader in) {
-		Tokenizer _IKTokenizer = new IKTokenizer(in, this.useSmart());
-		return new TokenStreamComponents(_IKTokenizer);
-	}
-
+	// protected TokenStreamComponents createComponents(String fieldName, final Reader in) {
+	// Tokenizer _IKTokenizer = new IKTokenizer(in, this.useSmart());
+	// return new TokenStreamComponents(_IKTokenizer);
+	// }
 	@Override
 	protected TokenStreamComponents createComponents(String fieldName) {
-		return null;
+		return new TokenStreamComponents(new IKTokenizer(this.useSmart()));
 	}
 
 }

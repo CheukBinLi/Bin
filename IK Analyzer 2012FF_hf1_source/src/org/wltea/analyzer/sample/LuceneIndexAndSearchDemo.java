@@ -47,7 +47,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 /**
@@ -67,7 +66,8 @@ public class LuceneIndexAndSearchDemo {
 		// Lucene Document的域名
 		String fieldName = "text";
 		// 检索内容
-		String text = "IK Analyzer是一个结合词典分词和文法分词的中文分词开源工具包。它使用了全新的正向迭代最细粒度切分算法。";
+		// String text = "IK Analyzer是一个结合词典分词和文法分词的中文分词开源工具包。它使用了全新的正向迭代最细粒度切分算法。";
+		String text = "你好好好限限好好中国人在这里广州";
 
 		// 实例化IKAnalyzer分词器
 		Analyzer analyzer = new IKAnalyzer(true);
@@ -96,7 +96,7 @@ public class LuceneIndexAndSearchDemo {
 			ireader = DirectoryReader.open(directory);
 			isearcher = new IndexSearcher(ireader);
 
-			String keyword = "中文分词工具包";
+			String keyword = "你好";
 			// 使用QueryParser查询分析器构造Query对象
 			QueryParser qp = new QueryParser(fieldName, analyzer);
 			qp.setDefaultOperator(QueryParser.AND_OPERATOR);

@@ -21,31 +21,47 @@ public class LuceneRss {
 		return id;
 	}
 
-	public void setId(int id) {
+	public LuceneRss setId(int id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public LuceneRss setTitle(String title) {
 		this.title = title;
+		return this;
 	}
 
 	public String getContent() {
 		return content;
 	}
 
-	public void setContent(String content) {
+	public LuceneRss setContent(String content) {
 		this.content = content;
+		return this;
 	}
 
 	public String getRemard() {
 		return remard;
 	}
 
-	public void setRemard(String remard) {
+	public LuceneRss setRemard(String remard) {
+		this.remard = remard;
+		return this;
+	}
+
+	public LuceneRss() {
+		super();
+	}
+
+	public LuceneRss(int id, String title, String content, String remard) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.content = content;
 		this.remard = remard;
 	}
 
