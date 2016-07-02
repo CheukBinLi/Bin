@@ -1,57 +1,77 @@
 package com.cheuks.bin.anythingtest.kafka;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Properties;
 
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-
-import kafka.consumer.Consumer;
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
 
 public class KafkaTest {
 
-	private Properties properties = new Properties();
-	Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+	private Properties props = new Properties();
+	/***
+	 * 生产者
+	 */
 	{
-		properties.put("zookeeper.connect", "192.168.1.30:2181");// 声明zk
-		// properties.put("metadata.broker.list", "192.168.1.30:9092");// 声明zk
-		properties.put("bootstrap.servers", "192.168.1.30:9092");
-		properties.put("group.id", "DemoConsumer");
-		properties.put("client.id", "DemoProducer");
-		properties.put("key.serializer", "org.apache.kafka.common.serialization.IntegerSerializer");
-		properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
-		topicCountMap.put("A", 1);
+		props.put("bootstrap.servers", "192.168.1.30:9092");
+		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		props.put("acks", "all");
+		props.put("retries", 1);
 	}
 
-	public void Producer() {
-		KafkaProducer<Integer, String> producer = new KafkaProducer<Integer, String>(properties);
-		producer.send(new ProducerRecord<Integer, String>("A", "abc"));
+	/***
+	 * 消费都
+	 */
+	{
+		props.put("bootstrap.servers", "192.168.1.30:9092");
+		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+		props.setProperty("group.id", "6");
+		// props.setProperty("auto.commit.enable", "true");
+		// props.setProperty("offsets.commit.required.acks", "-1");
+		// props.setProperty("auto.offset.reset", "earliest");
 	}
 
-	public void Consumer() {
-		ConsumerConnector connector = Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));
+	public void producer(String msg) {
+		Producer<String, String> producer = new KafkaProducer<String, String>(props);
+		producer.send(new ProducerRecord<String, String>("AA", "哇哈哈xx"));
+		producer.flush();
+		producer.close();
+	}
 
-		Map<String, List<KafkaStream<byte[], byte[]>>> streams = connector.createMessageStreams(topicCountMap);
-		List<KafkaStream<byte[], byte[]>> messages = streams.get(topicCountMap);
-		ConsumerIterator<byte[], byte[]> it;
-		for (KafkaStream<byte[], byte[]> en : messages) {
-			it = en.iterator();
-			while (it.hasNext()) {
-				System.out.println(new String(it.next().message()));
+	public void consumer() {
+		Consumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+
+		consumer.subscribe(Arrays.asList("AA"));
+		for (int i = 0; i < 2; i++) {
+			ConsumerRecords<String, String> records = consumer.poll(10);
+			System.out.println(records.count());
+			for (ConsumerRecord<String, String> record : records) {
+				// consumer.seekToBeginning(new TopicPartition(record.topic(), record.partition()));
+				System.out.println(record);
+				// consumer.seek(new TopicPartition(record.topic(), record.partition()), record.offset());
+				System.err.println("topic:" + record.topic() + "   partition: " + record.partition());
 			}
 		}
+		// consumer.commitAsync(new OffsetCommitCallback() {
+		//
+		// public void onComplete(Map<TopicPartition, org.apache.kafka.clients.consumer.OffsetAndMetadata> offsets, Exception exception) {
+		// System.out.println("");
+		// }
+		// });
+		consumer.commitSync();
 	}
 
 	public static void main(String[] args) {
-		KafkaTest kt = new KafkaTest();
-		kt.Producer();
-		// kt.Consumer();
+		KafkaTest k = new KafkaTest();
+		// k.producer("aaaa");
+		k.consumer();
 	}
+
 }
