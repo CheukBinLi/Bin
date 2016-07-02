@@ -190,9 +190,17 @@
 		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka_2.10 -->
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.10</artifactId>
+			<artifactId>kafka_2.11</artifactId>
 			<version>0.10.0.0</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>0.10.0.0</version>
+		</dependency>
+
 		<!-- <dependency> <groupId>project</groupId> <artifactId>freehelp-common</artifactId> <version>0.0.1-SNAPSHOT</version> </dependency> <dependency> <groupId>project</groupId> <artifactId>master-user</artifactId> <version>0.0.1-SNAPSHOT</version> </dependency> -->
 	</dependencies>
 </project>
