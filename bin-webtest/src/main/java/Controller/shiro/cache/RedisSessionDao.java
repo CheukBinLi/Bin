@@ -3,7 +3,8 @@ package Controller.shiro.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
@@ -16,14 +17,80 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
 	private final transient Logger log = LoggerFactory.getLogger(ShiroRedisClusterManager.class);
 
+	private int overTimeSceond = 1000;
+
 	private CacheManager<String, Object> cacheManager;
+
+	private static final Map<String, SessionVO> SESSION_CACHE = new WeakHashMap<String, SessionVO>();
+
+	class SessionVO {
+		private long lastRequest = System.currentTimeMillis();
+		private Session session;
+
+		public void updateRequest() {
+			lastRequest = System.currentTimeMillis();
+		}
+
+		public long getLastRequest() {
+			return lastRequest;
+		}
+
+		public SessionVO setLastRequest(long lastRequest) {
+			this.lastRequest = lastRequest;
+			return this;
+		}
+
+		public Session getSession() {
+			return session;
+		}
+
+		public SessionVO setSession(Session session) {
+			this.session = session;
+			return this;
+		}
+
+		public SessionVO(Session session) {
+			super();
+			this.session = session;
+		}
+	}
+
+	protected Session getSessionCache(String key) throws Throwable {
+		SessionVO vo = SESSION_CACHE.get(key);
+		Session session = null;
+		if (null == vo) {
+			System.err.println("get");
+			session = cacheManager.get(key);
+			if (null != session)
+				SESSION_CACHE.put(key, new SessionVO(session));
+			return session;
+		}
+		return vo.session;
+	}
+
+	protected void updateSessionCache(Session session) throws Throwable {
+		String key = session.getId().toString();
+		SessionVO vo = SESSION_CACHE.get(key);
+		if (null != vo) {
+			if ((System.currentTimeMillis() - vo.lastRequest) > overTimeSceond) {
+				// cacheManager.expire(key, overTimeSceond);
+				// else
+				System.out.println(overTimeSceond + ":a:" + (System.currentTimeMillis() - vo.lastRequest));
+				cacheManager.update(new DefaultCache(session.getId().toString(), session));
+				System.out.println("up");
+				vo.updateRequest();
+			}
+		}
+	}
 
 	public void update(Session session) throws UnknownSessionException {
 		try {
-			System.out.println("update-id:" + (null == session));
+			// System.out.println("update-id:" + (null == session));
 			if (null == session)
 				return;
-			cacheManager.update(new DefaultCache(session.getId().toString(), session));
+			// SimpleSession old = cacheManager.get(session.getId().toString());
+			// cacheManager.update(new DefaultCache(session.getId().toString(), session));
+			updateSessionCache(session);
 		} catch (Throwable e) {
 			log.error("redis is error:", e);
 		}
@@ -53,11 +120,6 @@ public class RedisSessionDao extends AbstractSessionDAO {
 	@Override
 	protected Serializable doCreate(Session session) {
 		try {
-			// if (isNull(session))
-			// ((SimpleSession) session).setId(UUID.randomUUID().toString());
-			// else
-			// session.getId();
-			// // System.out.println("id:" + o);
 			Serializable sessionId = generateSessionId(session);
 			assignSessionId(session, sessionId);
 			cacheManager.create(new DefaultCache(session.getId().toString(), session));
@@ -70,10 +132,10 @@ public class RedisSessionDao extends AbstractSessionDAO {
 	@Override
 	protected Session doReadSession(Serializable sessionId) {
 		try {
-			System.out.println("doReadSession-id:" + sessionId);
+			// System.out.println("doReadSession-id:" + sessionId);
 			if (null == sessionId)
 				return null;
-			return (Session) cacheManager.get(sessionId.toString());
+			return getSessionCache(sessionId.toString());
 		} catch (Throwable e) {
 			log.error("redis is error:", e);
 		}
@@ -93,6 +155,15 @@ public class RedisSessionDao extends AbstractSessionDAO {
 			session = new SimpleSession();
 		// return true;
 		return null == session.getId();
+	}
+
+	public int getOverTimeSceond() {
+		return overTimeSceond;
+	}
+
+	public RedisSessionDao setOverTimeSceond(int overTimeSceond) {
+		this.overTimeSceond = overTimeSceond;
+		return this;
 	}
 
 }

@@ -6,26 +6,21 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
+@SuppressWarnings({ "unchecked", "deprecation" })
 public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<ShardedJedis, V> {
 
-	private final transient Logger log = LoggerFactory.getLogger(ShiroRedisClusterManager.class);
-
 	ShardedJedis tempJedis;
-
 	private int maxIdle = 10;
 	private int maxTotal = 300;
 	private int maxWaitMillis = 5000;
+	private int overTimeSecond = 60;
 	// private String serverList = "192.168.3.5:6379";
 	private String serverList = "127.0.0.1:6379";
-	// private String name = null;
 	private String password = null;
 
 	private static ShardedJedisPool pool;
@@ -74,7 +69,8 @@ public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<Shard
 	}
 
 	public void update(Cache<String, V> cache) throws Throwable {
-		(tempJedis = getResource()).set(getSerialize().encode(cache.getKey()), getSerialize().encode(cache.getValue()));
+		(tempJedis = getResource()).setex(getSerialize().encode(cache.getKey()), overTimeSecond, getSerialize().encode(cache.getValue()));
+		// (tempJedis = getResource()).set(getSerialize().encode(cache.getKey()), getSerialize().encode(cache.getValue()));
 		destory(tempJedis);
 	}
 
@@ -95,17 +91,25 @@ public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<Shard
 		}
 	}
 
-	public V get(String k) throws Throwable {
+	public <R> R get(String k) throws Throwable {
 		try {
 			Object o = getSerialize().decode(getResource().get(getSerialize().encode(k)));
-			return null == o ? null : (V) o;
+			return null == o ? null : (R) o;
+		} finally {
+			destory(tempJedis);
+		}
+	}
+
+	public void expire(Object key, int expireSeconds) throws Throwable {
+		try {
+			getResource().expire(getSerialize().encode(key), expireSeconds);
 		} finally {
 			destory(tempJedis);
 		}
 	}
 
 	public Collection<Serializable> getcollection() throws Throwable {
-		return null;
+		throw new Exception("不支持");
 	}
 
 	public ClusterRedisCacheManager() {

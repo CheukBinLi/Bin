@@ -46,12 +46,10 @@ public class ShiroRedisClusterManager implements CacheManager, Initializable {
 	}
 
 	public <K, V> Cache<K, V> getCache(String name) throws CacheException {
-		System.out.println("1111111111111");
 		ShiroRedisClusterCache<?, ?> tempCache = cache.get(name);
 		if (null == tempCache) {
 			tempCache = new ShiroRedisClusterCache<K, Serializable>(pool, serializable);
 		}
-
 		return (Cache<K, V>) tempCache;
 	}
 

@@ -14,6 +14,8 @@ public interface CacheManager<K /* extends Serializable */, V /* extends Seriali
 
 	public V getAndSet(Cache<K, V> cache) throws Throwable;
 
-	public V get(K k) throws Throwable;
+	public void expire(Object key, int expireSeconds) throws Throwable;
+
+	public <R> R get(K k) throws Throwable;
 
 }

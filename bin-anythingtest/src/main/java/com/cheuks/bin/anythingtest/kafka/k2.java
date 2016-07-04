@@ -24,6 +24,8 @@ import kafka.javaapi.consumer.ConsumerConnector;
  * @date 2016年5月17日下午5:06:36
  */
 public class k2 extends Thread {
+	
+	volatile 
 
 	private final ConsumerConnector consumer;// 连接
 	private final String topic;

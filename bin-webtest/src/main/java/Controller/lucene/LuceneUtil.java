@@ -19,6 +19,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -30,6 +31,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.wltea.analyzer.lucene.IKAnalyzer;
@@ -39,6 +42,8 @@ import Controller.entity.service.LuceneRssService;
 
 @Component
 public class LuceneUtil {
+
+	private final Logger log = LoggerFactory.getLogger(LuceneUtil.class);
 
 	@Autowired
 	private LuceneRssService luceneRssService;
@@ -50,13 +55,37 @@ public class LuceneUtil {
 		System.out.println("123");
 	}
 
-	private Analyzer analyzer = new IKAnalyzer(true);
+	private static final Analyzer analyzer = new IKAnalyzer(true);
+
+	private static IndexWriter writer;
+
+	public static IndexWriter getWriter(String path) {
+		// String[] paths = path.split(",");
+		// DirectoryReader[] directoryReaders = new DirectoryReader[paths.length];
+		// for (int i = 0, len = paths.length; i < len; i++) {
+		// directoryReaders[i] = DirectoryReader.open(FSDirectory.open(Paths.get(paths[i])));
+		// }
+		// MultiReader mr = new MultiReader(directoryReaders);
+		// IndexWriterConfig config = new IndexWriterConfig(analyzer);// 分词器
+		// config.setOpenMode(OpenMode.CREATE_OR_APPEND);
+		//
+		// IndexWriter writer = new IndexWriter(mr, config);
+		// Document doc;
+		//
+		// FieldType type = new FieldType(TextField.TYPE_STORED);
+		// type.setStoreTermVectorOffsets(true);// 记录相对增量
+		// type.setStoreTermVectorPositions(true);// 记录位置信息
+		// type.setStoreTermVectors(true);// 存储向量信息
+		//
+		// writer.deleteAll();
+		return writer;
+	}
 
 	private Directory directory = new RAMDirectory();
 
 	@PostConstruct
 	public void create() throws Throwable {
-		// create(luceneRssService.getList(null, false, 0, 0), getPath());
+		create(luceneRssService.getList(null, false, 0, 0), getPath());
 	}
 
 	// private Analyzer analyzer = new IKAnalyzer();
@@ -70,7 +99,8 @@ public class LuceneUtil {
 	}
 
 	public void create(List<LuceneRss> list, String path) throws IOException {
-		// Directory directory = FSDirectory.open(Paths.get(path));
+		log.error("建立索引");
+		// // Directory directory = FSDirectory.open(Paths.get(path));
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);// 分词器
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
 		IndexWriter writer = new IndexWriter(directory, config);
@@ -94,6 +124,7 @@ public class LuceneUtil {
 		}
 		writer.commit();
 		writer.close();
+		log.error("建立索引完成");
 	}
 
 	public List<LuceneRss> getSeach(String search) throws IOException, ParseException {

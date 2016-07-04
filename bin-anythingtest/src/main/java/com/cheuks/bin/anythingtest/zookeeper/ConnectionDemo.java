@@ -18,7 +18,7 @@ public class ConnectionDemo {
 		final CountDownLatch countDownLatch2 = new CountDownLatch(2);
 		final CountDownLatch countDownLatch3 = new CountDownLatch(1);
 
-		ZooKeeper zk = new ZooKeeper("192.168.168.150:2181,192.168.168.119:2181,192.168.168.124:2181", 2000, new Watcher() {
+		ZooKeeper zk = new ZooKeeper("192.168.168.150:2181,192.168.168.119:2181,192.168.168.124:2181,192.168.1.30:2181", 2000, new Watcher() {
 			public void process(WatchedEvent arg0) {
 				try {
 					System.out.println("连接0侦听：" + arg0);
