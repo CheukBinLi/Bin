@@ -21,22 +21,41 @@ import java.util.function.ToIntFunction;
 import java.util.function.ToLongBiFunction;
 import java.util.function.ToLongFunction;
 
-public class T1<K, V> extends ConcurrentHashMap<K, V> {
+public class T1<K, V> extends ConcurrentHashMap<K, Object> {
 
-	private ReferenceQueue<Entry<K, V>> queue = new ReferenceQueue<T1<K, V>.Entry<K, V>>();
+	private ReferenceQueue<K> queue = new ReferenceQueue<K>();
 
 	private void checkValues() {
 		Entry<K, V> entry;
-		for (Object x; null != (x = queue.poll());) {
-			entry = (T1<K, V>.Entry<K, V>) x;
+		for (Object x; (x = queue.poll()) != null;) {
+			// entry = (T1<K, V>.Entry<K, V>) x;
+			System.err.println(x);
+			removeQueue(x);
 			// removeEntry();
 		}
 	}
 
-	class Entry<K, V> extends SoftReference<Entry<K, V>> {
-		public Entry(Entry<K, V> referent, ReferenceQueue<? super Entry<K, V>> q) {
-			super(referent, q);
+	class Entry<K, V> extends SoftReference<K> {
+		private K key;
+		private V value;
+
+		public Entry(K key, V value, ReferenceQueue<? super K> q) {
+			super(key, q);
+			this.value = value;
+			this.key = key;
 		}
+
+		public K getKey() {
+			return key;
+		}
+
+		public V getValue() {
+			return value;
+		}
+	}
+
+	protected Object removeQueue(Object key) {
+		return super.remove(key);
 	}
 
 	@Override
@@ -52,9 +71,12 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public V get(Object key) {
+	public Object get(Object key) {
 		checkValues();
-		return super.get(key);
+		Object o = super.get(key);
+		if (null != o)
+			return ((Entry<K, V>) o).getValue();
+		return null;
 	}
 
 	@Override
@@ -70,19 +92,19 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public V put(K key, V value) {
+	public Object put(K key, Object value) {
 		checkValues();
-		return super.put(key, value);
+		return super.put(key, new Entry<K, Object>(key, value, queue));
 	}
 
 	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
+	public void putAll(Map<? extends K, ? extends Object> m) {
 		checkValues();
 		super.putAll(m);
 	}
 
 	@Override
-	public V remove(Object key) {
+	public Object remove(Object key) {
 		checkValues();
 		return super.remove(key);
 	}
@@ -94,19 +116,19 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public java.util.concurrent.ConcurrentHashMap.KeySetView<K, V> keySet() {
+	public java.util.concurrent.ConcurrentHashMap.KeySetView<K, Object> keySet() {
 		checkValues();
 		return super.keySet();
 	}
 
 	@Override
-	public Collection<V> values() {
+	public Collection<Object> values() {
 		checkValues();
 		return super.values();
 	}
 
 	@Override
-	public Set<java.util.Map.Entry<K, V>> entrySet() {
+	public Set<java.util.Map.Entry<K, Object>> entrySet() {
 		checkValues();
 		return super.entrySet();
 	}
@@ -118,25 +140,15 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public String toString() {
-		checkValues();
-		return super.toString();
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		checkValues();
 		return super.equals(o);
 	}
 
 	@Override
-	public V putIfAbsent(K key, V value) {
+	public Object putIfAbsent(K key, Object value) {
 		checkValues();
 		return super.putIfAbsent(key, value);
-	}
-
-	protected boolean removeEntry(Object key, Object value) {
-		return super.remove(key, value);
 	}
 
 	@Override
@@ -146,55 +158,55 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public boolean replace(K key, V oldValue, V newValue) {
+	public boolean replace(K key, Object oldValue, Object newValue) {
 		checkValues();
 		return super.replace(key, oldValue, newValue);
 	}
 
 	@Override
-	public V replace(K key, V value) {
+	public Object replace(K key, Object value) {
 		checkValues();
 		return super.replace(key, value);
 	}
 
 	@Override
-	public V getOrDefault(Object key, V defaultValue) {
+	public Object getOrDefault(Object key, Object defaultValue) {
 		checkValues();
 		return super.getOrDefault(key, defaultValue);
 	}
 
 	@Override
-	public void forEach(BiConsumer<? super K, ? super V> action) {
+	public void forEach(BiConsumer<? super K, ? super Object> action) {
 		checkValues();
 		super.forEach(action);
 	}
 
 	@Override
-	public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+	public void replaceAll(BiFunction<? super K, ? super Object, ? extends Object> function) {
 		checkValues();
 		super.replaceAll(function);
 	}
 
 	@Override
-	public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+	public Object computeIfAbsent(K key, Function<? super K, ? extends Object> mappingFunction) {
 		checkValues();
 		return super.computeIfAbsent(key, mappingFunction);
 	}
 
 	@Override
-	public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+	public Object computeIfPresent(K key, BiFunction<? super K, ? super Object, ? extends Object> remappingFunction) {
 		checkValues();
 		return super.computeIfPresent(key, remappingFunction);
 	}
 
 	@Override
-	public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+	public Object compute(K key, BiFunction<? super K, ? super Object, ? extends Object> remappingFunction) {
 		checkValues();
 		return super.compute(key, remappingFunction);
 	}
 
 	@Override
-	public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public Object merge(K key, Object value, BiFunction<? super Object, ? super Object, ? extends Object> remappingFunction) {
 		checkValues();
 		return super.merge(key, value, remappingFunction);
 	}
@@ -212,7 +224,7 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public Enumeration<V> elements() {
+	public Enumeration<Object> elements() {
 		checkValues();
 		return super.elements();
 	}
@@ -224,49 +236,49 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public java.util.concurrent.ConcurrentHashMap.KeySetView<K, V> keySet(V mappedValue) {
+	public java.util.concurrent.ConcurrentHashMap.KeySetView<K, Object> keySet(Object mappedValue) {
 		checkValues();
 		return super.keySet(mappedValue);
 	}
 
 	@Override
-	public void forEach(long parallelismThreshold, BiConsumer<? super K, ? super V> action) {
+	public void forEach(long parallelismThreshold, BiConsumer<? super K, ? super Object> action) {
 		checkValues();
 		super.forEach(parallelismThreshold, action);
 	}
 
 	@Override
-	public <U> void forEach(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> transformer, Consumer<? super U> action) {
+	public <U> void forEach(long parallelismThreshold, BiFunction<? super K, ? super Object, ? extends U> transformer, Consumer<? super U> action) {
 		checkValues();
 		super.forEach(parallelismThreshold, transformer, action);
 	}
 
 	@Override
-	public <U> U search(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> searchFunction) {
+	public <U> U search(long parallelismThreshold, BiFunction<? super K, ? super Object, ? extends U> searchFunction) {
 		checkValues();
 		return super.search(parallelismThreshold, searchFunction);
 	}
 
 	@Override
-	public <U> U reduce(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) {
+	public <U> U reduce(long parallelismThreshold, BiFunction<? super K, ? super Object, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) {
 		checkValues();
 		return super.reduce(parallelismThreshold, transformer, reducer);
 	}
 
 	@Override
-	public double reduceToDouble(long parallelismThreshold, ToDoubleBiFunction<? super K, ? super V> transformer, double basis, DoubleBinaryOperator reducer) {
+	public double reduceToDouble(long parallelismThreshold, ToDoubleBiFunction<? super K, ? super Object> transformer, double basis, DoubleBinaryOperator reducer) {
 		checkValues();
 		return super.reduceToDouble(parallelismThreshold, transformer, basis, reducer);
 	}
 
 	@Override
-	public long reduceToLong(long parallelismThreshold, ToLongBiFunction<? super K, ? super V> transformer, long basis, LongBinaryOperator reducer) {
+	public long reduceToLong(long parallelismThreshold, ToLongBiFunction<? super K, ? super Object> transformer, long basis, LongBinaryOperator reducer) {
 		checkValues();
 		return super.reduceToLong(parallelismThreshold, transformer, basis, reducer);
 	}
 
 	@Override
-	public int reduceToInt(long parallelismThreshold, ToIntBiFunction<? super K, ? super V> transformer, int basis, IntBinaryOperator reducer) {
+	public int reduceToInt(long parallelismThreshold, ToIntBiFunction<? super K, ? super Object> transformer, int basis, IntBinaryOperator reducer) {
 		checkValues();
 		return super.reduceToInt(parallelismThreshold, transformer, basis, reducer);
 	}
@@ -320,111 +332,99 @@ public class T1<K, V> extends ConcurrentHashMap<K, V> {
 	}
 
 	@Override
-	public void forEachValue(long parallelismThreshold, Consumer<? super V> action) {
+	public void forEachValue(long parallelismThreshold, Consumer<? super Object> action) {
 		checkValues();
 		super.forEachValue(parallelismThreshold, action);
 	}
 
 	@Override
-	public <U> void forEachValue(long parallelismThreshold, Function<? super V, ? extends U> transformer, Consumer<? super U> action) {
+	public <U> void forEachValue(long parallelismThreshold, Function<? super Object, ? extends U> transformer, Consumer<? super U> action) {
 		checkValues();
 		super.forEachValue(parallelismThreshold, transformer, action);
 	}
 
 	@Override
-	public <U> U searchValues(long parallelismThreshold, Function<? super V, ? extends U> searchFunction) {
+	public <U> U searchValues(long parallelismThreshold, Function<? super Object, ? extends U> searchFunction) {
 		checkValues();
 		return super.searchValues(parallelismThreshold, searchFunction);
 	}
 
 	@Override
-	public V reduceValues(long parallelismThreshold, BiFunction<? super V, ? super V, ? extends V> reducer) {
+	public Object reduceValues(long parallelismThreshold, BiFunction<? super Object, ? super Object, ? extends Object> reducer) {
 		checkValues();
 		return super.reduceValues(parallelismThreshold, reducer);
 	}
 
 	@Override
-	public <U> U reduceValues(long parallelismThreshold, Function<? super V, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) {
+	public <U> U reduceValues(long parallelismThreshold, Function<? super Object, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) {
 		checkValues();
 		return super.reduceValues(parallelismThreshold, transformer, reducer);
 	}
 
 	@Override
-	public double reduceValuesToDouble(long parallelismThreshold, ToDoubleFunction<? super V> transformer, double basis, DoubleBinaryOperator reducer) {
+	public double reduceValuesToDouble(long parallelismThreshold, ToDoubleFunction<? super Object> transformer, double basis, DoubleBinaryOperator reducer) {
 		checkValues();
 		return super.reduceValuesToDouble(parallelismThreshold, transformer, basis, reducer);
 	}
 
 	@Override
-	public long reduceValuesToLong(long parallelismThreshold, ToLongFunction<? super V> transformer, long basis, LongBinaryOperator reducer) {
+	public long reduceValuesToLong(long parallelismThreshold, ToLongFunction<? super Object> transformer, long basis, LongBinaryOperator reducer) {
 		checkValues();
 		return super.reduceValuesToLong(parallelismThreshold, transformer, basis, reducer);
 	}
 
 	@Override
-	public int reduceValuesToInt(long parallelismThreshold, ToIntFunction<? super V> transformer, int basis, IntBinaryOperator reducer) {
+	public int reduceValuesToInt(long parallelismThreshold, ToIntFunction<? super Object> transformer, int basis, IntBinaryOperator reducer) {
 		checkValues();
 		return super.reduceValuesToInt(parallelismThreshold, transformer, basis, reducer);
 	}
 
 	@Override
-	public void forEachEntry(long parallelismThreshold, Consumer<? super java.util.Map.Entry<K, V>> action) {
+	public void forEachEntry(long parallelismThreshold, Consumer<? super java.util.Map.Entry<K, Object>> action) {
 		checkValues();
 		super.forEachEntry(parallelismThreshold, action);
 	}
 
 	@Override
-	public <U> void forEachEntry(long parallelismThreshold, Function<java.util.Map.Entry<K, V>, ? extends U> transformer, Consumer<? super U> action) {
+	public <U> void forEachEntry(long parallelismThreshold, Function<java.util.Map.Entry<K, Object>, ? extends U> transformer, Consumer<? super U> action) {
 		checkValues();
 		super.forEachEntry(parallelismThreshold, transformer, action);
 	}
 
 	@Override
-	public <U> U searchEntries(long parallelismThreshold, Function<java.util.Map.Entry<K, V>, ? extends U> searchFunction) {
+	public <U> U searchEntries(long parallelismThreshold, Function<java.util.Map.Entry<K, Object>, ? extends U> searchFunction) {
 		checkValues();
 		return super.searchEntries(parallelismThreshold, searchFunction);
 	}
 
 	@Override
-	public java.util.Map.Entry<K, V> reduceEntries(long parallelismThreshold, BiFunction<java.util.Map.Entry<K, V>, java.util.Map.Entry<K, V>, ? extends java.util.Map.Entry<K, V>> reducer) {
+	public java.util.Map.Entry<K, Object> reduceEntries(long parallelismThreshold, BiFunction<java.util.Map.Entry<K, Object>, java.util.Map.Entry<K, Object>, ? extends java.util.Map.Entry<K, Object>> reducer) {
 		checkValues();
 		return super.reduceEntries(parallelismThreshold, reducer);
 	}
 
 	@Override
-	public <U> U reduceEntries(long parallelismThreshold, Function<java.util.Map.Entry<K, V>, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) {
+	public <U> U reduceEntries(long parallelismThreshold, Function<java.util.Map.Entry<K, Object>, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) {
 		checkValues();
 		return super.reduceEntries(parallelismThreshold, transformer, reducer);
 	}
 
 	@Override
-	public double reduceEntriesToDouble(long parallelismThreshold, ToDoubleFunction<java.util.Map.Entry<K, V>> transformer, double basis, DoubleBinaryOperator reducer) {
+	public double reduceEntriesToDouble(long parallelismThreshold, ToDoubleFunction<java.util.Map.Entry<K, Object>> transformer, double basis, DoubleBinaryOperator reducer) {
 		checkValues();
 		return super.reduceEntriesToDouble(parallelismThreshold, transformer, basis, reducer);
 	}
 
 	@Override
-	public long reduceEntriesToLong(long parallelismThreshold, ToLongFunction<java.util.Map.Entry<K, V>> transformer, long basis, LongBinaryOperator reducer) {
+	public long reduceEntriesToLong(long parallelismThreshold, ToLongFunction<java.util.Map.Entry<K, Object>> transformer, long basis, LongBinaryOperator reducer) {
 		checkValues();
 		return super.reduceEntriesToLong(parallelismThreshold, transformer, basis, reducer);
 	}
 
 	@Override
-	public int reduceEntriesToInt(long parallelismThreshold, ToIntFunction<java.util.Map.Entry<K, V>> transformer, int basis, IntBinaryOperator reducer) {
+	public int reduceEntriesToInt(long parallelismThreshold, ToIntFunction<java.util.Map.Entry<K, Object>> transformer, int basis, IntBinaryOperator reducer) {
 		checkValues();
 		return super.reduceEntriesToInt(parallelismThreshold, transformer, basis, reducer);
-	}
-
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		checkValues();
-		return super.clone();
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		checkValues();
-		super.finalize();
 	}
 
 }
