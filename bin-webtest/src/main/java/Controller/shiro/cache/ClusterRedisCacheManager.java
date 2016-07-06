@@ -73,7 +73,6 @@ public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<Shard
 
 	public void update(Cache<String, V> cache) throws Throwable {
 		(tempJedis = getResource()).setex(getSerialize().encode(cache.getKey()), overTimeSecond, getSerialize().encode(cache.getValue()));
-		// (tempJedis = getResource()).set(getSerialize().encode(cache.getKey()), getSerialize().encode(cache.getValue()));
 		destory(tempJedis);
 	}
 
