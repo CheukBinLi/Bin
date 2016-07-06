@@ -11,11 +11,11 @@ import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
-@SuppressWarnings({ "unchecked", "deprecation" })
+@SuppressWarnings({ "unchecked" })
 public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<ShardedJedis, V> {
 
 	ShardedJedis tempJedis;
-	private int maxIdle = 10;
+	private int maxIdle = 100;
 	private int maxTotal = 300;
 	private int maxWaitMillis = 5000;
 	private int overTimeSecond = 60;
@@ -42,6 +42,8 @@ public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<Shard
 		config.setMaxIdle(this.maxIdle);// 空闲
 		config.setMaxTotal(this.maxTotal);
 		config.setMaxWaitMillis(this.maxWaitMillis);
+		config.setTestOnBorrow(true);// ping
+		config.setTestOnReturn(true);
 		if (null == this.serverList)
 			return;
 		shardInfos = new ArrayList<JedisShardInfo>();
@@ -65,7 +67,8 @@ public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<Shard
 
 	@Override
 	void destory(ShardedJedis jedis) {
-		pool.returnResourceObject(jedis);
+		// pool.returnResource(jedis);
+		// jedis.close();
 	}
 
 	public void update(Cache<String, V> cache) throws Throwable {
@@ -93,8 +96,8 @@ public class ClusterRedisCacheManager<V> extends AbstractRedisCacheManager<Shard
 
 	public <R> R get(String k) throws Throwable {
 		try {
-			Object o = getSerialize().decode(getResource().get(getSerialize().encode(k)));
-			return null == o ? null : (R) o;
+			byte[] o = getResource().get(getSerialize().encode(k));
+			return null == o ? null : (R) getSerialize().decode(o);
 		} finally {
 			destory(tempJedis);
 		}
