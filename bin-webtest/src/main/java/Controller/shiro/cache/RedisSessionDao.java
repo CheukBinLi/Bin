@@ -3,8 +3,7 @@ package Controller.shiro.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
@@ -17,18 +16,18 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
 	private final transient Logger log = LoggerFactory.getLogger(ShiroRedisClusterManager.class);
 
-	private int overTimeSceond = 1000;
+	private long overTimeSceond = 10000;
 
 	private CacheManager<String, Object> cacheManager;
 
-	private static final Map<String, SessionVO> SESSION_CACHE = new WeakHashMap<String, SessionVO>();
+	private static final SoftConcurrentHashMap<String, SessionVO> SESSION_CACHE = new SoftConcurrentHashMap<String, SessionVO>();
 
 	class SessionVO {
-		private long lastRequest = System.currentTimeMillis();
+		private volatile long lastRequest = System.currentTimeMillis() + overTimeSceond;
 		private Session session;
 
 		public void updateRequest() {
-			lastRequest = System.currentTimeMillis();
+			lastRequest = System.currentTimeMillis() + overTimeSceond;
 		}
 
 		public long getLastRequest() {
@@ -57,35 +56,39 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
 	protected Session getSessionCache(String key) throws Throwable {
 		SessionVO vo = SESSION_CACHE.get(key);
-		Session session = null;
-		if (null == vo) {
-			System.err.println("get");
+		Session session = null == vo ? null : vo.session;
+		if (null == session) {
 			session = cacheManager.get(key);
+			System.out.println("Redis获取 isNull:" + (null == session));
 			if (null != session)
 				SESSION_CACHE.put(key, new SessionVO(session));
 			return session;
+		} else if ((System.currentTimeMillis() >= vo.lastRequest)) {
+			session = cacheManager.get(key);
+			if(null!=session)
+				vo.updateRequest();
 		}
-		return vo.session;
+		return session;
 	}
 
 	protected void updateSessionCache(Session session) throws Throwable {
 		String key = session.getId().toString();
 		SessionVO vo = SESSION_CACHE.get(key);
+		boolean update = false;
 		if (null != vo) {
-			if ((System.currentTimeMillis() - vo.lastRequest) > overTimeSceond) {
-				// cacheManager.expire(key, overTimeSceond);
-				// else
-				System.out.println(overTimeSceond + ":a:" + (System.currentTimeMillis() - vo.lastRequest));
-				cacheManager.update(new DefaultCache(session.getId().toString(), session));
-				System.out.println("up");
-				vo.updateRequest();
+			if ((System.currentTimeMillis() >= vo.lastRequest)) {
+				System.out.println(overTimeSceond + ":更新:now" + (System.currentTimeMillis() + " last:" + vo.lastRequest));
+				update = true;
 			}
+		}
+		if (update) {
+			cacheManager.update(new DefaultCache(session.getId().toString(), session));
+			vo.updateRequest();
 		}
 	}
 
 	public void update(Session session) throws UnknownSessionException {
 		try {
-			// System.out.println("update-id:" + (null == session));
 			if (null == session)
 				return;
 			// SimpleSession old = cacheManager.get(session.getId().toString());
@@ -132,7 +135,6 @@ public class RedisSessionDao extends AbstractSessionDAO {
 	@Override
 	protected Session doReadSession(Serializable sessionId) {
 		try {
-			// System.out.println("doReadSession-id:" + sessionId);
 			if (null == sessionId)
 				return null;
 			return getSessionCache(sessionId.toString());
@@ -157,11 +159,11 @@ public class RedisSessionDao extends AbstractSessionDAO {
 		return null == session.getId();
 	}
 
-	public int getOverTimeSceond() {
+	public long getOverTimeSceond() {
 		return overTimeSceond;
 	}
 
-	public RedisSessionDao setOverTimeSceond(int overTimeSceond) {
+	public RedisSessionDao setOverTimeSceond(long overTimeSceond) {
 		this.overTimeSceond = overTimeSceond;
 		return this;
 	}

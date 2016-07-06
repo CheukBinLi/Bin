@@ -51,7 +51,7 @@ public class BaseController {
 		// System.err.println(o);
 		Subject user = SecurityUtils.getSubject();
 		String username = request.getParameter("name");
-		System.err.println(username);
+		System.err.println("username:"+username);
 		if (null == username)
 			return new ModelAndView(request.getServletPath());
 		String password = request.getParameter("password");
