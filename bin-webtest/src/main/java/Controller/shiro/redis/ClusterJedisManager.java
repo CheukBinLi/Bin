@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +18,13 @@ import redis.clients.jedis.ShardedJedisPool;
 
 public class ClusterJedisManager<K extends Serializable, V extends Serializable> extends AbstractJedisManager<ShardedJedis, K, V> {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private static transient final Logger LOG = LoggerFactory.getLogger(ClusterJedisManager.class);
 
 	private int maxIdle = 8;
 	private int maxTotal = 300;
 	private int maxWaitMillis = 5000;
-	private String serverList = "127.0.0.1:6379";
-	private String password = null;
+	private String serverList;
+	private String password;
 	private boolean testOnBorrow;// ping
 	private int expireSecond = 300;// 5分钟
 
@@ -30,19 +32,20 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 	private JedisPoolConfig config;
 	private List<JedisShardInfo> shardInfos;
 
+	private volatile boolean isInit;
+
+	@PostConstruct
 	void init() {
-		if (log.isInfoEnabled())
-			log.info("ClusterJedisManager:init");
-		if (null != pool)
-			return;
+		if (isInit) return;
+		isInit = true;
+		if (LOG.isInfoEnabled()) LOG.info("ClusterJedisManager:init");
 		config = new JedisPoolConfig();
 		config.setMaxIdle(this.maxIdle);
 		config.setMaxTotal(this.maxTotal);
 		config.setMaxWaitMillis(this.maxWaitMillis);
 		config.setTestOnBorrow(testOnBorrow);
 		if (null == this.serverList) {
-			if (log.isWarnEnabled())
-				log.warn("servlet is null.");
+			if (LOG.isWarnEnabled()) LOG.warn("servlet is null.");
 			return;
 		}
 		shardInfos = new ArrayList<JedisShardInfo>();
@@ -51,16 +54,13 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 		JedisShardInfo info = null;
 		while (ip.hasMoreTokens()) {
 			split = ip.nextToken().split(":");
-			if (null == split || split.length < 2)
-				continue;
+			if (null == split || split.length < 2) continue;
 			info = new JedisShardInfo(split[0], split[1]);
-			if (null != password)
-				info.setPassword(password);
+			if (null != password) info.setPassword(password);
 			shardInfos.add(info);
 		}
 		pool = new ShardedJedisPool(config, shardInfos);
-		if (log.isInfoEnabled())
-			log.info("ClusterJedisManager:complete");
+		if (LOG.isInfoEnabled()) LOG.info("ClusterJedisManager:complete");
 	}
 
 	public void delete(K k) throws RedisExcecption {
@@ -81,7 +81,7 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 	public void create(K k, V v, int expireSeconds) throws RedisExcecption {
 		ShardedJedis jedis = getResource();
 		try {
-			jedis.setex(getRedisSerialize().encode(k), expireSecond, getRedisSerialize().encode(v));
+			jedis.setex(getRedisSerialize().encode(k), expireSeconds, getRedisSerialize().encode(v));
 		} catch (Throwable e) {
 			throw new RedisExcecption(e);
 		} finally {
@@ -89,7 +89,8 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 		}
 	}
 
-	public Collection<?> getcollection() throws RedisExcecption {
+	public <T> Collection<T> getcollection() throws RedisExcecption {
+		LOG.error("no supper getcollection() method.");
 		return null;
 	}
 
@@ -98,7 +99,9 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 		ShardedJedis jedis = getResource();
 		byte[] result;
 		try {
-			result = jedis.getSet(getRedisSerialize().encode(k), getRedisSerialize().encode(v));
+			byte[] key = getRedisSerialize().encode(k);
+			result = jedis.getSet(key, getRedisSerialize().encode(v));
+			jedis.expire(key, expireSecond);
 			return null != result ? (V) getRedisSerialize().decode(result) : null;
 		} catch (Throwable e) {
 			throw new RedisExcecption(e);
@@ -134,6 +137,7 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 
 	@Override
 	ShardedJedis getResource() {
+		init();
 		return pool.getResource();
 	}
 
@@ -176,5 +180,4 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 		this.expireSecond = expireSecond;
 		return this;
 	}
-
 }

@@ -42,21 +42,33 @@
 
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="shiroDbRealm" />
-		<property name="cacheManager" ref="shiroEhcacheManager" />
+		<!-- <property name="cacheManager" ref="shiroEhcacheManager" /> -->
 		<property name="sessionManager" ref="DefaultWebSessionManager" />
 	</bean>
 
 
-	<bean id="redisSessionDao" class="Controller.shiro.cache.RedisSessionDao">
-		<!-- <property name="serialize" ref="Serialize"></property> -->
-		<property name="cacheManager" ref="cacheManager"></property>
+	<bean id="redisSessionDao" class="Controller.shiro.RedisSessionDao">
+		<property name="tempCacheTimeOutSecond" value="15" /><!-- 15秒过期 -->
+		<property name="redisManager" ref="redisManager"></property>
 	</bean>
 
-	<bean id="Serialize" class="Controller.shiro.cache.DefaultSerialize" />
-
-	<bean id="cacheManager" class="Controller.shiro.cache.ClusterRedisCacheManager">
-		<property name="Serialize" ref="Serialize" />
+<!-- 	<bean id="redisManager" class="Controller.shiro.redis.ClusterJedisManager">
+		<property name="serverList" value="127.0.0.1:6379" />
+		<property name="testOnBorrow" value="true" />
+		<property name="maxTotal" value="50" />
+		<property name="expireSecond" value="120" />2分钟过期
+		<property name="redisSerialize" ref="redisSerialize" />
+	</bean> -->
+	<bean id="redisManager" class="Controller.shiro.redis.StandAloneJedisManager">
+		<property name="host" value="127.0.0.1" />
+		<property name="port" value="6379" />
+		<property name="testOnBorrow" value="true" />
+		<property name="expireSecond" value="120" /><!-- 2分钟过期 -->
+		<property name="redisSerialize" ref="redisSerialize" />
 	</bean>
+
+	<bean id="redisSerialize" class="Controller.shiro.redis.DefaultRedisSerialize" />
+
 
 	<bean id="DefaultWebSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 		<property name="sessionDAO" ref="redisSessionDao" />
@@ -65,7 +77,7 @@
 	<!-- <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> <property name="cacheManagerConfigFile" value="/WEB-INF/ehcache-shiro.xml" /> </bean> -->
 
 	<!-- Shiro Filter -->
-	<bean id="shiroFilter" class="Controller.entity.filter.CutomShiroFilterFactoryBean">
+	<bean id="shiroFilter" class="Controller.shiro.CutomShiroFilterFactoryBean">
 		<!-- <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean"> -->
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/login" />

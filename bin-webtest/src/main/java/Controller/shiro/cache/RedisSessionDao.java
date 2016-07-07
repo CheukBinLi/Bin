@@ -3,7 +3,6 @@ package Controller.shiro.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;

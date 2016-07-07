@@ -10,7 +10,7 @@ public interface RedisManager<K, V> {
 
 	public void create(K k, V v, int expireSeconds) throws RedisExcecption;
 
-	public Collection<?> getcollection() throws RedisExcecption;
+	public <T> Collection<T> getcollection() throws RedisExcecption;
 
 	public V getAndSet(K k, V v) throws RedisExcecption;
 
