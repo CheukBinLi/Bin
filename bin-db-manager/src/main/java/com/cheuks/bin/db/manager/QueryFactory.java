@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -43,8 +44,7 @@ public class QueryFactory implements QueryType {
 	}
 
 	public synchronized void put(String name, String XQL, boolean isFormat) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException {
-		if (null == name || null == XQL)
-			return;
+		if (null == name || null == XQL) return;
 		if (isFormat) {
 			stringTemplateLoader.putTemplate(name, XQL);
 			FORMAT_XQL.put(name, freemarkerConfiguration.getTemplate(name));
@@ -57,11 +57,9 @@ public class QueryFactory implements QueryType {
 	public String getXQL(String name, boolean isFormat, Map<String, Object> params) throws TemplateException, IOException {
 		// if (!isScan)
 		// scan();
-		if (!isFormat)
-			return UNFORMAT_XQL.get(name);
+		if (!isFormat) return UNFORMAT_XQL.get(name);
 		Template tp = FORMAT_XQL.get(name);
-		if (null == tp)
-			return null;
+		if (null == tp) return null;
 		StringWriter sw = new StringWriter();
 		tp.process(params, sw);
 		return sw.toString();
@@ -109,17 +107,33 @@ public class QueryFactory implements QueryType {
 
 	class xmlHandler extends DefaultHandler {
 		// private boolean isHQL = false;
-		private boolean format = false;
-		private boolean alias = false;
-		private String packageName = null;
-		private String name = null;
-		//		private String fullName;
-		//		private List<String> aliasName = new ArrayList<String>();
+		private boolean format;
+		private boolean alias;
+		private String packageName;
+		private String name;
+		private String joinRef;
+		private String joinTag;
+		private boolean isJoin;
+		LinkedList<String> currentTag = new LinkedList<String>();
+
+		// private String fullName;
+		// private List<String> aliasName = new ArrayList<String>();
 		Map<String, String> aliases = new HashMap<String, String>();
+		Map<String, String> joins = new HashMap<String, String>();
 		private String value;
 
 		@Override
+		public void endElement(String uri, String localName, String qName) throws SAXException {
+			if (currentTag.size() > 0) {
+				String tag = currentTag.removeLast();
+				if (!tag.equals(qName)) currentTag.addLast(tag);
+			}
+			super.endElement(uri, localName, qName);
+		}
+
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+			currentTag.addLast(qName);
 			if (qName.equals(QUERY_LIST)) {
 				packageName = attributes.getValue(PACKAGE);
 			} else if (qName.equals(QUERY)) {
@@ -127,8 +141,13 @@ public class QueryFactory implements QueryType {
 				name = attributes.getValue(NAME);
 				format = Boolean.valueOf(attributes.getValue(FREEMARK_FORMAT));
 				alias = Boolean.valueOf(attributes.getValue(ALIAS));
+				joinRef = attributes.getValue(JOIN_REF);
+				joinTag = attributes.getValue(JOIN_TAG);
+				isJoin = null != joinRef;
 			} else if (qName.equals(ALIAS)) {
 				aliases.put(attributes.getValue(ALIAS), attributes.getValue(NAME));
+			} else if (qName.equals(JOIN)) {
+				name = attributes.getValue(NAME);
 			}
 			super.startElement(uri, localName, qName, attributes);
 		}
@@ -138,21 +157,28 @@ public class QueryFactory implements QueryType {
 			value = new String(ch, start, length).replaceAll("(\n|\t)", "");
 			if (value.length() > 0) {
 				try {
-//					System.err.println(name+":"+value);
-//					System.err.println();
-					put(String.format("%s.%s", packageName, name).toLowerCase(), alias ? alias(value) : value, format);
+					if (currentTag.getLast().equals(QUERY)) {
+						value = isJoin ? join(value, joinRef, joinTag) : value;
+						put(String.format("%s.%s", packageName, name).toLowerCase(), alias ? alias(value) : value, format);
+					} else if (currentTag.getLast().equals(JOIN)) {
+						value = value.replaceAll("\\<!\\[CDATA\\[", "").replaceAll("\\]\\]\\>", "");
+						joins.put(name, value);
+					}
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-			// super.characters(ch, start, length);
 		}
 
 		private String alias(String str) {
-			if (alias)
-				for (Entry<String, String> en : aliases.entrySet())
-					str = str.replaceAll(en.getKey(), en.getValue());
+			if (alias) for (Entry<String, String> en : aliases.entrySet())
+				str = str.replaceAll(en.getKey(), en.getValue());
 			return str;
 		}
-		
+
+		private String join(String str, String joinRef, String joinTag) {
+			str = str.replaceAll(joinTag, joins.get(joinRef));
+			return str;
+		}
 	}
 }

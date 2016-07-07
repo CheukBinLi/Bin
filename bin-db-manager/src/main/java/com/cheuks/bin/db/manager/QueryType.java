@@ -10,5 +10,8 @@ public interface QueryType {
 	String TYPE = "type";
 	String ALIAS = "Alias";
 	String RESULT_TYPE = "resultType";
+	String JOIN = "Join";
+	String JOIN_REF = "joinRef";
+	String JOIN_TAG = "joinTag";
 
 }
