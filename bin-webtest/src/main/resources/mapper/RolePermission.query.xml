@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryList SYSTEM "Query.dtd">
+<QueryList package="Controller.entity.RolePermission">
+	<Alias name="Controller.entity.RolePermission" Alias="RolePermission" />
+	<Join name="defaultWhereList">
+	<![CDATA[ 
+			<#if id??>
+				<#if like??>
+					and A.id like '%'||:id||'%' 
+				<#else>
+					and A.id=:id 
+				</#if>
+			</#if>
+			<#if roleId??>
+				<#if like??>
+					and A.roleId like '%'||:roleId||'%' 
+				<#else>
+					and A.roleId=:roleId 
+				</#if>
+			</#if>
+			<#if permissionId??>
+				<#if like??>
+					and A.permissionId like '%'||:permissionId||'%' 
+				<#else>
+					and A.permissionId=:permissionId 
+				</#if>
+			</#if>
+	]]>
+	</Join>
+	<Query name="list" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			FROM RolePermission A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+	<Query name="count" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			SELECT COUNT(1) FROM RolePermission A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+</QueryList>

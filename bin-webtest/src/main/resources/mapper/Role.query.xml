@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryList SYSTEM "Query.dtd">
+<QueryList package="Controller.entity.Role">
+	<Alias name="Controller.entity.Role" Alias="Role" />
+	<Join name="defaultWhereList">
+	<![CDATA[ 
+			<#if id??>
+				<#if like??>
+					and A.id like '%'||:id||'%' 
+				<#else>
+					and A.id=:id 
+				</#if>
+			</#if>
+			<#if status??>
+				<#if like??>
+					and A.status like '%'||:status||'%' 
+				<#else>
+					and A.status=:status 
+				</#if>
+			</#if>
+			<#if remark??>
+				<#if like??>
+					and A.remark like '%'||:remark||'%' 
+				<#else>
+					and A.remark=:remark 
+				</#if>
+			</#if>
+			<#if roleName??>
+				<#if like??>
+					and A.roleName like '%'||:roleName||'%' 
+				<#else>
+					and A.roleName=:roleName 
+				</#if>
+			</#if>
+	]]>
+	</Join>
+	<Query name="list" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			FROM Role A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+	<Query name="count" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			SELECT COUNT(1) FROM Role A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+</QueryList>

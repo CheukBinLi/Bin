@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryList SYSTEM "Query.dtd">
+<QueryList package="Controller.entity.User">
+	<Alias name="Controller.entity.User" Alias="User" />
+	<Join name="defaultWhereList">
+	<![CDATA[ 
+			<#if id??>
+				<#if like??>
+					and A.id like '%'||:id||'%' 
+				<#else>
+					and A.id=:id 
+				</#if>
+			</#if>
+			<#if sex??>
+				<#if like??>
+					and A.sex like '%'||:sex||'%' 
+				<#else>
+					and A.sex=:sex 
+				</#if>
+			</#if>
+			<#if status??>
+				<#if like??>
+					and A.status like '%'||:status||'%' 
+				<#else>
+					and A.status=:status 
+				</#if>
+			</#if>
+			<#if password??>
+				<#if like??>
+					and A.password like '%'||:password||'%' 
+				<#else>
+					and A.password=:password 
+				</#if>
+			</#if>
+			<#if login??>
+				<#if like??>
+					and A.login like '%'||:login||'%' 
+				<#else>
+					and A.login=:login 
+				</#if>
+			</#if>
+			<#if userName??>
+				<#if like??>
+					and A.userName like '%'||:userName||'%' 
+				<#else>
+					and A.userName=:userName 
+				</#if>
+			</#if>
+	]]>
+	</Join>
+	<Query name="list" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			FROM User A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+	<Query name="count" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			SELECT COUNT(1) FROM User A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+</QueryList>
