@@ -25,7 +25,7 @@ public abstract class AbstractHibernateDBAdapter implements DBAdapter {
 	}
 
 	public <T> List<T> getList(Class<?> c, int page, int size) throws Throwable {
-		Query query = getSession().createQuery(String.format("FROM %s a", c.getSimpleName()));
+		Query query = getSession().createQuery(String.format("FROM %s a", c.getName()));
 		List list = page > 0 ? page(query, page, size).list() : query.list();
 		return null == list ? null : list;
 	}
