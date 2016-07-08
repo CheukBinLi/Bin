@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Controller.entity.Permission;
+import Controller.entity.Role;
+import Controller.entity.RolePermission;
+import Controller.entity.User;
+import Controller.entity.UserRole;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
@@ -53,10 +58,9 @@ public class CreateFile {
 			genFile = new File(gen + "/" + c.getSimpleName());
 			if (!genFile.exists())
 				genFile.mkdirs();
-			if (!str.equals("queue"))
+			if (!str.equals("query"))
 				writer = new FileWriter(genFile = new File(String.format("%s/%s/%s%s.java", gen, c.getSimpleName(), c.getSimpleName(), str)));
-			else
-				writer = new FileWriter(new File(String.format("%s/%s/%s.%s.xml", gen, c.getSimpleName(), c.getSimpleName(), str)));
+			else writer = new FileWriter(new File(String.format("%s/%s/%s.%s.xml", gen, c.getSimpleName(), c.getSimpleName(), str)));
 			config.getTemplate(str.toLowerCase() + ".flv").process(map, writer);
 			writer.flush();
 			writer.close();
@@ -98,13 +102,6 @@ public class CreateFile {
 	}
 
 	public static void main(String[] args) throws IOException, TemplateException {
-		//		CreateFile.create(Dictionary.class, Integer.class, true);
-		//		CreateFile.create(HouseInfo.class, String.class, true);
-		//		CreateFile.create(HouseSteward.class, String.class, true);
-		//		CreateFile.create(Order.class, String.class, true);
-		//		CreateFile.create(UserInfo.class, String.class, true);
-		//		CreateFile.create(Notice.class, String.class, true);
-		//		CreateFile.create(User.class, String.class, true);
 		// CreateFile.create(Dictionary.class, Integer.class, true);
 		// CreateFile.create(HouseInfo.class, String.class, true);
 		// CreateFile.create(HouseSteward.class, String.class, true);
@@ -112,6 +109,18 @@ public class CreateFile {
 		// CreateFile.create(UserInfo.class, String.class, true);
 		// CreateFile.create(Notice.class, String.class, true);
 		// CreateFile.create(User.class, String.class, true);
+		// CreateFile.create(Dictionary.class, Integer.class, true);
+		// CreateFile.create(HouseInfo.class, String.class, true);
+		// CreateFile.create(HouseSteward.class, String.class, true);
+		// CreateFile.create(Order.class, String.class, true);
+		// CreateFile.create(UserInfo.class, String.class, true);
+		// CreateFile.create(Notice.class, String.class, true);
+		// CreateFile.create(User.class, String.class, true);
+		create(User.class, int.class, true);
+		create(Role.class, int.class, true);
+		create(RolePermission.class, int.class, true);
+		create(UserRole.class, int.class, true);
+		create(Permission.class, int.class, true);
 	}
 
 }

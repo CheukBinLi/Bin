@@ -9,6 +9,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.cheuks.bin.anythingtest.reference.SoftMap.valueX;
+import com.cheuks.bin.anythingtest.reference.T4.softObject;
 
 public class SoftReferenceTest {
 
@@ -206,11 +207,6 @@ public class SoftReferenceTest {
 		System.err.println(Runtime.getRuntime().totalMemory() + "   " + Runtime.getRuntime().freeMemory());
 		int nullCount = 0;
 		int count = 0;
-		// for (Entry<String, String> en : weakHashMap.entrySet()) {
-		// if (null == en.getValue())
-		// nullCount++;
-		// count++;
-		// }
 		System.err.print("总数：" + count + " null数量" + nullCount);
 	}
 
@@ -239,8 +235,79 @@ public class SoftReferenceTest {
 		System.err.print("总数：" + count + " null数量" + nullCount);
 	}
 
+	public void x8() {
+		T2<String, String> weakHashMap = new T2<String, String>();
+		StringBuffer sb = new StringBuffer();
+		Random r = new Random();
+		for (int i = 0; i < 100000; i++) {
+			for (int j = 0; j < 10; j++) {
+				sb.append((char) (r.nextInt(5000) + 1));
+			}
+			weakHashMap.putx(Integer.toString(i), sb.toString());
+			if (i % 20 == 0)
+				System.out.println(Runtime.getRuntime().totalMemory() + "   " + Runtime.getRuntime().freeMemory());
+			if (i > 20000)
+				this.toString();
+		}
+		System.err.println(Runtime.getRuntime().totalMemory() + "   " + Runtime.getRuntime().freeMemory());
+		int nullCount = 0;
+		int count = 0;
+		System.err.print("总数：" + count + " null数量" + nullCount);
+	}
+
+	public void x9() {
+		T3<String, String> weakHashMap = new T3<String, String>();
+		StringBuffer sb = new StringBuffer();
+		Random r = new Random();
+		for (int i = 0; i < 100000; i++) {
+			for (int j = 0; j < 10; j++) {
+				sb.append((char) (r.nextInt(5000) + 1));
+			}
+			weakHashMap.putx(Integer.toString(i), sb.toString());
+			if (i % 20 == 0)
+				System.out.println(Runtime.getRuntime().totalMemory() + "   " + Runtime.getRuntime().freeMemory());
+			if (i > 20000)
+				this.toString();
+		}
+		System.err.println(Runtime.getRuntime().totalMemory() + "   " + Runtime.getRuntime().freeMemory());
+		int nullCount = 0;
+		int count = 0;
+		System.err.print("总数：" + count + " null数量" + nullCount);
+	}
+
+	public void x10() {
+		final T4<String, String> weakHashMap = new T4<String, String>();
+		Thread t1 = new Thread(new Runnable() {
+			public void run() {
+				try {
+					for (;;) {
+						for (Entry<String, softObject<String, String>> en : weakHashMap.entrySet()) {
+							System.out.println("内容" + en.getValue().get());
+						}
+						Thread.sleep(1000);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		t1.start();
+		StringBuffer sb = new StringBuffer();
+		Random r = new Random();
+		for (int i = 0; i < 9000000; i++) {
+			for (int j = 0; j < 10; j++) {
+				sb.append((char) (r.nextInt(5000) + 1));
+			}
+			weakHashMap.put(Integer.toString(i), sb.toString());
+		}
+		System.err.println(Runtime.getRuntime().totalMemory() + "   " + Runtime.getRuntime().freeMemory());
+		int nullCount = 0;
+		int count = 0;
+		System.err.print("总数：" + weakHashMap.size() + " null数量" + nullCount);
+	}
+
 	public static void main(String[] args) {
-		new SoftReferenceTest().x7();
+		new SoftReferenceTest().x10();
 		// sun.misc.Unsafe u = sun.misc.Unsafe.getUnsafe();
 	}
 
