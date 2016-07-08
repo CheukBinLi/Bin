@@ -25,7 +25,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
 	public void update(Session session) throws UnknownSessionException {
 		try {
-			if (null == session) return;
+			if (null == session)
+				return;
 			updateSession(session);
 		} catch (Throwable e) {
 			LOG.error("redis is error:", e);
@@ -34,7 +35,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
 	public void delete(Session session) {
 		try {
-			if (null == session) return;
+			if (null == session)
+				return;
 			redisManager.delete(session.getId().toString());
 		} catch (Throwable e) {
 			LOG.error("redis is error:", e);
@@ -55,7 +57,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
 		try {
 			Serializable sessionId = generateSessionId(session);
 			assignSessionId(session, sessionId);
-			redisManager.create(session.getId().toString(), session);
+			if (redisManager.create(session.getId().toString(), session))
+				TEMP_SESSION_CACHE.put(session.getId().toString(), new SessionVO(session));
 		} catch (Throwable e) {
 			LOG.error("redis is error:", e);
 		}
@@ -65,7 +68,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
 	@Override
 	protected Session doReadSession(Serializable sessionId) {
 		try {
-			if (null == sessionId) return null;
+			if (null == sessionId)
+				return null;
 			return getSession(sessionId.toString());
 		} catch (Throwable e) {
 			LOG.error("redis is error:", e);
@@ -102,30 +106,52 @@ public class RedisSessionDao extends AbstractSessionDAO {
 		Session session = null == vo ? null : vo.session;
 		if (null == session) {
 			session = redisManager.get(key);
-			if (null != session) TEMP_SESSION_CACHE.put(key, new SessionVO(session));
+			if (null != session)
+				TEMP_SESSION_CACHE.put(key, new SessionVO(session));
 			return session;
 		} else if ((System.currentTimeMillis() >= vo.lastAccessTime)) {
 			session = redisManager.get(key);
-			if (LOG.isDebugEnabled()) LOG.debug("获取Session-id：" + (null == session ? null : session.getId()));
-			if (null != session) vo.updateSession(session);
+			if (LOG.isDebugEnabled())
+				LOG.debug("获取Session-id：" + (null == session ? null : session.getId()));
+			if (null != session)
+				vo.updateSession(session);
 		}
 		return session;
+		// SessionVO vo = TEMP_SESSION_CACHE.get(key);
+		// Session session = null == vo ? null : vo.session;
+		// if (null == session) {
+		// session = redisManager.get(key);
+		// if (null != session)
+		// TEMP_SESSION_CACHE.put(key, new SessionVO(session));
+		// return session;
+		// } else if ((System.currentTimeMillis() >= vo.lastAccessTime)) {
+		// session = redisManager.get(key);
+		// if (LOG.isDebugEnabled())
+		// LOG.debug("获取Session-id：" + (null == session ? null : session.getId()));
+		// if (null != session)
+		// vo.updateSession(session);
+		// }
+		// return session;
 	}
 
 	protected void updateSession(Session session) throws Throwable {
 		String key = session.getId().toString();
 		SessionVO vo = TEMP_SESSION_CACHE.get(key);
-		boolean update = false;
-		if (null != vo) {
-			if ((System.currentTimeMillis() >= vo.lastAccessTime)) {
-				update = true;
-			}
-		}
-		if (update) {
-			if (LOG.isDebugEnabled()) LOG.debug("Session更新：" + session.getId());
-			redisManager.create(session.getId().toString(), session);
-			vo.updateAccessTime();
-		}
+		// boolean update = false;
+		// if (null != vo) {
+		// if ((System.currentTimeMillis() >= vo.lastAccessTime)) {
+		// update = true;
+		// }
+		// }
+		// if (update) {
+		// if (LOG.isDebugEnabled())
+		// LOG.debug("Session更新：" + session.getId());
+		// redisManager.create(session.getId().toString(), session);
+		// vo.updateAccessTime();
+		// }
+		if (redisManager.create(session.getId().toString(), session))
+			vo.updateSession(session);
+		LOG.debug("Session更新：" + session.getId());
 	}
 
 	public RedisSessionDao setRedisManager(RedisManager<String, Session> redisManager) {

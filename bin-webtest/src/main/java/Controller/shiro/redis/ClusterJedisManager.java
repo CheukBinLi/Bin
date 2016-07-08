@@ -36,16 +36,19 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 
 	@PostConstruct
 	void init() {
-		if (isInit) return;
+		if (isInit)
+			return;
 		isInit = true;
-		if (LOG.isInfoEnabled()) LOG.info("ClusterJedisManager:init");
+		if (LOG.isInfoEnabled())
+			LOG.info("ClusterJedisManager:init");
 		config = new JedisPoolConfig();
 		config.setMaxIdle(this.maxIdle);
 		config.setMaxTotal(this.maxTotal);
 		config.setMaxWaitMillis(this.maxWaitMillis);
 		config.setTestOnBorrow(testOnBorrow);
 		if (null == this.serverList) {
-			if (LOG.isWarnEnabled()) LOG.warn("servlet is null.");
+			if (LOG.isWarnEnabled())
+				LOG.warn("servlet is null.");
 			return;
 		}
 		shardInfos = new ArrayList<JedisShardInfo>();
@@ -54,13 +57,16 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 		JedisShardInfo info = null;
 		while (ip.hasMoreTokens()) {
 			split = ip.nextToken().split(":");
-			if (null == split || split.length < 2) continue;
+			if (null == split || split.length < 2)
+				continue;
 			info = new JedisShardInfo(split[0], split[1]);
-			if (null != password) info.setPassword(password);
+			if (null != password)
+				info.setPassword(password);
 			shardInfos.add(info);
 		}
 		pool = new ShardedJedisPool(config, shardInfos);
-		if (LOG.isInfoEnabled()) LOG.info("ClusterJedisManager:complete");
+		if (LOG.isInfoEnabled())
+			LOG.info("ClusterJedisManager:complete");
 	}
 
 	public void delete(K k) throws RedisExcecption {
@@ -74,14 +80,15 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 		}
 	}
 
-	public void create(K k, V v) throws RedisExcecption {
-		create(k, v, this.expireSecond);
+	public boolean create(K k, V v) throws RedisExcecption {
+		return create(k, v, this.expireSecond);
 	}
 
-	public void create(K k, V v, int expireSeconds) throws RedisExcecption {
+	public boolean create(K k, V v, int expireSeconds) throws RedisExcecption {
 		ShardedJedis jedis = getResource();
 		try {
-			jedis.setex(getRedisSerialize().encode(k), expireSeconds, getRedisSerialize().encode(v));
+			String o = jedis.setex(getRedisSerialize().encode(k), expireSeconds, getRedisSerialize().encode(v));
+			return o.equalsIgnoreCase("OK");
 		} catch (Throwable e) {
 			throw new RedisExcecption(e);
 		} finally {
@@ -143,7 +150,7 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 
 	@Override
 	void destory(ShardedJedis jedis) {
-
+		jedis.close();
 	}
 
 	public ClusterJedisManager<K, V> setMaxIdle(int maxIdle) {

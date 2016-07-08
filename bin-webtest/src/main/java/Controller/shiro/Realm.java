@@ -1,6 +1,7 @@
 package Controller.shiro;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import Controller.entity.Permission;
 import Controller.entity.Role;
 import Controller.entity.RolePermission;
+import Controller.entity.User;
+import Controller.entity.UserRole;
 import Controller.entity.service.PermissionService;
 import Controller.entity.service.RolePermissionService;
 import Controller.entity.service.RoleService;
@@ -36,31 +39,65 @@ public class Realm extends AuthorizingRealm {
 	@Autowired
 	private RolePermissionService rolePermissionService;
 
+	static final ConcurrentHashMap<String, User> userCache = new ConcurrentHashMap<String, User>();
+	static final ConcurrentHashMap<Integer, Role> roleCache = new ConcurrentHashMap<Integer, Role>();
+	static final ConcurrentHashMap<Integer, Permission> permissionCache = new ConcurrentHashMap<Integer, Permission>();
+	static final ConcurrentHashMap<Integer, RolePermission> rolePermissionCache = new ConcurrentHashMap<Integer, RolePermission>();
+	static final ConcurrentHashMap<Integer, UserRole> userRoleCache = new ConcurrentHashMap<Integer, UserRole>();
+
+	static volatile boolean isInit;
+
 	@PostConstruct
-	public void x() throws Throwable {
+	public void initParam() throws Throwable {
+		if (isInit)
+			return;
+		isInit = true;
+
+		List<User> users = userService.getList(null, false, 0, 0);
 		List<Role> roles = roleService.getList(null, false, 0, 0);
 		List<Permission> permissions = permissionService.getList(null, false, 0, 0);
 		List<RolePermission> RolePermissions = rolePermissionService.getList(null, false, 0, 0);
-		System.err.println();
+		List<UserRole> userRoles = userRoleService.getList(null, false, 0, 0);
+		for (User u : users)
+			userCache.put(u.getLogin() + u.getPassword(), u);
+		for (Role r : roles)
+			roleCache.put(r.getId(), r);
+		for (Permission p : permissions)
+			permissionCache.put(p.getId(), p);
+		for (RolePermission rp : RolePermissions)
+			rolePermissionCache.put(rp.getId(), rp);
+		for (UserRole ur : userRoles)
+			userRoleCache.put(ur.getId(), ur);
+
 	}
 
+	/***
+	 * 获得授权信息
+	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection arg0) {
-		System.out.println("1");
+		System.out.println("1#############################");
+		System.err.println(arg0.getPrimaryPrincipal());
+		System.out.println("1#############################");
 		return null;
 	}
 
+	/***
+	 * 获得认证的信息
+	 */
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken arg0) throws AuthenticationException {
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken aToken) throws AuthenticationException {
 		System.out.println("2");
-		UsernamePasswordToken token = (UsernamePasswordToken) arg0;
+		UsernamePasswordToken token = (UsernamePasswordToken) aToken;
+		User user = userCache.get(token.getUsername() + new String(token.getPassword()));
 		// User user = userService.getByAccount(token.getUsername());
-		// if (user != null) {
-		// return new SimpleAuthenticationInfo(user.getAccount(), user.getPassword(), user.getNickname());
-		return new SimpleAuthenticationInfo("sa", "123", "小明");
-		// } else {
-		// return null;
-		// }
+		if (user != null) {
+			// return new SimpleAuthenticationInfo(user.getAccount(), user.getPassword(), user.getNickname());
+			return new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(), user.getLogin());
+			// } else {
+			// return null;
+			// }
+		}
+		return null;
 	}
-
 }

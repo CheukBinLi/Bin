@@ -1,24 +1,22 @@
 package Controller;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
-import Controller.entity.service.LuceneRssServiceImpl;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping({ "/*", "/*/**", "/", "" })
@@ -29,6 +27,7 @@ public class BaseController {
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
 		String url = request.getParameter("url");
 		if ("proxy".equals(path)) {
+			SecurityUtils.getSubject().isAuthenticated();
 			return new ModelAndView("proxy", getParams(request)).addObject("data", JspProxy.getProxy(url));
 		}
 		return new ModelAndView(path, getParams(request));
@@ -51,7 +50,7 @@ public class BaseController {
 		// System.err.println(o);
 		Subject user = SecurityUtils.getSubject();
 		String username = request.getParameter("name");
-		System.err.println("username:"+username);
+		System.err.println("username:" + username);
 		if (null == username)
 			return new ModelAndView(request.getServletPath());
 		String password = request.getParameter("password");

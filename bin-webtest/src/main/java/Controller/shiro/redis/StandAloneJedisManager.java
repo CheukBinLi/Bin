@@ -4,9 +4,6 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -40,14 +37,15 @@ public class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis, K,
 		}
 	}
 
-	public void create(K k, V v) throws RedisExcecption {
-		create(k, v, expireSecond);
+	public boolean create(K k, V v) throws RedisExcecption {
+		return create(k, v, expireSecond);
 	}
 
-	public void create(K k, V v, int expireSeconds) throws RedisExcecption {
+	public boolean create(K k, V v, int expireSeconds) throws RedisExcecption {
 		Jedis jedis = getResource();
 		try {
-			jedis.setex(getRedisSerialize().encode(k), expireSeconds, getRedisSerialize().encode(v));
+			String o = jedis.setex(getRedisSerialize().encode(k), expireSeconds, getRedisSerialize().encode(v));
+			return o.equalsIgnoreCase("OK");
 		} catch (Throwable e) {
 			throw new RedisExcecption(e);
 		} finally {
@@ -140,7 +138,6 @@ public class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis, K,
 
 	public StandAloneJedisManager() {
 		super();
-		init();
 	}
 
 }

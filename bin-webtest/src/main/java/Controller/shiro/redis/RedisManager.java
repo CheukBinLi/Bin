@@ -6,9 +6,9 @@ public interface RedisManager<K, V> {
 
 	public void delete(K k) throws RedisExcecption;
 
-	public void create(K k, V v) throws RedisExcecption;
+	public boolean create(K k, V v) throws RedisExcecption;
 
-	public void create(K k, V v, int expireSeconds) throws RedisExcecption;
+	public boolean create(K k, V v, int expireSeconds) throws RedisExcecption;
 
 	public <T> Collection<T> getcollection() throws RedisExcecption;
 
