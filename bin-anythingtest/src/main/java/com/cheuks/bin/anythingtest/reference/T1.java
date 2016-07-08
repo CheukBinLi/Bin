@@ -23,7 +23,7 @@ import java.util.function.ToLongFunction;
 
 public class T1<K, V> extends ConcurrentHashMap<K, Object> {
 
-	private ReferenceQueue<K> queue = new ReferenceQueue<K>();
+	private final ReferenceQueue<K> queue = new ReferenceQueue<K>();
 
 	private void checkValues() {
 		Entry<K, V> entry;
