@@ -1,6 +1,7 @@
 package Controller.shiro;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -34,6 +35,13 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 		if (this.isInit)
 			return;
 		isInit = true;
+		List<Permission> permissions = null;
+		try {
+			permissions = permissionService.getList(null, false, 0, 0);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("/login", "anon");
 		map.put("/error", "anon");
@@ -42,6 +50,9 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 		map.put("/**", "perms[11,12,13]");
 		if (null != getFilterChainDefinitionMap())
 			map.putAll(getFilterChainDefinitionMap());
+		if (null != permissions)
+			for (Permission p : permissions)
+				map.put(p.getUrl(), "perms[" + p.getId() + "]");
 		setFilterChainDefinitionMap(map);
 	}
 }
