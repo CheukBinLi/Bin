@@ -1,5 +1,7 @@
 package Controller.shiro;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +13,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +82,11 @@ public class Realm extends AuthorizingRealm {
 		System.out.println("1#############################");
 		System.err.println(arg0.getPrimaryPrincipal());
 		System.out.println("1#############################");
-		return null;
+		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+		info.setRoles(new HashSet<String>(Arrays.asList("admin")));
+		info.setStringPermissions(new HashSet<String>(Arrays.asList("11","12")));
+		// info.setObjectPermissions(objectPermissions);
+		return info;
 	}
 
 	/***

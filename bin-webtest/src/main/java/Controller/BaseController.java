@@ -27,7 +27,10 @@ public class BaseController {
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
 		String url = request.getParameter("url");
 		if ("proxy".equals(path)) {
-			SecurityUtils.getSubject().isAuthenticated();
+			// Subject subject = SecurityUtils.getSubject();
+			// System.err.println(subject.isPermitted(request.getParameter("url")) ? "OK" : "NO");
+			// SecurityUtils.getSubject().hasRole("123");
+			// SecurityUtils.getSubject().isAuthenticated();
 			return new ModelAndView("proxy", getParams(request)).addObject("data", JspProxy.getProxy(url));
 		}
 		return new ModelAndView(path, getParams(request));

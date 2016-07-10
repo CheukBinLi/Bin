@@ -15,6 +15,7 @@ public class Permission implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String permissionName;
+	private String url;
 	private int status;
 	private String remark;
 
@@ -33,6 +34,15 @@ public class Permission implements Serializable {
 
 	public Permission setPermissionName(String permissionName) {
 		this.permissionName = permissionName;
+		return this;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public Permission setUrl(String url) {
+		this.url = url;
 		return this;
 	}
 
