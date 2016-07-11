@@ -4,27 +4,42 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @Controller
 @RequestMapping({ "/*", "/*/**", "/", "" })
 @Scope("prototype")
 public class BaseController {
 
+	@Autowired
+	private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
 	@RequestMapping("{path}")
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
+
+		Map<RequestMappingInfo, HandlerMethod> allRequestMappings = requestMappingHandlerMapping.getHandlerMethods();
+
+		for (Entry<RequestMappingInfo, HandlerMethod> en : allRequestMappings.entrySet()) {
+			System.out.println(en.getKey());
+			System.out.println(en.getValue());
+		}
+
 		String url = request.getParameter("url");
 		if ("proxy".equals(path)) {
 			// Subject subject = SecurityUtils.getSubject();

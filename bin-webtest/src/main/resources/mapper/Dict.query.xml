@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QueryList SYSTEM "Query.dtd">
+<QueryList package="Controller.entity.Dict">
+	<Alias name="Controller.entity.Dict" Alias="Dict" />
+	<Join name="defaultWhereList">
+	<![CDATA[ 
+			<#if value??>
+				<#if like??>
+					and A.value like '%'||:value||'%' 
+				<#else>
+					and A.value=:value 
+				</#if>
+			</#if>
+			<#if key??>
+				<#if like??>
+					and A.key like '%'||:key||'%' 
+				<#else>
+					and A.key=:key 
+				</#if>
+			</#if>
+			<#if id??>
+				<#if like??>
+					and A.id like '%'||:id||'%' 
+				<#else>
+					and A.id=:id 
+				</#if>
+			</#if>
+			<#if parentId??>
+				<#if like??>
+					and A.parentId like '%'||:parentId||'%' 
+				<#else>
+					and A.parentId=:parentId 
+				</#if>
+			</#if>
+			<#if remark??>
+				<#if like??>
+					and A.remark like '%'||:remark||'%' 
+				<#else>
+					and A.remark=:remark 
+				</#if>
+			</#if>
+	]]>
+	</Join>
+	<Query name="list" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			FROM Dict A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+	<Query name="count" type="HQL" freemarkFormat="true" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			SELECT COUNT(1) FROM Dict A 
+			WHERE 
+			1=1 
+			@WHERE@ 
+		]]>
+	</Query>
+</QueryList>
