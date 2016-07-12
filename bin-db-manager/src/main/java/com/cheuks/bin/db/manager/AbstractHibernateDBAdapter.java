@@ -8,8 +8,6 @@ import java.util.Map.Entry;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.transform.ResultTransformer;
-import org.hibernate.transform.Transformers;
 
 import freemarker.template.TemplateException;
 
@@ -156,9 +154,13 @@ public abstract class AbstractHibernateDBAdapter implements DBAdapter {
 		return count;
 	}
 
-	public <T> T save(T o) throws Throwable {
+	public <T> T save(final T o) throws Throwable {
 		getSession().save(o);
 		return o;
+	}
+
+	public <T> T customSave(T t) throws Throwable {
+		return null;
 	}
 
 	public <T> T replicate(T o, String ReplicationMode) throws Throwable {

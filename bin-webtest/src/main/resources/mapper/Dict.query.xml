@@ -57,4 +57,10 @@
 			@WHERE@ 
 		]]>
 	</Query>
+	<Query name="test" type="HQL" freemarkFormat="false" Alias="true" joinRef="defaultWhereList" joinTag="@WHERE@">
+		<![CDATA[ 
+			insert into Dict(id,parentId) value(:id,:parentId)
+		]]>
+	</Query>
+
 </QueryList>

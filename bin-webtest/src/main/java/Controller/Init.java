@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import Controller.entity.Dict;
 import Controller.entity.service.DictService;
 
 @Component
@@ -34,6 +35,11 @@ public class Init {
 	@PostConstruct
 	void init() {
 
+		try {
+			dictService.save(new Dict().setKey("aaa"));
+		} catch (Throwable e1) {
+			e1.printStackTrace();
+		}
 		BeanNameUrlHandlerMapping b = new BeanNameUrlHandlerMapping();
 		Map<String, Object> mapping = b.getHandlerMap();
 		for (Entry<String, Object> en : mapping.entrySet()) {
@@ -50,7 +56,7 @@ public class Init {
 					System.out.println(en.getKey());
 					Iterator<String> it = en.getKey().getPatternsCondition().getPatterns().iterator();
 					while (it.hasNext())
-						System.out.print(it.next().replaceAll("([{].*[}])", "**")+"			");
+						System.out.print(it.next().replaceAll("([{].*[}])", "**") + "			");
 					System.out.println(en.getValue());
 				}
 			}

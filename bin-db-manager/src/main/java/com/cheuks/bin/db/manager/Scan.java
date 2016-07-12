@@ -21,10 +21,7 @@ import java.util.jar.JarFile;
 
 public class Scan {
 
-	private static ExecutorService executorService = null;
-
 	public static final Set<String> doScan(String path) throws IOException, InterruptedException, ExecutionException {
-		executorService = Executors.newFixedThreadPool(2);
 		try {
 			Set<String> result = new HashSet<String>();
 			Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources("");
@@ -33,58 +30,62 @@ public class Scan {
 				scanResult.add(urls.nextElement());
 			}
 			result.addAll(classMatchFilter(path, scanResult));
-			// }
 			return result;
 		} finally {
-			executorService.shutdown();
 		}
 	}
 
 	protected static final Set<String> classMatchFilter(String path, Set<URL> paths) throws InterruptedException, ExecutionException {
-		String[] pathPattern = null;
-		path = path.replace("*", ".*").replace("/**", "(/.*)?").replace(File.separator, "/");
-		pathPattern = path.split(",");
-		for (int i = 0, len = pathPattern.length; i < len; i++) {
-			pathPattern[i] = String.format("^(/|.*/|.*)?%s$", pathPattern[i]);
-		}
-
-		final int startIndex = (new File(Thread.currentThread().getContextClassLoader().getResource("").getPath())).getPath().replace(File.separator, "/").length() + 1;
-		Set<URL> jarClassPaths = new HashSet<URL>();
-		Set<URL> fileClassPaths = new HashSet<URL>();
-		Set<String> result = new HashSet<String>();
-		List<Future<Set<String>>> futures = new ArrayList<Future<Set<String>>>();
-		final CountDownLatch countDownLatch = new CountDownLatch(2);
-		Iterator<URL> urls = paths.iterator();
-		URL u;
-		while (urls.hasNext()) {
-			u = urls.next();
-			if ("jar".equals(u.getProtocol()))
-				jarClassPaths.add(u);
-			else fileClassPaths.add(u);
-
-		}
-		futures.add(executorService.submit(new Scan.FileFilter(jarClassPaths, pathPattern, 0, countDownLatch) {
-			@Override
-			public Set<String> doFilter(Set<URL> url, String[] pathPattern, int startIndex) throws IOException {
-				return jarTypeFilter(pathPattern, url);
+		ExecutorService executorService = Executors.newFixedThreadPool(2);
+		try {
+			String[] pathPattern = null;
+			path = path.replace("*", ".*").replace("/**", "(/.*)?").replace(File.separator, "/");
+			pathPattern = path.split(",");
+			for (int i = 0, len = pathPattern.length; i < len; i++) {
+				pathPattern[i] = String.format("^(/|.*/|.*)?%s$", pathPattern[i]);
 			}
-		}));
-		futures.add(executorService.submit(new Scan.FileFilter(fileClassPaths, pathPattern, startIndex, countDownLatch) {
-			@Override
-			public Set<String> doFilter(Set<URL> url, String[] pathPattern, int startIndex) {
-				Iterator<URL> it = url.iterator();
-				Set<String> result = new HashSet<String>();
-				while (it.hasNext())
-					result.addAll(fileTypeFilter(new File(it.next().getPath()), pathPattern, startIndex));
-				return result;
+
+			final int startIndex = (new File(Thread.currentThread().getContextClassLoader().getResource("").getPath())).getPath().replace(File.separator, "/").length() + 1;
+			Set<URL> jarClassPaths = new HashSet<URL>();
+			Set<URL> fileClassPaths = new HashSet<URL>();
+			Set<String> result = new HashSet<String>();
+			List<Future<Set<String>>> futures = new ArrayList<Future<Set<String>>>();
+			final CountDownLatch countDownLatch = new CountDownLatch(2);
+			Iterator<URL> urls = paths.iterator();
+			URL u;
+			while (urls.hasNext()) {
+				u = urls.next();
+				if ("jar".equals(u.getProtocol()))
+					jarClassPaths.add(u);
+				else
+					fileClassPaths.add(u);
+
 			}
-		}));
-		countDownLatch.await();
+			futures.add(executorService.submit(new Scan.FileFilter(jarClassPaths, pathPattern, 0, countDownLatch) {
+				@Override
+				public Set<String> doFilter(Set<URL> url, String[] pathPattern, int startIndex) throws IOException {
+					return jarTypeFilter(pathPattern, url);
+				}
+			}));
+			futures.add(executorService.submit(new Scan.FileFilter(fileClassPaths, pathPattern, startIndex, countDownLatch) {
+				@Override
+				public Set<String> doFilter(Set<URL> url, String[] pathPattern, int startIndex) {
+					Iterator<URL> it = url.iterator();
+					Set<String> result = new HashSet<String>();
+					while (it.hasNext())
+						result.addAll(fileTypeFilter(new File(it.next().getPath()), pathPattern, startIndex));
+					return result;
+				}
+			}));
+			countDownLatch.await();
 
-		result.addAll(futures.get(0).get());
-		result.addAll(futures.get(1).get());
+			result.addAll(futures.get(0).get());
+			result.addAll(futures.get(1).get());
 
-		return result;
+			return result;
+		} finally {
+			executorService.shutdown();
+		}
 	}
 
 	@SuppressWarnings("resource")

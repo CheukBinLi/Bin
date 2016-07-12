@@ -221,6 +221,15 @@ public interface DBAdapter {
 	 * 插入
 	 * 
 	 * @param t
+	 * @return
+	 * @throws Throwable
+	 */
+	public <T> T customSave(T t) throws Throwable;
+
+	/***
+	 * 插入
+	 * 
+	 * @param t
 	 *            对象
 	 * @param ReplicationMode
 	 *            插入模式()

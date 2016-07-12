@@ -1,5 +1,8 @@
 package Controller.entity.dao;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +26,14 @@ public class DictDao extends AbstractDao<Dict, Integer> {
 	public DBAdapter getDBAdapter() {
 		return dBAdapter;
 	}
+
+//	@Override
+//	public Dict save(Dict o) throws Throwable {
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("id", 100);
+//		params.put("parentId", 100);
+//		dBAdapter.executeUpdate("Controller.entity.Dict.test".toLowerCase(), params, true, false);
+//		return o;
+//	}
 
 }
