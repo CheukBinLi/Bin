@@ -9,7 +9,7 @@ import com.cheuks.bin.db.manager.dao.AbstractDao;
 import Controller.entity.Dict;
 
 @Component
-public class DictDao extends AbstractDao<Dict, Integer>  {
+public class DictDao extends AbstractDao<Dict, Integer> {
 
 	@Autowired
 	private DBAdapter dBAdapter;

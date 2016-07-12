@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +32,12 @@ public class BaseController {
 	@Autowired
 	private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
+	@Autowired
+	private DefaultListableBeanFactory defaultListableBeanFactory;
+
 	@RequestMapping({ "{path}", "xxxxxxx", "ggggggg" })
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
+		System.out.println(Arrays.asList(defaultListableBeanFactory.getBeanDefinitionNames()).toString());
 
 		Map<RequestMappingInfo, HandlerMethod> allRequestMappings = requestMappingHandlerMapping.getHandlerMethods();
 

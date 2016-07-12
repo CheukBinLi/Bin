@@ -1,5 +1,6 @@
 package Controller;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -47,13 +48,20 @@ public class Init {
 				Map<RequestMappingInfo, HandlerMethod> mappings = requestMappingHandlerMapping.getHandlerMethods();
 				for (Entry<RequestMappingInfo, HandlerMethod> en : mappings.entrySet()) {
 					System.out.println(en.getKey());
+					Iterator<String> it = en.getKey().getPatternsCondition().getPatterns().iterator();
+					while (it.hasNext())
+						System.out.print(it.next().replaceAll("([{].*[}])", "**")+"			");
 					System.out.println(en.getValue());
 				}
 			}
 		} catch (Throwable e) {
 			LOG.error(null, e);
 		}
+	}
 
+	public static void main(String[] args) {
+		String a = "a{aaaa}a";
+		System.err.println(a.replaceAll("([{].*[}])", "123"));
 	}
 
 }
