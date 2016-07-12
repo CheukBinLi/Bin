@@ -21,21 +21,22 @@ import java.util.jar.JarFile;
 
 public class Scan {
 
-	private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
+	private static ExecutorService executorService = null;
 
 	public static final Set<String> doScan(String path) throws IOException, InterruptedException, ExecutionException {
-		Set<String> result = new HashSet<String>();
-
-		Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources("");
-		Set<URL> scanResult = new LinkedHashSet<URL>();
-		while (urls.hasMoreElements()) {
-			scanResult.add(urls.nextElement());
-		}
-		result.addAll(classMatchFilter(path, scanResult));
-		//		}
+		executorService = Executors.newFixedThreadPool(2);
 		try {
+			Set<String> result = new HashSet<String>();
+			Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources("");
+			Set<URL> scanResult = new LinkedHashSet<URL>();
+			while (urls.hasMoreElements()) {
+				scanResult.add(urls.nextElement());
+			}
+			result.addAll(classMatchFilter(path, scanResult));
+			// }
 			return result;
 		} finally {
+			executorService.shutdown();
 		}
 	}
 
@@ -59,8 +60,7 @@ public class Scan {
 			u = urls.next();
 			if ("jar".equals(u.getProtocol()))
 				jarClassPaths.add(u);
-			else
-				fileClassPaths.add(u);
+			else fileClassPaths.add(u);
 
 		}
 		futures.add(executorService.submit(new Scan.FileFilter(jarClassPaths, pathPattern, 0, countDownLatch) {
@@ -116,8 +116,7 @@ public class Scan {
 				if (tempPath.matches(pathPattern[i]))
 					result.add(file.getPath().substring(startIndex));
 			return result;
-		}
-		else if (file.isDirectory()) {
+		} else if (file.isDirectory()) {
 			File[] files = file.listFiles();
 			for (File f : files) {
 				result.addAll(fileTypeFilter(f, pathPattern, startIndex));
