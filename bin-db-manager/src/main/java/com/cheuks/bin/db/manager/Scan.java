@@ -163,6 +163,5 @@ public class Scan {
 	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
 		Object o = doScan("/**/*.query.xml,/**/*.query2.xml");
 		System.out.println("X");
-
 	}
 }

@@ -14,9 +14,26 @@ import java.util.regex.Pattern;
 
 public class Scan {
 
-	private static final ExecutorService executorService = ExecutorServiceFatory.getExector();
+	private static ExecutorService executorService = ExecutorServiceFatory.getExector();
 
 	public static final Set<String> doScan(String path) throws IOException, InterruptedException, ExecutionException {
+		return doScan(path, ".class", false);
+	}
+
+	public static final Set<String> doScan(String path, String suffix) throws IOException, InterruptedException, ExecutionException {
+		return doScan(path, suffix, false);
+	}
+
+	public final static String setSuffix(String suffix) {
+		if (suffix.charAt(0) != '.')
+			suffix = "." + suffix;
+		return suffix;
+	}
+
+	public static final Set<String> doScan(String path, String suffix, final boolean isFullPath) throws IOException, InterruptedException, ExecutionException {
+		if (executorService.isShutdown())
+			executorService = ExecutorServiceFatory.getExector();
+		suffix = setSuffix(suffix);
 		Set<String> result = new HashSet<String>();
 		path = path.replace(".", "/");
 		path = path.replace(File.separator, "/");
@@ -36,7 +53,7 @@ public class Scan {
 				// 第一段完成，遍历所有路径,再正则
 				// jar
 			}
-			result.addAll(classMatchFilter(fullPaths[i], scanResult));
+			result.addAll(classMatchFilter(fullPaths[i], scanResult, suffix, isFullPath));
 		}
 		try {
 			// Iterator<String>a=result.iterator();
@@ -48,8 +65,9 @@ public class Scan {
 		}
 	}
 
-	protected static final Set<String> classMatchFilter(String path, Set<URL> paths) throws InterruptedException, ExecutionException {
-		final String pathPattern = "^(/.*/|.*/)?" + path.replace("/**", "(/.*)?") + "(/.*)?.class$";
+	protected static final Set<String> classMatchFilter(String path, Set<URL> paths, final String suffix, final boolean isFullPath) throws InterruptedException, ExecutionException {
+		final String pathPattern = "^(/.*/|.*/)?" + path.replace("/**", "(/.*)?") + "(/.*)?" + suffix + "$";
+		// packageName
 		final int startIndex = (new File(Thread.currentThread().getContextClassLoader().getResource("").getPath())).getPath().replace(File.separator, "/").length() + 1;
 		Set<URL> jarClassPaths = new HashSet<URL>();
 		Set<URL> fileClassPaths = new HashSet<URL>();
@@ -77,7 +95,7 @@ public class Scan {
 				Iterator<URL> it = url.iterator();
 				Set<String> result = new HashSet<String>();
 				while (it.hasNext())
-					result.addAll(fileTypeFilter(new File(it.next().getPath()), pathPattern, startIndex));
+					result.addAll(fileTypeFilter(new File(it.next().getPath()), pathPattern, startIndex, suffix, isFullPath));
 				return result;
 			}
 		}));
@@ -108,20 +126,20 @@ public class Scan {
 		return result;
 	}
 
-	protected static final Set<String> fileTypeFilter(File file, String pathPattern, int startIndex) {
+	protected static final Set<String> fileTypeFilter(File file, String pathPattern, int startIndex, String suffix, final boolean isFullPath) {
 		// Map<String, String> result = new WeakHashMap<String, String>();
 		Set<String> result = new HashSet<String>();
 		if (file.isFile()) {
-			if (file.getPath().replace(File.separator, "/").matches(pathPattern))
-				// result.put(file.getName(), file.getPath().substring(startIndex).replace(".class", "").replace(File.separator, "."));
+			if (file.getPath().replace(File.separator, "/").matches(pathPattern)) {
 				// 文件添加返回
-				result.add(file.getPath().substring(startIndex).replace(".class", "").replace(File.separator, "."));
+				result.add(isFullPath ? file.getPath() : file.getPath().substring(startIndex).replace(suffix, "").replace(File.separator, "."));
+			}
 			return result;
 		} else if (file.isDirectory()) {
 			File[] files = file.listFiles();
 			for (File f : files) {
 				// 目录递归
-				result.addAll(fileTypeFilter(f, pathPattern, startIndex));
+				result.addAll(fileTypeFilter(f, pathPattern, startIndex, suffix, isFullPath));
 			}
 		}
 		return result;
@@ -161,16 +179,16 @@ public class Scan {
 	}
 
 	@SuppressWarnings("unused")
-	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+	public static void main1(String[] args) throws IOException, InterruptedException, ExecutionException {
 
 		// ClassPathXmlApplicationContext c=new ClassPathXmlApplicationContext();
 		// c.getBean("a");
 
 		// doScan("antlr/actions");
-//		 Set<String> result = doScan("org/**/orm/hibernate4");
-		 Set<String> result = doScan("org/springframework");
+		// Set<String> result = doScan("org/**/orm/hibernate4");
+		Set<String> result = doScan("org/springframework");
 		// Set<String> result = doScan("com");
-//		Set<String> result = doScan("javassist/**/annotation,com");
+		// Set<String> result = doScan("javassist/**/annotation,com");
 		Iterator<String> it = result.iterator();
 		while (it.hasNext())
 			System.err.println(it.next());

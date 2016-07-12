@@ -1,13 +1,17 @@
 package Controller.shiro;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.cheuks.bin.db.manager.Scan;
 
 import Controller.entity.Permission;
 import Controller.entity.service.PermissionService;
@@ -55,5 +59,10 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 			for (Permission p : permissions)
 				map.put(p.getUrl(), "perms[" + p.getId() + "]");
 		setFilterChainDefinitionMap(map);
+	}
+
+	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+		Object o = Scan.doScan("/**/*.query.xml,/**/*.query2.xml");
+		System.out.println(o);
 	}
 }
