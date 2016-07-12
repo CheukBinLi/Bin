@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Controller.entity.Dict;
 import Controller.entity.Permission;
 import Controller.entity.Role;
 import Controller.entity.RolePermission;
@@ -115,12 +116,13 @@ public class CreateFile {
 		// CreateFile.create(Order.class, String.class, true);
 		// CreateFile.create(UserInfo.class, String.class, true);
 		// CreateFile.create(Notice.class, String.class, true);
-		// CreateFile.create(User.class, String.class, true);
-		create(User.class, int.class, true);
-		create(Role.class, int.class, true);
-		create(RolePermission.class, int.class, true);
-		create(UserRole.class, int.class, true);
-		create(Permission.class, int.class, true);
+		CreateFile.create(User.class, String.class, true);
+		create(User.class, Integer.class, true);
+		create(Role.class, Integer.class, true);
+		create(RolePermission.class, Integer.class, true);
+		create(UserRole.class, Integer.class, true);
+		create(Permission.class, Integer.class, true);
+		create(Dict.class, Integer.class, true);
 	}
 
 }

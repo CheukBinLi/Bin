@@ -1,7 +1,7 @@
-package project.master.dao;
+package Controller.dao;
 
 import project.freehelp.common.entity.User;
 import project.master.dbmaamger.dao.BaseDao;
 
-public interface UserDao extends BaseDao<User, String> {
+public interface UserDao extends BaseDao<User, int> {
 }

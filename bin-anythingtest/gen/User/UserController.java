@@ -1,4 +1,10 @@
-package project.master.controller;
+package Controller.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -8,14 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import project.freehelp.common.entity.User;
 import project.freehelp.common.service.UserService;
 import project.master.fw.sh.common.AbstractController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @Scope("prototype")
@@ -36,7 +38,7 @@ public class UserController extends AbstractController {
 			User user = fillObject(new User(), getParams(request));
 			user.setId(user.generatedValue());
 			userService.save(user);
-			return new ModelAndView("user_" + next).addObject("user", user);
+			return new ModelAndView(request.getPathInfo().replace("post/", "")).addObject("user", user);
 		} catch (Throwable e) {
 			return exceptionPage(e);
 		}
@@ -60,7 +62,7 @@ public class UserController extends AbstractController {
 		try {
 			User user = fillObject(new User(), getParams(request));
 			userService.update(user);
-			return new ModelAndView("user_" + next).addObject("user", user);
+			return new ModelAndView(request.getPathInfo().replace("put/", "")).addObject("user", user);
 		} catch (Throwable e) {
 			return exceptionPage(e);
 		}
@@ -80,7 +82,7 @@ public class UserController extends AbstractController {
 
 	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public Object get(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
+	public Object get(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") int id) {
 		try {
 			User user = userService.getByPk(id);
 			return success(user);
@@ -90,10 +92,10 @@ public class UserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "get/{id}/{next}", method = RequestMethod.GET)
-	public ModelAndView getj(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id, @PathVariable("next") String next) {
+	public ModelAndView getj(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") int id, @PathVariable("next") String next) {
 		try {
 			User user = userService.getByPk(id);
-			return new ModelAndView("user_" + next).addObject("user", user);
+			return new ModelAndView(request.getPathInfo().replace("get/" + id + "/", "")).addObject("user", user);
 		} catch (Throwable e) {
 			return exceptionPage(e);
 		}
@@ -105,8 +107,8 @@ public class UserController extends AbstractController {
 			Map<String, Object> map = getParams(request);
 			int page = map.containsKey("page") ? Integer.valueOf(map.remove("page").toString()) : -1;
 			int size = map.containsKey("size") ? Integer.valueOf(map.remove("size").toString()) : -1;
-			List<User> list = userService.getList(map,true, page, size);
-			return new ModelAndView("user_" + next).addObject("userList", list);
+			List<User> list = userService.getList(map, page, size);
+			return new ModelAndView(request.getPathInfo().replace("list/", "")).addObject("userList", list);
 		} catch (Throwable e) {
 			return exceptionPage(e);
 		}
@@ -119,7 +121,7 @@ public class UserController extends AbstractController {
 			Map<String, Object> map = getParams(request);
 			int page = map.containsKey("page") ? Integer.valueOf(map.remove("page").toString()) : -1;
 			int size = map.containsKey("size") ? Integer.valueOf(map.remove("size").toString()) : -1;
-			List<User> list = userService.getList(map,true, page, size);
+			List<User> list = userService.getList(map, page, size);
 			return success(list);
 		} catch (Throwable e) {
 			return fail(e);
@@ -128,7 +130,7 @@ public class UserController extends AbstractController {
 
 	@ResponseBody
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-	public Object delete(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
+	public Object delete(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") int id) {
 		try {
 			userService.delete(new User(id));
 			return success();

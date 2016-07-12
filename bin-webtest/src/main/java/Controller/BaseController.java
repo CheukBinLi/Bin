@@ -30,13 +30,13 @@ public class BaseController {
 	@Autowired
 	private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
-	@RequestMapping("{path}")
+	@RequestMapping({ "{path}", "xxxxxxx", "ggggggg" })
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
 
 		Map<RequestMappingInfo, HandlerMethod> allRequestMappings = requestMappingHandlerMapping.getHandlerMethods();
 
 		for (Entry<RequestMappingInfo, HandlerMethod> en : allRequestMappings.entrySet()) {
-			System.out.println(en.getKey());
+			System.out.println(en.getKey().getPatternsCondition());
 			System.out.println(en.getValue());
 		}
 

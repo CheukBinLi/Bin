@@ -1,14 +1,15 @@
-package project.master.dao.impl;
+package Controller.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import project.freehelp.common.dao.UserDao;
 import project.freehelp.common.entity.User;
 import project.master.dbmaamger.DBAdapter;
 import project.master.dbmaamger.dao.AbstractDao;
 
 @Component
-public class UserDaoImpl extends AbstractDao<User, String> implements UserDao {
+public class UserDaoImpl extends AbstractDao<User, int> implements UserDao {
 
 	@Autowired
 	private DBAdapter dBAdapter;
