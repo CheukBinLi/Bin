@@ -10,6 +10,8 @@ public interface BaseDao<entity, ID extends Serializable> extends HibernateRepli
 
 	entity get(ID o) throws Throwable;
 
+	int getCount(Map<String, Object> params) throws Throwable;
+
 	/***
 	 * 
 	 * @param page
@@ -73,6 +75,8 @@ public interface BaseDao<entity, ID extends Serializable> extends HibernateRepli
 	// List<Object[]> getListCustomQueryName(String queryName, Map<String, Object> params, boolean isHql, boolean isFromat, int page, int size) throws Throwable;
 
 	entity save(entity o) throws Throwable;
+
+	public entity saveCustom(entity e) throws Throwable;
 
 	void saveOrUpeate(entity o) throws Throwable;
 

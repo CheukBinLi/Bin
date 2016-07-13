@@ -16,7 +16,7 @@ public class LuceneRssServiceImpl extends AbstractService<LuceneRss, String> imp
 	private LuceneRssDao luceneRssDao;
 
 	@Override
-	public BaseDao<LuceneRss, String> getService() {
+	public BaseDao<LuceneRss, String> getDao() {
 		return luceneRssDao;
 	}
 

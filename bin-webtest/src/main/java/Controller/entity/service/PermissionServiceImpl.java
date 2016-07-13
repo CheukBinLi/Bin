@@ -16,7 +16,7 @@ public class PermissionServiceImpl extends AbstractService<Permission, String> i
 	private PermissionDao permissionDao;
 
 	@Override
-	public BaseDao<Permission, String> getService() {
+	public BaseDao<Permission, String> getDao() {
 		return permissionDao;
 	}
 

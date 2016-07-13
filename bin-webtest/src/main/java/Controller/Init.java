@@ -34,9 +34,8 @@ public class Init {
 
 	@PostConstruct
 	void init() {
-
 		try {
-			dictService.save(new Dict().setKey("aaa"));
+			dictService.saveCustom(new Dict().setKey("aaa11011996").setId(110));
 		} catch (Throwable e1) {
 			e1.printStackTrace();
 		}

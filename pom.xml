@@ -22,9 +22,16 @@
 		<gson.version>2.6.2</gson.version>
 		<junit.version>4.12</junit.version>
 		<aspectj.version>1.8.9</aspectj.version>
+		<slf4j.version>1.7.12</slf4j.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 	<modules>
 		<module>bin-net</module>

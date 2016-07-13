@@ -12,6 +12,10 @@ public abstract class AbstractDao<entity, ID extends Serializable> implements Ba
 
 	public abstract DBAdapter getDBAdapter();
 
+	public entity saveCustom(entity e) throws Throwable {
+		return save(e);
+	}
+
 	public entity get(ID id) throws Throwable {
 		return getDBAdapter().get(getEntityClass(), id);
 	}
@@ -24,23 +28,24 @@ public abstract class AbstractDao<entity, ID extends Serializable> implements Ba
 		return getDBAdapter().getListByXqlQueryName(getDBAdapter().queryNameFormat(getEntityClass(), "list"), true, true, params, page, size);
 	}
 
+	public int getCount(Map<String, Object> params) throws Throwable {
+		Object o = getDBAdapter().uniqueResult(getDBAdapter().queryNameFormat(getEntityClass(), "count"), true, true, params);
+		return Integer.valueOf(o.toString());
+	}
+
 	public <T> List<T> getList(String queryName, Map<String, Object> params, boolean isFromat, int page, int size) throws Throwable {
 		return getDBAdapter().getListByXqlQueryName(getDBAdapter().queryNameFormat(getEntityClass(), queryName), true, isFromat, params, page, size);
-		// return getDBAdapter().getListByXqlQueryName(getDBAdapter().queryNameFormat(getEntityClass(), queryName), true, isFromat, params, page, size);
 	}
 
 	public <T> List<T> getListCustomQueryName(String queryName, Map<String, Object> params, boolean isFromat, int page, int size) throws Throwable {
-		// return getDBAdapter().getListByXqlQueryName(queryName.toLowerCase(), true, isFromat, params, page, size);
 		return getDBAdapter().getListByXqlQueryName(queryName.toLowerCase(), true, isFromat, params, page, size);
 	}
 
 	public List<entity> getListEntity(String queryName, Map<String, Object> params, boolean isFromat, int page, int size) throws Throwable {
 		return getDBAdapter().getListByXqlQueryName(getDBAdapter().queryNameFormat(getEntityClass(), queryName), true, isFromat, params, page, size);
-		// return getDBAdapter().getListByXqlQueryName(getDBAdapter().queryNameFormat(getEntityClass(), queryName), true, isFromat, params, page, size);
 	}
 
 	public List<entity> getListEntityCustomQueryName(String queryName, Map<String, Object> params, boolean isFromat, int page, int size) throws Throwable {
-		// return getDBAdapter().getListByXqlQueryName(queryName.toLowerCase(), true, isFromat, params, page, size);
 		return getDBAdapter().getListByXqlQueryName(queryName.toLowerCase(), true, isFromat, params, page, size);
 	}
 

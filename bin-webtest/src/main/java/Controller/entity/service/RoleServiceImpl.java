@@ -16,7 +16,7 @@ public class RoleServiceImpl extends AbstractService<Role, String> implements Ro
 	private RoleDao roleDao;
 
 	@Override
-	public BaseDao<Role, String> getService() {
+	public BaseDao<Role, String> getDao() {
 		return roleDao;
 	}
 

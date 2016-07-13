@@ -12,6 +12,8 @@ public interface BaseService<entity, ID extends Serializable> {
 
 	entity save(entity obj) throws Throwable;
 
+	entity saveCustom(entity obj) throws Throwable;
+
 	void saveOrUpdate(entity obj) throws Throwable;
 
 	void update(entity obj) throws Throwable;

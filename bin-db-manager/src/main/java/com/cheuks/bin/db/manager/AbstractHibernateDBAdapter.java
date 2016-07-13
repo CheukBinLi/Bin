@@ -159,10 +159,6 @@ public abstract class AbstractHibernateDBAdapter implements DBAdapter {
 		return o;
 	}
 
-	public <T> T customSave(T t) throws Throwable {
-		return null;
-	}
-
 	public <T> T replicate(T o, String ReplicationMode) throws Throwable {
 		getSession().replicate(o, org.hibernate.ReplicationMode.valueOf(ReplicationMode));
 		return o;
@@ -174,6 +170,11 @@ public abstract class AbstractHibernateDBAdapter implements DBAdapter {
 
 	public int executeUpdate(String xql, boolean isHql) throws Throwable {
 		Query query = isHql ? getSession().createQuery(xql) : getSession().createSQLQuery(xql);
+		return query.executeUpdate();
+	}
+
+	public int executeUpdate(String xql, Map<String, Object> params, boolean isHql) throws Throwable {
+		Query query = fillParams(isHql ? getSession().createQuery(xql) : getSession().createSQLQuery(xql), params);
 		return query.executeUpdate();
 	}
 
@@ -201,8 +202,7 @@ public abstract class AbstractHibernateDBAdapter implements DBAdapter {
 		for (Entry<String, ?> en : o.entrySet())
 			try {
 				q.setParameter(en.getKey(), en.getValue());
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 		return q;
 	}
 

@@ -16,7 +16,7 @@ public class RolePermissionServiceImpl extends AbstractService<RolePermission, S
 	private RolePermissionDao rolePermissionDao;
 
 	@Override
-	public BaseDao<RolePermission, String> getService() {
+	public BaseDao<RolePermission, String> getDao() {
 		return rolePermissionDao;
 	}
 

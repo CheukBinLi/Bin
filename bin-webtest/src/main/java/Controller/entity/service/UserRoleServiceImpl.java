@@ -16,7 +16,7 @@ public class UserRoleServiceImpl extends AbstractService<UserRole, String> imple
 	private UserRoleDao userRoleDao;
 
 	@Override
-	public BaseDao<UserRole, String> getService() {
+	public BaseDao<UserRole, String> getDao() {
 		return userRoleDao;
 	}
 

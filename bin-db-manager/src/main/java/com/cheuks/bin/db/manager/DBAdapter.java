@@ -221,15 +221,6 @@ public interface DBAdapter {
 	 * 插入
 	 * 
 	 * @param t
-	 * @return
-	 * @throws Throwable
-	 */
-	public <T> T customSave(T t) throws Throwable;
-
-	/***
-	 * 插入
-	 * 
-	 * @param t
 	 *            对象
 	 * @param ReplicationMode
 	 *            插入模式()
@@ -247,6 +238,8 @@ public interface DBAdapter {
 	public void saveOrUpdate(Object t) throws Throwable;
 
 	int executeUpdate(String xql, boolean isHql) throws Throwable;
+
+	int executeUpdate(String xql, Map<String, Object> params, boolean isHql) throws Throwable;
 
 	int executeUpdate(String queryName, Map<String, Object> params, boolean isHql, boolean isFromat) throws Throwable;
 
