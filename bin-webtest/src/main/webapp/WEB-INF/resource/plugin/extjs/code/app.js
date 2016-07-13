@@ -6,7 +6,7 @@ Ext.onReady(function() {
 	Ext.application({
 				// requires : ['Ext.container.Viewport'],
 				name : 'am',
-				appFolder : 'resource/plugin/extjs/5.10/code/apps',
+				appFolder : 'resource/plugin/extjs/code/apps',
 				launch : function() {
 					Ext.create('Ext.container.Viewport', {
 								layout : 'fit',
