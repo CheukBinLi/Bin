@@ -37,15 +37,7 @@
 	<!-- 項目自定义的Realm -->
 	<bean id="shiroDbRealm" class="Controller.shiro.Realm"></bean>
 
-	<bean id="shiroEhcacheManager" class="Controller.shiro.cache.ShiroRedisClusterManager">
-	</bean>
-
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="shiroDbRealm" />
-		<!-- <property name="cacheManager" ref="shiroEhcacheManager" /> -->
-		<property name="sessionManager" ref="DefaultWebSessionManager" />
-	</bean>
-
+	<!-- <bean id="shiroEhcacheManager" class="Controller.shiro.cache.ShiroRedisClusterManager"> </bean> -->
 
 	<bean id="redisSessionDao" class="Controller.shiro.RedisSessionDao">
 		<!-- <property name="tempCacheTimeOutSecond" value="10" />15秒过期 -->
@@ -56,10 +48,11 @@
 		<property name="serverList" value="127.0.0.1:6379" />
 		<property name="testOnBorrow" value="true" />
 		<property name="maxTotal" value="50" />
-		<!-- 2分钟过期 -->
-		<property name="expireSecond" value="120" />
+		<!-- 10分钟过期 -->
+		<property name="expireSecond" value="600" />
 		<property name="redisSerialize" ref="redisSerialize" />
 	</bean>
+	
 	<!-- <bean id="redisManager" class="Controller.shiro.redis.StandAloneJedisManager"> <property name="host" value="127.0.0.1" /> <property name="port" value="6379" /> <property name="testOnBorrow" value="true" /> <property name="expireSecond" value="120" />2分钟过期 <property name="redisSerialize" ref="redisSerialize" /> </bean> -->
 
 	<bean id="redisSerialize" class="Controller.shiro.redis.DefaultRedisSerialize" />
@@ -70,6 +63,19 @@
 	</bean>
 
 	<!-- <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> <property name="cacheManagerConfigFile" value="/WEB-INF/ehcache-shiro.xml" /> </bean> -->
+
+	<!-- -->
+	<bean name="redisShiroCacheManager" class="Controller.shiro.RedisShiroCacheManager">
+		<property name="redisManager" ref="redisManager" />
+	</bean>
+
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="shiroDbRealm" />
+		<!-- <property name="cacheManager" ref="shiroEhcacheManager" /> -->
+		<property name="cacheManager" ref="redisShiroCacheManager" />
+		<property name="sessionManager" ref="DefaultWebSessionManager" />
+	</bean>
 
 	<!-- Shiro Filter -->
 	<bean id="shiroFilter" class="Controller.shiro.CutomShiroFilterFactoryBean">

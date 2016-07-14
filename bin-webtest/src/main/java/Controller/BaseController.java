@@ -39,6 +39,8 @@ public class BaseController {
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
 		System.out.println(Arrays.asList(defaultListableBeanFactory.getBeanDefinitionNames()).toString());
 
+		// Object marker=defaultListableBeanFactory.getBean("configuration");
+
 		Map<RequestMappingInfo, HandlerMethod> allRequestMappings = requestMappingHandlerMapping.getHandlerMethods();
 
 		for (Entry<RequestMappingInfo, HandlerMethod> en : allRequestMappings.entrySet()) {
@@ -73,6 +75,12 @@ public class BaseController {
 		// LuceneRssService s=(LuceneRssService) o;
 		// System.err.println(o);
 		Subject user = SecurityUtils.getSubject();
+		if (user.isAuthenticated())
+			return new ModelAndView("/main");
+		String verificationCode = request.getParameter("verificationCode");
+		if (null == verificationCode || !verificationCode.toUpperCase().equals(user.getSession().getAttribute("verificationCode")))
+			return new ModelAndView(request.getServletPath());
+		user.getSession().removeAttribute("verificationCode");
 		String username = request.getParameter("name");
 		System.err.println("username:" + username);
 		if (null == username)
@@ -80,6 +88,7 @@ public class BaseController {
 		String password = request.getParameter("password");
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		user.login(token);
+		user.getSession().setAttribute("hhha", "叼嗱星");
 		return new ModelAndView("/main");
 	}
 
@@ -92,6 +101,13 @@ public class BaseController {
 			map.put(name, request.getParameter(name));
 		}
 		return map;
+	}
+
+	// 验证码
+	@RequestMapping(value = "verificationcode")
+	public void ramdonImage(HttpServletRequest request, HttpServletResponse response) {
+		SecurityUtils.getSubject().getSession().setAttribute("verificationCode", RandomImage.randomImageWriter(response, request, 100, 30, 18));
+		return;
 	}
 
 }

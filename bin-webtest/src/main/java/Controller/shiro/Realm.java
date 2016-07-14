@@ -84,7 +84,7 @@ public class Realm extends AuthorizingRealm {
 		System.out.println("1#############################");
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		info.setRoles(new HashSet<String>(Arrays.asList("admin")));
-		info.setStringPermissions(new HashSet<String>(Arrays.asList("11","12")));
+		info.setStringPermissions(new HashSet<String>(Arrays.asList("11", "12")));
 		// info.setObjectPermissions(objectPermissions);
 		return info;
 	}
@@ -94,8 +94,8 @@ public class Realm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken aToken) throws AuthenticationException {
-		System.out.println("2");
 		UsernamePasswordToken token = (UsernamePasswordToken) aToken;
+		token.setRememberMe(true);
 		User user = userCache.get(token.getUsername() + new String(token.getPassword()));
 		// User user = userService.getByAccount(token.getUsername());
 		if (user != null) {

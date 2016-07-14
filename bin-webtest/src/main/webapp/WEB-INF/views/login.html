@@ -3,10 +3,11 @@
 	<h2>login</h2>
 
 	<form action="login" method="POST">
-		<label>name</label>
-		<input type="text" name="name" value="sa">
-		<label>password</label>
-		<input type="password" name="password" value="123">
+		<label>name</label> <input type="text" name="name" value="sa">
+		<label>password</label> <input type="password" name="password"
+			value="123"> <input type="text" name=verificationCode>
+		<img alt=""
+			src="${request.contextPath}/verificationcode?validation=true">
 		<input type="submit">
 	</form>
 
