@@ -35,11 +35,9 @@ public class BaseController {
 	@Autowired
 	private DefaultListableBeanFactory defaultListableBeanFactory;
 
-	@RequestMapping({ "{path}", "xxxxxxx", "ggggggg" })
+	@RequestMapping({ "{path}" })
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response, @PathVariable("path") String path) throws IOException {
 		System.out.println(Arrays.asList(defaultListableBeanFactory.getBeanDefinitionNames()).toString());
-
-		// Object marker=defaultListableBeanFactory.getBean("configuration");
 
 		Map<RequestMappingInfo, HandlerMethod> allRequestMappings = requestMappingHandlerMapping.getHandlerMethods();
 
@@ -105,8 +103,14 @@ public class BaseController {
 
 	// 验证码
 	@RequestMapping(value = "verificationcode")
-	public void ramdonImage(HttpServletRequest request, HttpServletResponse response) {
-		SecurityUtils.getSubject().getSession().setAttribute("verificationCode", RandomImage.randomImageWriter(response, request, 100, 30, 18));
+	public void ramdonImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String verificationCode = null;
+		String tempVerificationCode = null;
+		if (null != (verificationCode = request.getParameter("verificationCode")) || null == (tempVerificationCode = SecurityUtils.getSubject().getSession().getAttribute("verificationCode").toString()))
+			SecurityUtils.getSubject().getSession().setAttribute("verificationCode", RandomImage.randomImageWriter(response, request, 100, 30, 18));
+		else {
+			ResponseCharset.responseChangeEncodeUTF8(response).getWriter().write(verificationCode.toUpperCase().equals(tempVerificationCode) ? "OK" : "field");
+		}
 		return;
 	}
 
