@@ -48,9 +48,11 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("/login", "anon");
+		map.put("/resource", "anon");
+		map.put("/back", "anon");
 		map.put("/verificationcode", "anon");
 		map.put("/error", "anon");
-		map.put("/**", "authc");
+//		map.put("/**", "authc");
 		// map.put("/**", "roles[admin]");
 		// map.put("/**", "perms[11,12,13]");
 		// map.put("/**", "perms[adnmi:add]");

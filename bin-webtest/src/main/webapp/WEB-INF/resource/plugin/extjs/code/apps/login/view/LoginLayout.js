@@ -70,12 +70,12 @@ Ext.define('am.login.view.LoginLayout', {
 											click : {
 													element : 'el',
 													fn : function(a, b, c) {
-														b.setAttribute("src", 'verificationcode?validation=true&verificationCode=?a=' + Math.random());
+														b.setAttribute("src", 'verificationcode?' + Math.random());
 													}
 											}
 										},
 										initComponent : function() {
-											this.setSrc('verificationcode?validation=true&verificationCode=');
+											this.setSrc('verificationcode');
 										}
 								} ]
 						} ],

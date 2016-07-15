@@ -106,10 +106,10 @@ public class BaseController {
 	public void ramdonImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String verificationCode = null;
 		String tempVerificationCode = null;
-		if (null != (verificationCode = request.getParameter("verificationCode")) || null == (tempVerificationCode = SecurityUtils.getSubject().getSession().getAttribute("verificationCode").toString()))
+		if (null == (verificationCode = request.getParameter("verificationCode")) || null == (tempVerificationCode = SecurityUtils.getSubject().getSession().getAttribute("verificationCode").toString()))
 			SecurityUtils.getSubject().getSession().setAttribute("verificationCode", RandomImage.randomImageWriter(response, request, 100, 30, 18));
 		else {
-			ResponseCharset.responseChangeEncodeUTF8(response).getWriter().write(verificationCode.toUpperCase().equals(tempVerificationCode) ? "OK" : "field");
+			ResponseCharset.responseChangeEncodeUTF8(response).getWriter().write(verificationCode.toUpperCase().equals(tempVerificationCode) ? "OK" : "FIALD");
 		}
 		return;
 	}
