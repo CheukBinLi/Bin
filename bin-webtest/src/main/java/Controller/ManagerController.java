@@ -17,7 +17,7 @@ public class ManagerController {
 
 	@RequestMapping({ "/back" })
 	public ModelAndView basePath(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		return new ModelAndView(SecurityUtils.getSubject().isAuthenticated() ? "/manager" : "/back");
+		return new ModelAndView("/back");
 	}
 
 }

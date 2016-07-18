@@ -1,7 +1,6 @@
 // 权限信息集
 Ext.define('am.sms.store.SmsLogStore', {
 			extend : 'Ext.data.Store',
-			storeId : 'smslogstore',
 			fields : [{
 						name : 'id',
 						type : 'int'
@@ -29,17 +28,7 @@ Ext.define('am.sms.store.SmsLogStore', {
 					}, {
 						name : 'remark',
 						type : 'String'
-					}],
-			proxy : {
-				type : 'ajax',
-				actionMethods : 'POST',
-				url : 'smsmanager/allSmsLog.html',
-				reader : {
-					type : 'json'
-					// root : 'users'
-				}
-			},
-			autoLoad : true
+					}]
 		});
 // 创建数据集
 //Ext.create('am.sms.store.SmsLogStore').load();

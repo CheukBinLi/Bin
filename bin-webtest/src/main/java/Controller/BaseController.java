@@ -114,4 +114,11 @@ public class BaseController {
 		return;
 	}
 
+	@RequestMapping(value = "verification")
+	public void verification(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Subject token = SecurityUtils.getSubject();
+		System.err.println("验证通过" + (token.isAuthenticated() ? "OK" : "FAIL"));
+		response.getWriter().write((token.isAuthenticated() ? "OK" : "FAIL"));
+	}
+
 }

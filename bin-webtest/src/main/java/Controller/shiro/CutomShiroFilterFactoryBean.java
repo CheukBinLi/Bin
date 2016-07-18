@@ -48,11 +48,12 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("/login", "anon");
-		map.put("/resource", "anon");
+		map.put("/resource/**", "anon");
 		map.put("/back", "anon");
 		map.put("/verificationcode", "anon");
+		map.put("/verification", "anon");
 		map.put("/error", "anon");
-//		map.put("/**", "authc");
+		map.put("/**", "authc");
 		// map.put("/**", "roles[admin]");
 		// map.put("/**", "perms[11,12,13]");
 		// map.put("/**", "perms[adnmi:add]");
@@ -61,7 +62,8 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 		if (null != permissions)
 			for (Permission p : permissions)
 				map.put(p.getUrl(), "perms[" + p.getId() + "]");
-		setFilterChainDefinitionMap(map);
+		// setFilterChainDefinitionMap(map);
+		getFilterChainDefinitionMap().putAll(map);
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {

@@ -76,8 +76,10 @@
 		<property name="requestContextAttribute" value="request" />
 		<property name="attributes">
 			<props>
-				<prop key="extjsVersion">5.10</prop>
-				<prop key="extjsTheme">packages/ext-theme-classic/build/resources/ext-theme-classic-all.css
+				<!-- <prop key="extjsVersion">5.10</prop> <prop key="extjsTheme">packages/ext-theme-classic/build/resources/ext-theme-classic-all.css </prop> -->
+				<prop key="extjsVersion">6.0</prop>
+				<prop key="bootstrap">ext-bootstrap</prop>
+				<prop key="extjsTheme">classic/theme-gray/resources/theme-gray-all.css
 				</prop>
 			</props>
 		</property>

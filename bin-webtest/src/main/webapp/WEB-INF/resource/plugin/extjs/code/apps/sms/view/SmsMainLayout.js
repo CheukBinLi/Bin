@@ -36,11 +36,7 @@ Ext.define('am.sms.view.SmsMainLayout', {
 					}, {
 						text : '备注',
 						dataIndex : 'remark'
-					}],
-			store : 'am.sms.store.SmsLogStore',
-			initComponent : function() {
-				this.callParent(arguments);
-			}
+					}]
 		})
 // private int id;
 // private int userid;// 用户ID
