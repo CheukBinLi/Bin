@@ -19,9 +19,8 @@ Ext.define("am.login.controller.LoginController", {
 									url : 'login',
 									type : 'ajax',
 									params : {
-											name : cc.phone,
-											password : cc.password,
-											verificationCode : cc.verificationcode
+											phone : cc.phone,
+											password : cc.password
 									},
 									success : function(response) {
 										if (response.responseText.toUpperCase() == 'OK') {
