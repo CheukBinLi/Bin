@@ -59,7 +59,7 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 			split = ip.nextToken().split(":");
 			if (null == split || split.length < 2)
 				continue;
-			info = new JedisShardInfo(split[0], split[1]);
+			info = new JedisShardInfo(split[0], Integer.valueOf(split[1]));
 			if (null != password)
 				info.setPassword(password);
 			shardInfos.add(info);

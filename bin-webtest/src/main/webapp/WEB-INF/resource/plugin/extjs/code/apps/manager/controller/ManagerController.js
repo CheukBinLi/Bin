@@ -9,7 +9,7 @@ Ext.define("am.manager.controller.ManagerController", {
 						var viewXtype = info.rootViewXtype.down(info.xtypeName);
 						// 空即创建
 						if (!viewXtype) {
-							viewXtype=Ext.widget('smsmainlayout');
+							viewXtype=Ext.widget(info.xtypeName);
 							//viewXtype = Ext.createWidget(info.xtypeName);
 							viewXtype.setTitle(info.xtypeTitle);
 							info.rootViewXtype.add(viewXtype);

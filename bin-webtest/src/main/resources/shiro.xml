@@ -45,14 +45,16 @@
 	</bean>
 
 	<bean id="redisManager" class="Controller.shiro.redis.ClusterJedisManager">
-		<property name="serverList" value="127.0.0.1:6379" />
+		<!-- <property name="serverList" value="127.0.0.1:6379" /> -->
+		<property name="serverList" value="192.168.3.4:7001,192.168.3.4:7002,192.168.3.4:7003,192.168.3.4:7004,192.168.3.4:7005,192.168.3.4:7006" />
 		<property name="testOnBorrow" value="true" />
+		<property name="password" value="123" />
 		<property name="maxTotal" value="50" />
 		<!-- 10分钟过期 -->
 		<property name="expireSecond" value="600" />
 		<property name="redisSerialize" ref="redisSerialize" />
 	</bean>
-	
+
 	<!-- <bean id="redisManager" class="Controller.shiro.redis.StandAloneJedisManager"> <property name="host" value="127.0.0.1" /> <property name="port" value="6379" /> <property name="testOnBorrow" value="true" /> <property name="expireSecond" value="120" />2分钟过期 <property name="redisSerialize" ref="redisSerialize" /> </bean> -->
 
 	<bean id="redisSerialize" class="Controller.shiro.redis.DefaultRedisSerialize" />
