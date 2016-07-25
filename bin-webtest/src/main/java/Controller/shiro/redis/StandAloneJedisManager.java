@@ -99,12 +99,12 @@ public class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis, K,
 	}
 
 	@Override
-	Jedis getResource() {
+	public Jedis getResource() {
 		return pool.getResource();
 	}
 
 	@Override
-	void destory(Jedis jedis) {}
+	public void destory(Jedis jedis) {}
 
 	public StandAloneJedisManager<K, V> setTimeOut(int timeOut) {
 		this.timeOut = timeOut;

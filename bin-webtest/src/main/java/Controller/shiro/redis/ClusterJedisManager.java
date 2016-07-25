@@ -143,13 +143,13 @@ public class ClusterJedisManager<K extends Serializable, V extends Serializable>
 	}
 
 	@Override
-	ShardedJedis getResource() {
+	public ShardedJedis getResource() {
 		init();
 		return pool.getResource();
 	}
 
 	@Override
-	void destory(ShardedJedis jedis) {
+	public void destory(ShardedJedis jedis) {
 		jedis.close();
 	}
 
