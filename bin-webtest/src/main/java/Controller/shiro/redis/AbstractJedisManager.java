@@ -9,14 +9,14 @@ public abstract class AbstractJedisManager<J extends JedisCommands, K, V> implem
 	 * 
 	 * @return
 	 */
-	abstract J getResource();
+	public abstract J getResource();
 
 	/***
 	 * 销毁连接
 	 * 
 	 * @param jedis
 	 */
-	abstract void destory(J jedis);
+	public abstract void destory(J jedis);
 
 	/***
 	 * 序列化
