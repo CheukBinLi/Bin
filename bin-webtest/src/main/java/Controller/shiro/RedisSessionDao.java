@@ -17,7 +17,7 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
 	private static transient final Logger LOG = LoggerFactory.getLogger(RedisSessionDao.class);
 
-	RedisManager<String, Session> redisManager;
+	RedisManager redisManager;
 
 	private int tempCacheTimeOutSecond = 10;// 10秒
 
@@ -44,11 +44,12 @@ public class RedisSessionDao extends AbstractSessionDAO {
 	}
 
 	public Collection<Session> getActiveSessions() {
-		try {
-			return redisManager.getcollection();
-		} catch (Throwable e) {
-			LOG.error("redis is error:", e);
-		}
+		// try {
+		// return redisManager.getcollection();
+		// } catch (Throwable e) {
+		// LOG.error("redis is error:", e);
+		// }
+		LOG.error("not support");
 		return new ArrayList<Session>();
 	}
 
@@ -57,7 +58,7 @@ public class RedisSessionDao extends AbstractSessionDAO {
 		try {
 			Serializable sessionId = generateSessionId(session);
 			assignSessionId(session, sessionId);
-			if (redisManager.create(session.getId().toString(), session))
+			if (redisManager.setObject(session.getId().toString(), session))
 				TEMP_SESSION_CACHE.put(session.getId().toString(), new SessionVO(session));
 		} catch (Throwable e) {
 			LOG.error("redis is error:", e);
@@ -105,31 +106,30 @@ public class RedisSessionDao extends AbstractSessionDAO {
 		SessionVO vo = TEMP_SESSION_CACHE.get(key);
 		Session session = null == vo ? null : vo.session;
 		if (null == session) {
-			session = redisManager.get(key);
+			session = redisManager.getObject(key);
 			if (null != session)
 				TEMP_SESSION_CACHE.put(key, new SessionVO(session));
 			return session;
-		} else
-			if ((System.currentTimeMillis() >= vo.lastAccessTime)) {
-				session = redisManager.get(key);
-				if (LOG.isDebugEnabled())
-					LOG.debug("获取Session-id：" + (null == session ? null : session.getId()));
-				if (null != session)
-					vo.updateSession(session);
-			}
+		} else if ((System.currentTimeMillis() >= vo.lastAccessTime)) {
+			session = redisManager.getObject(key);
+			if (LOG.isDebugEnabled())
+				LOG.debug("获取Session-id：" + (null == session ? null : session.getId()));
+			if (null != session)
+				vo.updateSession(session);
+		}
 		return session;
 	}
 
 	protected void updateSession(Session session) throws Throwable {
 		String key = session.getId().toString();
 		SessionVO vo = TEMP_SESSION_CACHE.get(key);
-		if (redisManager.create(session.getId().toString(), session))
+		if (redisManager.setObject(session.getId().toString(), session))
 			vo.updateSession(session);
 		if (LOG.isDebugEnabled())
 			LOG.debug("Session更新：" + session.getId());
 	}
 
-	public RedisSessionDao setRedisManager(RedisManager<String, Session> redisManager) {
+	public RedisSessionDao setRedisManager(RedisManager redisManager) {
 		this.redisManager = redisManager;
 		return this;
 	}

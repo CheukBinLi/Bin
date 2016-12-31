@@ -14,6 +14,8 @@ public interface ServiceHandlerTestI extends ServiceHandler {
 
 	public MessageInfo mmx() throws Throwable;
 
+	public Integer mmx3() throws Throwable;
+
 	public void mmx1() throws Throwable;
 
 	public String a(String haha, int a) throws Throwable;

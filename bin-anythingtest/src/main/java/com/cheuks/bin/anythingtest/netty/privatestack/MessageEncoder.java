@@ -8,19 +8,29 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf buf) throws Exception {
-
+		int a = 0;
+		a += 4;
 		buf.writeInt(msg.firstByte);
+		a += 4;
 		buf.writeInt(msg.getHeader().getType());
+		a += 4;
 		buf.writeLong(msg.getHeader().getLength());
+		a += 8;
 		buf.writeLong(msg.getHeader().getSessionID());
+		a += 8;
 		byte[] attachment = serial.objectToBytes(msg.getHeader().getAttchment());
 		buf.writeLong(attachment.length);
+		a += 8;
 		buf.writeBytes(attachment);
+		a += attachment.length;
 		byte[] body = serial.objectToBytes(msg.getBody());
-		//int way = buf.arrayOffset();
+		// int way = buf.arrayOffset();
 		buf.writeLong(body.length);
+		a += 8;
 		buf.writeBytes(body);
-		//		buf.setLong(way, body.length);
+		a += body.length;
+		// buf.setLong(way, body.length);
+		System.err.println(a);
 
 	}
 

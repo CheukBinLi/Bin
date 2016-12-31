@@ -38,4 +38,9 @@ public class ServiceHandlerTest2 implements ServiceHandlerTestI {
 		return "";
 	}
 
+	public Integer mmx3() throws Throwable {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

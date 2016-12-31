@@ -44,11 +44,10 @@
 		<property name="redisManager" ref="redisManager"></property>
 	</bean>
 
-	<bean id="redisManager" class="Controller.shiro.redis.ClusterJedisManager">
+	<bean id="redisManager" class="Controller.shiro.redis.RedisClusterManager">
 		<!-- <property name="serverList" value="127.0.0.1:6379" /> -->
-		<property name="serverList" value="192.168.3.4:7001,192.168.3.4:7002,192.168.3.4:7003,192.168.3.4:7004,192.168.3.4:7005,192.168.3.4:7006" />
+		<property name="serverList" value="192.168.1.200:2000,192.168.1.201:2001,192.168.1.202:2002,192.168.1.203:2003,192.168.1.204:2004,192.168.1.205:2005" />
 		<property name="testOnBorrow" value="true" />
-		<property name="password" value="123" />
 		<property name="maxTotal" value="50" />
 		<!-- 10分钟过期 -->
 		<property name="expireSecond" value="600" />

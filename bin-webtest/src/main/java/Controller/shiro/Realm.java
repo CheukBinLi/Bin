@@ -11,6 +11,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -99,12 +100,17 @@ public class Realm extends AuthorizingRealm {
 		User user = userCache.get(token.getUsername() + new String(token.getPassword()));
 		// User user = userService.getByAccount(token.getUsername());
 		if (user != null) {
-			// return new SimpleAuthenticationInfo(user.getAccount(), user.getPassword(), user.getNickname());
+			// if (Boolean.TRUE.equals(user.getLocked())) {
+			// throw new LockedAccountException(); // 帐号锁定
+			// }
+			// return new SimpleAuthenticationInfo(user.getAccount(),
+			// user.getPassword(), user.getNickname());
 			return new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(), user.getLogin());
 			// } else {
 			// return null;
 			// }
 		}
-		return null;
+		throw new UnknownAccountException();// 没找到帐号
+		// throw new AuthenticationException();
 	}
 }

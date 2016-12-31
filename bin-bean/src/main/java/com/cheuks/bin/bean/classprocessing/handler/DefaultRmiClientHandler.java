@@ -48,7 +48,7 @@ public class DefaultRmiClientHandler extends AbstractClassProcessingHandler<CtCl
 		else
 			sb.append(result);
 		sb.append("}");
-		//		System.out.println(sb.toString());
+		System.out.println(sb.toString());
 		ctMethod.setBody(sb.toString());
 		newClazz.addMethod(ctMethod);
 		return new HandlerInfo(null, newClazz, ctMethod);

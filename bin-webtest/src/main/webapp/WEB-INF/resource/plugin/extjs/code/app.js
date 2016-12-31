@@ -18,7 +18,9 @@ Ext.onReady(function() {
 				controllers : [
 						'am.manager.controller.ManagerController',
 						'am.login.controller.LoginController',
-						'am.sms.controller.SmsController'
+//						'am.sms.controller.SmsController',
+						'am.authority.controller.AuthorityController',
+						'am.user.controller.UserController'
 						]
 			});
 		//

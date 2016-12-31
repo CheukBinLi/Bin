@@ -11,16 +11,16 @@ import Controller.shiro.redis.RedisManager;
 
 public class RedisShiroCache<K, V> implements Cache<K, V> {
 
-	private RedisManager<K, V> redisManager;
+	private RedisManager redisManager;
 
-	public RedisShiroCache(RedisManager<K, V> redisManager) {
+	public RedisShiroCache(RedisManager redisManager) {
 		super();
 		this.redisManager = redisManager;
 	}
 
 	public V get(K key) throws CacheException {
 		try {
-			return redisManager.get(key);
+			return redisManager.getObject(key.toString());
 		} catch (RedisExcecption e) {
 			throw new CacheException(e);
 		}
@@ -28,7 +28,7 @@ public class RedisShiroCache<K, V> implements Cache<K, V> {
 
 	public V put(K key, V value) throws CacheException {
 		try {
-			redisManager.create(key, value);
+			redisManager.setObject(key.toString(), value);
 			return value;
 		} catch (RedisExcecption e) {
 			throw new CacheException(e);
@@ -37,8 +37,8 @@ public class RedisShiroCache<K, V> implements Cache<K, V> {
 
 	public V remove(K key) throws CacheException {
 		try {
-			V v = redisManager.get(key);
-			redisManager.delete(key);
+			V v = redisManager.getObject(key.toString());
+			redisManager.delete(key.toString());
 			return v;
 		} catch (RedisExcecption e) {
 			throw new CacheException(e);

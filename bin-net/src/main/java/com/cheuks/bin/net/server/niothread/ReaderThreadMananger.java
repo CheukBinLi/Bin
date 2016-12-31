@@ -52,7 +52,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 
 	@Override
 	public void run() {
-		//System.out.println("ReaderThread");
+		// System.out.println("ReaderThread");
 		for (int i = 0; i < defaultConcurrentCount; i++, currentCount.addAndGet(1))
 			executorService.submit(new Dispatcher());
 		while (!Thread.interrupted()) {
@@ -62,8 +62,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						if (READER_QUEUE.size() > 200 && currentCount.get() < maxConcurrentCount) {
 							executorService.submit(new Dispatcher());
 						}
-					}
-					else {
+					} else {
 						syncObj.wait();
 					}
 					Thread.sleep(10000);
@@ -84,8 +83,8 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					if (null != (key = READER_QUEUE.poll(pollInterval, TimeUnit.MICROSECONDS))) {
 						attachment = (Attachment) key.attachment();
 						try {
-							//							key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getReadEvent().process(key);
-							//							attachment = (Attachment) key.attachment();
+							// key = EVENT_LIST.get(attachment.getAttachment().getServiceType()).getReadEvent().process(key);
+							// attachment = (Attachment) key.attachment();
 							attachment = (Attachment) key.attachment();
 							channel = (SocketChannel) key.channel();
 							DataPacket dataPacket = ByteBufferUtil.newInstance().getData(channel, true);
@@ -94,7 +93,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
-							//							e.printStackTrace();
+							// e.printStackTrace();
 						} finally {
 							tryDo(RELEASE, key);
 						}
@@ -110,7 +109,7 @@ public class ReaderThreadMananger extends AbstractControlThread {
 					break;
 				}
 			}
-			//System.out.println("ReaderQueue-Dispatcher结束");
+			// System.out.println("ReaderQueue-Dispatcher结束");
 		}
 	}
 

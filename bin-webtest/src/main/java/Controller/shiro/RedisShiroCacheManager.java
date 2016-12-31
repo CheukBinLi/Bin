@@ -6,7 +6,6 @@ import org.apache.shiro.cache.CacheManager;
 
 import Controller.shiro.redis.RedisManager;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class RedisShiroCacheManager implements CacheManager {
 
 	private RedisManager redisManager;

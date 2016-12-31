@@ -44,12 +44,12 @@
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.cheuks</groupId>
 			<artifactId>bin-webtest</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>com.cheuks</groupId>
 			<artifactId>bin-util</artifactId>

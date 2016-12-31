@@ -2,7 +2,7 @@ package Controller.shiro.redis;
 
 import redis.clients.jedis.JedisCommands;
 
-public abstract class AbstractJedisManager<J extends JedisCommands, K, V> implements RedisManager<K, V> {
+public abstract class AbstractJedisManager<J extends JedisCommands> implements RedisManager {
 
 	/***
 	 * jedis
@@ -16,7 +16,8 @@ public abstract class AbstractJedisManager<J extends JedisCommands, K, V> implem
 	 * 
 	 * @param jedis
 	 */
-	public abstract void destory(J jedis);
+	public void destory(J jedis) {
+	};
 
 	/***
 	 * 序列化
@@ -27,7 +28,7 @@ public abstract class AbstractJedisManager<J extends JedisCommands, K, V> implem
 		return redisSerialize;
 	}
 
-	public AbstractJedisManager<J, K, V> setRedisSerialize(RedisSerialize redisSerialize) {
+	public AbstractJedisManager<J> setRedisSerialize(RedisSerialize redisSerialize) {
 		this.redisSerialize = redisSerialize;
 		return this;
 	}

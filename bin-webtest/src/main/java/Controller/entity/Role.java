@@ -1,6 +1,7 @@
 package Controller.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ public class Role implements Serializable {
 	private String roleName;
 	private int status;
 	private String remark;
+	private transient Set<Integer> permissions;
 
 	public int getId() {
 		return id;
@@ -52,6 +54,15 @@ public class Role implements Serializable {
 
 	public Role setRemark(String remark) {
 		this.remark = remark;
+		return this;
+	}
+
+	public Set<Integer> getPermissions() {
+		return permissions;
+	}
+
+	public Role setPermissions(Set<Integer> permissions) {
+		this.permissions = permissions;
 		return this;
 	}
 

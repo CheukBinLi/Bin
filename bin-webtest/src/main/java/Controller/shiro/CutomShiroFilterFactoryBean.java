@@ -38,10 +38,10 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 	private void init() {
 		if (this.isInit)
 			return;
-		isInit = true;
 		List<Permission> permissions = null;
 		try {
 			permissions = permissionService.getList(null, false, 0, 0);
+			isInit = true;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

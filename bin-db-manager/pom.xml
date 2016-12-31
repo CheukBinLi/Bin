@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>com.cheuks</groupId>
 		<artifactId>Bin</artifactId>
-		<version>${bin.version}</version>
+		<version>1.0</version>
 	</parent>
 	<groupId>com.cheuks</groupId>
 	<artifactId>bin-db-manager</artifactId>
-	<version>${bin.version}</version>
+	<version>1.0</version>
 	<name>bin-db-manager</name>
 	<url>http://maven.apache.org</url>
 	<properties>

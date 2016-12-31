@@ -9,12 +9,16 @@ import org.apache.thrift.transport.TTransport;
 public class demo_1_client {
 
 	public static void main(String[] args) throws TException {
-//		TTransport transport = new TSocket("127.0.0.1", 10099);
-		TTransport transport = new TSocket("127.0.0.1", 8888);
+		TTransport transport = new TSocket("127.0.0.1", 10099);
+		// TTransport transport = new TSocket("127.0.0.1", 8888);
 		TProtocol protocol = new TBinaryProtocol(transport);
-		HelloWordService.Client client = new HelloWordService.Client(protocol);
 		transport.open();
-		System.out.println(client.sayHello("叼拿星"));
+		long now = System.currentTimeMillis();
+		for (int i = 0; i < 10000; i++) {
+			HelloWordService.Client client = new HelloWordService.Client(protocol);
+			client.sayHello("叼拿星" + i);
+		}
+		System.err.println(System.currentTimeMillis() - now);
 		transport.close();
 	}
 

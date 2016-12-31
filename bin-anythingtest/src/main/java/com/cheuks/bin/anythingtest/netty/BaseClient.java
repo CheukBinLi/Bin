@@ -22,7 +22,7 @@ public abstract class BaseClient {
 
 	private EventLoopGroup work = new NioEventLoopGroup();
 
-	private Bootstrap client = new Bootstrap().group(work).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true);;
+	private Bootstrap client = new Bootstrap().group(work).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true);
 
 	public Channel connection(InetSocketAddress address) throws InterruptedException {
 		client = setting(client).attr(CLIENT, this);

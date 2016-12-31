@@ -26,7 +26,6 @@ public class App {
 		} catch (Exception e) {
 			System.out.println("super");
 		}
-
 	}
 
 	public String[] a(String str, int x) {

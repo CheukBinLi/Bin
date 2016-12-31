@@ -8,7 +8,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-public class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis, K, V> {
+public abstract class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis> {
 
 	private JedisPoolConfig config;
 	private JedisPool pool;
@@ -26,16 +26,16 @@ public class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis, K,
 		pool = new JedisPool(config, host, port, timeOut, password);
 	}
 
-	public void delete(K k) throws RedisExcecption {
-		Jedis jedis = getResource();
-		try {
-			jedis.del(getRedisSerialize().encode(k));
-		} catch (Throwable e) {
-			throw new RedisExcecption(e);
-		} finally {
-			destory(jedis);
-		}
-	}
+	// public void delete(K k) throws RedisExcecption {
+	// Jedis jedis = getResource();
+	// try {
+	// jedis.del(getRedisSerialize().encode(k));
+	// } catch (Throwable e) {
+	// throw new RedisExcecption(e);
+	// } finally {
+	// destory(jedis);
+	// }
+	// }
 
 	public boolean create(K k, V v) throws RedisExcecption {
 		return create(k, v, expireSecond);
@@ -57,21 +57,21 @@ public class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis, K,
 		throw new RedisExcecption("not supper getcollection() method.");
 	}
 
-	@SuppressWarnings("unchecked")
-	public V getAndSet(K k, V v) throws RedisExcecption {
-		Jedis jedis = getResource();
-		byte[] result;
-		try {
-			byte[] key = getRedisSerialize().encode(k);
-			result = jedis.getSet(key, getRedisSerialize().encode(v));
-			jedis.expire(key, expireSecond);
-			return null == result ? null : (V) getRedisSerialize().decode(result);
-		} catch (Throwable e) {
-			throw new RedisExcecption(e);
-		} finally {
-			destory(jedis);
-		}
-	}
+	// @SuppressWarnings("unchecked")
+	// public V getAndSet(K k, V v) throws RedisExcecption {
+	// Jedis jedis = getResource();
+	// byte[] result;
+	// try {
+	// byte[] key = getRedisSerialize().encode(k);
+	// result = jedis.getSet(key, getRedisSerialize().encode(v));
+	// jedis.expire(key, expireSecond);
+	// return null == result ? null : (V) getRedisSerialize().decode(result);
+	// } catch (Throwable e) {
+	// throw new RedisExcecption(e);
+	// } finally {
+	// destory(jedis);
+	// }
+	// }
 
 	public void expire(K key, int expireSeconds) throws RedisExcecption {
 		Jedis jedis = getResource();
@@ -84,19 +84,19 @@ public class StandAloneJedisManager<K, V> extends AbstractJedisManager<Jedis, K,
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public <R> R get(K k) throws RedisExcecption {
-		Jedis jedis = getResource();
-		byte[] result;
-		try {
-			result = jedis.get(getRedisSerialize().encode(k));
-			return null == result ? null : (R) getRedisSerialize().decode(result);
-		} catch (Throwable e) {
-			throw new RedisExcecption(e);
-		} finally {
-			destory(jedis);
-		}
-	}
+//	@SuppressWarnings("unchecked")
+//	public <R> R get(K k) throws RedisExcecption {
+//		Jedis jedis = getResource();
+//		byte[] result;
+//		try {
+//			result = jedis.get(getRedisSerialize().encode(k));
+//			return null == result ? null : (R) getRedisSerialize().decode(result);
+//		} catch (Throwable e) {
+//			throw new RedisExcecption(e);
+//		} finally {
+//			destory(jedis);
+//		}
+//	}
 
 	@Override
 	public Jedis getResource() {

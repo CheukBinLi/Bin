@@ -19,16 +19,15 @@ public class ClusterTest<K extends Serializable, V extends Serializable> extends
 
 	public ClusterTest() {
 		super();
-		// hosts.add(new HostAndPort("192.168.3.8", 7001));
-		hosts.add(new HostAndPort("192.168.3.8", 7002));
-		hosts.add(new HostAndPort("192.168.3.8", 7003));
-		hosts.add(new HostAndPort("192.168.3.8", 7004));
-		hosts.add(new HostAndPort("192.168.3.8", 7005));
-		hosts.add(new HostAndPort("192.168.3.8", 7006));
+		 hosts.add(new HostAndPort("192.168.1.200", 2000));
+		hosts.add(new HostAndPort("192.168.1.201", 2001));
+		hosts.add(new HostAndPort("192.168.1.202", 2002));
+		hosts.add(new HostAndPort("192.168.1.203", 2003));
+		hosts.add(new HostAndPort("192.168.1.204", 2004));
+		hosts.add(new HostAndPort("192.168.1.205", 2005));
 		jedisCluster = new JedisCluster(hosts, 2000, 10);
 		setRedisSerialize(new DefaultRedisSerialize());
 	}
-
 	public void delete(K k) throws RedisExcecption {
 
 	}
@@ -61,7 +60,7 @@ public class ClusterTest<K extends Serializable, V extends Serializable> extends
 
 	public <R> R get(K k) throws RedisExcecption {
 		try {
-			return (R) getRedisSerialize().decode(getResource().get(getRedisSerialize().encode(k)));
+			return (R) getRedisSerialize().decode(getResource().getObject(getRedisSerialize().encode(k)));
 		} catch (Throwable e) {
 			throw new RedisExcecption(e);
 		} finally {
@@ -81,8 +80,8 @@ public class ClusterTest<K extends Serializable, V extends Serializable> extends
 	public static void main(String[] args) throws RedisExcecption {
 
 		RedisManager<String, String> rm = new ClusterTest<String, String>();
-		rm.create("AAAAAAAAAAAA", "XXXXXXXXXXXXXX", 360);
-		System.err.println(rm.get("AAAAAAAAAAAA"));
+		rm.setObject("AAAAAAAAAAAA", "XXXXXXXXXXXXXX", 360);
+		System.err.println(rm.getObject("AAAAAAAAAAAA"));
 
 	}
 

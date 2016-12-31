@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,8 @@ public class BaseController {
 		String url = request.getParameter("url");
 		if ("proxy".equals(path)) {
 			// Subject subject = SecurityUtils.getSubject();
-			// System.err.println(subject.isPermitted(request.getParameter("url")) ? "OK" : "NO");
+			// System.err.println(subject.isPermitted(request.getParameter("url"))
+			// ? "OK" : "NO");
 			// SecurityUtils.getSubject().hasRole("123");
 			// SecurityUtils.getSubject().isAuthenticated();
 			return new ModelAndView("proxy", getParams(request)).addObject("data", JspProxy.getProxy(url));
@@ -58,7 +60,8 @@ public class BaseController {
 	}
 
 	// @RequestMapping({ "**/**", "/**" })
-	// public ModelAndView getXPage(HttpServletRequest request, HttpServletResponse response) {
+	// public ModelAndView getXPage(HttpServletRequest request,
+	// HttpServletResponse response) {
 	// System.out.println("*******************");
 	// System.out.println(request.getServletPath());
 	// System.out.println(request.getServerName());
@@ -68,7 +71,8 @@ public class BaseController {
 
 	@RequestMapping({ "/login" })
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
-		// ApplicationContext ac = new ClassPathXmlApplicationContext("application-config.xml");
+		// ApplicationContext ac = new
+		// ClassPathXmlApplicationContext("application-config.xml");
 		// Object o = ac.getBean("luceneRssService");
 		// LuceneRssService s=(LuceneRssService) o;
 		// System.err.println(o);
@@ -85,7 +89,11 @@ public class BaseController {
 			return new ModelAndView(request.getServletPath());
 		String password = request.getParameter("password");
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-		user.login(token);
+		try {
+			user.login(token);
+		} catch (AuthenticationException e) {
+			return new ModelAndView("/login");
+		}
 		user.getSession().setAttribute("hhha", "叼嗱星");
 		return new ModelAndView("/main");
 	}

@@ -43,4 +43,9 @@ public class ServiceHandlerTest implements ServiceHandlerTestI {
 	public ServiceHandler setSerializ(Serializ serializ) {
 		return null;
 	}
+
+	public Integer mmx3() throws Throwable {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
