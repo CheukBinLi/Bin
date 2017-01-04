@@ -42,6 +42,7 @@ public class QueryFactory implements QueryType {
 	private StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 
 	private String files;
+	private Scan scan;
 
 	public QueryFactory() {
 		super();
@@ -79,9 +80,9 @@ public class QueryFactory implements QueryType {
 	private void scan() {
 		try {
 			Set<String> o = null;
-			o = Scan.doScan(files);
+			o = scan.doScan(files).get(files);
 			xmlExplain(o);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			LOG.error("扫描", e);
 		}
 	}
@@ -92,6 +93,16 @@ public class QueryFactory implements QueryType {
 
 	public void setFiles(String files) {
 		this.files = files;
+	}
+	
+	
+
+	public Scan getScan() {
+		return scan;
+	}
+
+	public void setScan(Scan scan) {
+		this.scan = scan;
 	}
 
 	public void xmlExplain(Set<String> urls) throws ParserConfigurationException, SAXException, IOException {
@@ -146,22 +157,19 @@ public class QueryFactory implements QueryType {
 			currentTag.addLast(qName);
 			if (qName.equals(QUERY_LIST)) {
 				packageName = attributes.getValue(PACKAGE);
-			} else
-				if (qName.equals(QUERY)) {
-					// isHQL = attributes.getValue(TYPE).equals("HQL");
-					name = attributes.getValue(NAME);
-					format = Boolean.valueOf(attributes.getValue(FREEMARK_FORMAT));
-					alias = Boolean.valueOf(attributes.getValue(ALIAS));
-					joinRef = attributes.getValue(JOIN_REF);
-					joinTag = attributes.getValue(JOIN_TAG);
-					isJoin = null != joinRef;
-				} else
-					if (qName.equals(ALIAS)) {
-						aliases.put(attributes.getValue(ALIAS), attributes.getValue(NAME));
-					} else
-						if (qName.equals(JOIN)) {
-							name = attributes.getValue(NAME);
-						}
+			} else if (qName.equals(QUERY)) {
+				// isHQL = attributes.getValue(TYPE).equals("HQL");
+				name = attributes.getValue(NAME);
+				format = Boolean.valueOf(attributes.getValue(FREEMARK_FORMAT));
+				alias = Boolean.valueOf(attributes.getValue(ALIAS));
+				joinRef = attributes.getValue(JOIN_REF);
+				joinTag = attributes.getValue(JOIN_TAG);
+				isJoin = null != joinRef;
+			} else if (qName.equals(ALIAS)) {
+				aliases.put(attributes.getValue(ALIAS), attributes.getValue(NAME));
+			} else if (qName.equals(JOIN)) {
+				name = attributes.getValue(NAME);
+			}
 			super.startElement(uri, localName, qName, attributes);
 		}
 
@@ -173,11 +181,10 @@ public class QueryFactory implements QueryType {
 					if (currentTag.getLast().equals(QUERY)) {
 						value = isJoin ? join(value, joinRef, joinTag) : value;
 						put(String.format("%s.%s", packageName, name).toLowerCase(), alias ? alias(value) : value, format);
-					} else
-						if (currentTag.getLast().equals(JOIN)) {
-							value = value.replaceAll("\\<!\\[CDATA\\[", "").replaceAll("\\]\\]\\>", "");
-							joins.put(name, value);
-						}
+					} else if (currentTag.getLast().equals(JOIN)) {
+						value = value.replaceAll("\\<!\\[CDATA\\[", "").replaceAll("\\]\\]\\>", "");
+						joins.put(name, value);
+					}
 				} catch (Exception e) {
 					LOG.error(null, e);
 				}

@@ -30,7 +30,7 @@ public class CutomShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 
 	public CutomShiroFilterFactoryBean() {
 		super();
-		init();
+//		init();
 		System.out.println("CutomShiroFilterFactoryBean");
 	}
 
