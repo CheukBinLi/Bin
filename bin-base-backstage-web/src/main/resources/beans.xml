@@ -16,24 +16,14 @@
 	http://www.springframework.org/schema/task
 	http://www.springframework.org/schema/task/spring-task-4.1.xsd
 	">
-
-
-
-	<!-- QueryFile 注入 -->
-	<bean id="scan" class="com.cheuks.bin.db.manager.ScanSimple" />
-	<bean id="queryFactory" class="com.cheuks.bin.db.manager.QueryFactory">
-		<property name="files" value="*.query.xml" />
-		<property name="scan" ref="scan" />
+	<!-- 验证码 -->
+	<bean name="randomImage" class="com.cheuks.bin.base.web.util.DefaultRandomImage">
+		<property name="width" value="500" />
+		<property name="height" value="30" />
+		<property name="fontSize" value="20" />
+		<property name="codeCount" value="5" />
+		<property name="straightLineCount" value="20" />
+		<property name="font" value="黑体" />
 	</bean>
-	<!--Single DBAdapter 注入 -->
-	<bean id="dBAdapter" class="com.cheuks.bin.db.manager.HibernateSingleDBAdapter">
-		<property name="sessionFactory" ref="sessionFactory" />
-		<property name="queryFactory" ref="queryFactory" />
-	</bean>
-	<!--Multiple DBAdapter 注入 -->
-	<!-- <bean id="dBAdapter1" class="com.cheuks.original.dbmamager.HibernateSingleDBAdapter"> 
-		<property name="sessionFactory"> <map> <entry key="sessionFactory" value-ref="queryFactory" 
-		/> </map> </property> <property name="queryFactory" ref="queryFactory" /> 
-		</bean> -->
 
 </beans>

@@ -18,22 +18,7 @@
 	">
 
 
-
-	<!-- QueryFile 注入 -->
-	<bean id="scan" class="com.cheuks.bin.db.manager.ScanSimple" />
-	<bean id="queryFactory" class="com.cheuks.bin.db.manager.QueryFactory">
-		<property name="files" value="*.query.xml" />
-		<property name="scan" ref="scan" />
-	</bean>
-	<!--Single DBAdapter 注入 -->
-	<bean id="dBAdapter" class="com.cheuks.bin.db.manager.HibernateSingleDBAdapter">
-		<property name="sessionFactory" ref="sessionFactory" />
-		<property name="queryFactory" ref="queryFactory" />
-	</bean>
-	<!--Multiple DBAdapter 注入 -->
-	<!-- <bean id="dBAdapter1" class="com.cheuks.original.dbmamager.HibernateSingleDBAdapter"> 
-		<property name="sessionFactory"> <map> <entry key="sessionFactory" value-ref="queryFactory" 
-		/> </map> </property> <property name="queryFactory" ref="queryFactory" /> 
-		</bean> -->
+	<!-- 映射 -->
+	<mvc:resources location="/WEB-INF/resource/" mapping="/resource/**" />
 
 </beans>

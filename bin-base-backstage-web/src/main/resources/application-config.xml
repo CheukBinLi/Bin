@@ -35,7 +35,7 @@
 	<task:annotation-driven />
 
 	<!-- 扫描包 -->
-	<context:component-scan base-package="com.*,Controller.*" />
+	<context:component-scan base-package="com.*,Controller" />
 
 	<!-- 开启aop -->
 	<aop:aspectj-autoproxy />
@@ -98,6 +98,7 @@
 	<import resource="HibernateDBAdapter.xml" />
 	<import resource="resource.xml"></import>
 	<import resource="shiro.xml"></import>
+	<import resource="beans.xml"></import>
 	<!-- <import resource="other.xml" /> -->
 	<!-- <import resource="interceptors.xml" /> -->
 </beans>
